@@ -16,7 +16,7 @@ export default async function PublicLayout({ children }: { children: React.React
   }
 
   return (
-    <div className="min-h-full flex flex-col bg-[#FDFBF7]">
+    <div className="min-h-full flex flex-col bg-[#fffaf5] text-[#33241b]">
       <Header user={user} />
       <main className="flex-1">
         {children}

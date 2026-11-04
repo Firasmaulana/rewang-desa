@@ -1,76 +1,153 @@
-import { ArrowRight, Truck, ShieldCheck, Tag } from 'lucide-react';
+import { ArrowRight, ShieldCheck, HeartHandshake, Sparkles, PackageCheck } from 'lucide-react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import { products } from '@/data/products';
+import Logo from '@/components/Logo';
 
 export default function Home() {
-  // Get trending products (e.g. top 4 products or highest rated)
-  const trendingProducts = products.sort((a, b) => b.rating - a.rating).slice(0, 4);
+  // Top featured products from catalog
+  const featuredProducts = products.slice(0, 4);
+
+  const categories = [
+    { name: 'Bahan Pokok & Bumbu', desc: 'Beras Jampang, Garam Jono, Kecap Kelapa', icon: '🌾' },
+    { name: 'Gula-gulaan', desc: 'Gula Singkong Manes, Gula Aren & Kelapa', icon: '🍯' },
+    { name: 'Kerupuk & Kletikan', desc: 'Kerupuk Pak Kamto, Keripik Tempe, Renggining', icon: '🥨' },
+    { name: 'Minuman & Herbal', desc: 'Kalehon Drink Honje, Madu Randu Blitar', icon: '🍹' },
+  ];
 
   return (
     <>
       {/* Hero Section */}
-      <section className="py-16 md:py-24 relative overflow-hidden">
-        {/* Decorative circle */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-100 rounded-full mix-blend-multiply filter blur-3xl opacity-60 translate-x-1/3 -translate-y-1/3"></div>
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-lime-100 rounded-full mix-blend-multiply filter blur-3xl opacity-60 -translate-x-1/3 translate-y-1/3"></div>
+      <section className="py-16 md:py-24 relative overflow-hidden bg-gradient-to-b from-[#fffaf5] via-[#f7f1ea]/60 to-[#fffaf5]">
+        {/* Soft Organic Warm Blurs */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#8a5225]/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#ffdd7d]/25 rounded-full mix-blend-multiply filter blur-3xl opacity-70 -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
 
-        <div className="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center">
-          <div className="md:w-1/2 md:pr-12 text-center md:text-left mb-10 md:mb-0">
-            <span className="text-lime-700 font-bold tracking-wider uppercase text-sm mb-4 block">100% Organik & Lokal</span>
-            <h1 className="text-4xl md:text-6xl font-extrabold text-stone-900 leading-tight mb-6">
-              Mendukung <span className="text-amber-800">UMKM Desa</span> ke Pasar Global
+        <div className="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center gap-12">
+          <div className="md:w-1/2 text-center md:text-left">
+            
+            {/* Tagline Badge */}
+            <div className="inline-flex items-center gap-2 bg-[#8a5225]/10 text-[#854523] px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest mb-6 border border-[#8a5225]/20 font-body">
+              <Sparkles size={14} className="text-[#8a5225]" />
+              <span>Dari Tangan Desa</span>
+            </div>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading text-[#33241b] leading-[1.15] mb-6">
+              Menghubungkan <span className="text-[#8a5225] italic font-normal">Hasil Bumi</span> Desa dengan Anda
             </h1>
-            <p className="text-lg text-stone-600 mb-8 max-w-xl mx-auto md:mx-0">
-              Temukan kualitas terbaik dari gula aren, gula kelapa, dan beras merah langsung dari tangan petani lokal. Sehat, alami, dan memberdayakan.
+            
+            <p className="text-base sm:text-lg text-stone-600 mb-8 max-w-xl mx-auto md:mx-0 font-body leading-relaxed">
+              Lahir dari keresahan melihat potensi desa yang besar. Rewang Desa hadir sebagai jembatan menghubungkan produk alami, karya pengrajin, dan cerita petani langsung ke tangan Sahabat Rewang.
             </p>
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-              <Link href="/shop" className="bg-amber-800 text-white px-8 py-3 rounded-full font-bold hover:bg-amber-900 transition shadow-lg shadow-amber-900/20 flex items-center justify-center gap-2">
-                Belanja Sekarang <ArrowRight size={18} />
+              <Link 
+                href="/shop" 
+                className="bg-[#8a5225] text-[#fffaf5] px-8 py-3.5 rounded-full font-semibold hover:bg-[#733f1b] transition shadow-lg shadow-[#8a5225]/25 flex items-center justify-center gap-2 group text-sm md:text-base"
+              >
+                Jelajahi Katalog <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link 
+                href="/about" 
+                className="bg-white text-[#33241b] border border-[#33241b]/15 px-8 py-3.5 rounded-full font-semibold hover:bg-[#f7f1ea] hover:border-[#8a5225]/40 transition flex items-center justify-center text-sm md:text-base"
+              >
+                Cerita Kami
               </Link>
             </div>
+
+            {/* Quick Stats / Values */}
+            <div className="mt-10 pt-6 border-t border-[#33241b]/10 flex items-center justify-center md:justify-start gap-8 text-xs text-stone-500 font-body">
+              <div>
+                <p className="font-heading font-bold text-lg text-[#33241b]">100%</p>
+                <p>Karya Petani Lokal</p>
+              </div>
+              <div className="w-px h-8 bg-[#33241b]/10"></div>
+              <div>
+                <p className="font-heading font-bold text-lg text-[#33241b]">Alami</p>
+                <p>Tanpa Pengawet Buatan</p>
+              </div>
+              <div className="w-px h-8 bg-[#33241b]/10"></div>
+              <div>
+                <p className="font-heading font-bold text-lg text-[#33241b]">Berdampak</p>
+                <p>Membantu UMKM Sepuh</p>
+              </div>
+            </div>
           </div>
-          <div className="md:w-1/2 flex justify-center">
-            {/* Placeholder for Hero Image */}
-            <div className="relative w-full max-w-md aspect-square bg-white rounded-full shadow-2xl shadow-amber-900/10 p-4 flex items-center justify-center border-4 border-amber-100">
-               <div className="absolute w-full h-full rounded-full border border-dashed border-lime-300 animate-[spin_60s_linear_infinite]"></div>
-               <div className="text-center">
-                 <p className="text-stone-400 font-medium">[Gambar Hero Produk Organik]</p>
-               </div>
+
+          {/* Visual Showcase Card */}
+          <div className="md:w-1/2 flex justify-center w-full">
+            <div className="relative w-full max-w-md aspect-square rounded-3xl bg-gradient-to-br from-[#f7f1ea] via-white to-[#fffaf5] shadow-2xl shadow-[#8a5225]/15 p-8 flex flex-col justify-between border border-[#8a5225]/20">
+              {/* Decorative Corner Seals */}
+              <div className="flex justify-between items-start">
+                <span className="text-[10px] font-bold tracking-widest text-[#8a5225] uppercase bg-[#8a5225]/10 px-2.5 py-1 rounded">
+                  Edisi Katalog 2026
+                </span>
+                <span className="text-2xl">🌱</span>
+              </div>
+
+              {/* Center Emblem with Authentic Mistrully Logo */}
+              <div className="text-center py-6 my-auto">
+                <div className="w-24 h-24 rounded-full bg-[#8a5225]/10 mx-auto flex items-center justify-center mb-4 border border-[#8a5225]/30">
+                  <span className="text-4xl">🌾</span>
+                </div>
+                <Logo size="lg" showTagline={true} />
+                <p className="font-heading text-sm text-[#8a5225] mt-2 italic">
+                  &ldquo;Tumbuh dan bergerak bersama desa&rdquo;
+                </p>
+              </div>
+
+              {/* Bottom Feature Pill */}
+              <div className="bg-white/90 backdrop-blur rounded-2xl p-3.5 border border-[#33241b]/10 shadow-sm flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#ffdd7d]/40 text-[#8a5225] flex items-center justify-center shrink-0 font-bold">
+                  ✨
+                </div>
+                <div className="text-xs">
+                  <p className="font-semibold text-[#33241b]">Garam Jono &amp; Beras Sukabumi</p>
+                  <p className="text-stone-500">Pilihan favorit Sahabat Rewang bulan ini</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-12 border-y border-amber-900/10 bg-white">
+      {/* Philosophy / Features Section */}
+      <section className="py-12 border-y border-[#33241b]/10 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="flex items-center gap-4 bg-[#FDFBF7] p-6 rounded-2xl border border-amber-900/5 hover:border-amber-900/20 transition">
-              <div className="w-14 h-14 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center shrink-0">
-                <Truck size={28} />
+            <div className="flex items-start gap-4 bg-[#fffaf5] p-6 rounded-2xl border border-[#33241b]/5 hover:border-[#8a5225]/30 transition group">
+              <div className="w-12 h-12 bg-[#8a5225]/10 text-[#8a5225] rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#8a5225] group-hover:text-white transition-colors duration-200">
+                <PackageCheck size={24} />
               </div>
               <div>
-                <h4 className="font-bold text-stone-800 mb-1">Pengiriman Cepat</h4>
-                <p className="text-sm text-stone-500">Logistik aman ke seluruh Indonesia</p>
+                <h4 className="font-heading font-bold text-[#33241b] text-base mb-1">Dari Tangan Petani</h4>
+                <p className="text-xs text-stone-600 leading-relaxed font-body">
+                  Dikurasi langsung dari sawah dan kebun di Desa Jampang, Grobogan, Banyumas, dan Gunungkidul.
+                </p>
               </div>
             </div>
-            <div className="flex items-center gap-4 bg-[#FDFBF7] p-6 rounded-2xl border border-amber-900/5 hover:border-amber-900/20 transition">
-              <div className="w-14 h-14 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center shrink-0">
-                <ShieldCheck size={28} />
+
+            <div className="flex items-start gap-4 bg-[#fffaf5] p-6 rounded-2xl border border-[#33241b]/5 hover:border-[#8a5225]/30 transition group">
+              <div className="w-12 h-12 bg-[#8a5225]/10 text-[#8a5225] rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#8a5225] group-hover:text-white transition-colors duration-200">
+                <ShieldCheck size={24} />
               </div>
               <div>
-                <h4 className="font-bold text-stone-800 mb-1">Pembayaran Aman</h4>
-                <p className="text-sm text-stone-500">Transaksi terenkripsi 100% aman</p>
+                <h4 className="font-heading font-bold text-[#33241b] text-base mb-1">Murni &amp; Alami</h4>
+                <p className="text-xs text-stone-600 leading-relaxed font-body">
+                  Pilihan bahan pangan sehat tanpa pengawet sintesis, less gluten, dan aman bagi keluarga Anda.
+                </p>
               </div>
             </div>
-            <div className="flex items-center gap-4 bg-[#FDFBF7] p-6 rounded-2xl border border-amber-900/5 hover:border-amber-900/20 transition">
-              <div className="w-14 h-14 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center shrink-0">
-                <Tag size={28} />
+
+            <div className="flex items-start gap-4 bg-[#fffaf5] p-6 rounded-2xl border border-[#33241b]/5 hover:border-[#8a5225]/30 transition group">
+              <div className="w-12 h-12 bg-[#8a5225]/10 text-[#8a5225] rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#8a5225] group-hover:text-white transition-colors duration-200">
+                <HeartHandshake size={24} />
               </div>
               <div>
-                <h4 className="font-bold text-stone-800 mb-1">Kualitas Premium</h4>
-                <p className="text-sm text-stone-500">Kurasi ketat langsung dari petani</p>
+                <h4 className="font-heading font-bold text-[#33241b] text-base mb-1">Gotong Royong Nyata</h4>
+                <p className="text-xs text-stone-600 leading-relaxed font-body">
+                  Sesuai makna &ldquo;rewang&rdquo;, setiap transaksi langsung menggerakkan roda kemandirian petani dan lansia desa.
+                </p>
               </div>
             </div>
           </div>
@@ -78,68 +155,112 @@ export default function Home() {
       </section>
 
       {/* Categories Section */}
-      <section id="kategori" className="py-16 md:py-24">
+      <section id="kategori" className="py-16 md:py-24 bg-[#fffaf5]">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-4">Kategori Pilihan</h2>
-          <p className="text-stone-500 mb-12 max-w-2xl mx-auto">Jelajahi berbagai komoditas unggulan kami yang diproduksi dengan cinta oleh masyarakat desa.</p>
+          <span className="text-[#854523] text-xs font-bold uppercase tracking-widest mb-2 block font-body">
+            Kurasi Pilihan
+          </span>
+          <h2 className="text-3xl md:text-4xl font-heading text-[#33241b] mb-4">
+            Kategori Hasil Bumi &amp; Kerajinan
+          </h2>
+          <p className="text-stone-600 mb-12 max-w-xl mx-auto text-sm md:text-base font-body">
+            Jelajahi komoditas unggulan desa yang diproduksi dengan ketulusan tangan para pengrajin dan petani nusantara.
+          </p>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {['Gula Aren', 'Gula Kelapa', 'Beras Merah', 'Rempah Tradisional'].map((cat, i) => (
-              <Link href={`/shop?category=${cat}`} key={i} className="group cursor-pointer">
-                <div className="bg-white aspect-square rounded-full flex items-center justify-center mb-4 mx-auto shadow-sm border border-amber-900/10 group-hover:border-lime-500 group-hover:shadow-md transition-all relative overflow-hidden w-40 md:w-48">
-                  <div className="text-stone-300 text-sm">[Gambar {cat}]</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {categories.map((cat, i) => (
+              <Link 
+                href={`/shop?category=${encodeURIComponent(cat.name)}`} 
+                key={i} 
+                className="group bg-white p-6 rounded-2xl border border-[#33241b]/10 hover:border-[#8a5225] hover:shadow-lg hover:shadow-[#8a5225]/10 transition-all duration-300 text-left flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-14 h-14 rounded-2xl bg-[#f7f1ea] group-hover:bg-[#ffdd7d]/30 text-2xl flex items-center justify-center mb-4 transition-colors">
+                    {cat.icon}
+                  </div>
+                  <h3 className="font-heading font-bold text-lg text-[#33241b] group-hover:text-[#8a5225] transition mb-2">
+                    {cat.name}
+                  </h3>
+                  <p className="text-stone-500 text-xs font-body leading-relaxed mb-4">
+                    {cat.desc}
+                  </p>
                 </div>
-                <h3 className="font-bold text-stone-800 group-hover:text-amber-800 transition">{cat}</h3>
+                <div className="text-xs font-semibold text-[#8a5225] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  Lihat Produk <ArrowRight size={14} />
+                </div>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Trending Products */}
-      <section id="produk" className="py-16 bg-white border-t border-amber-900/5">
+      {/* Featured Products */}
+      <section id="produk" className="py-16 bg-white border-t border-[#33241b]/10">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-end mb-10">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-4">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-4">Produk Terlaris</h2>
-              <p className="text-stone-500">Produk yang paling disukai oleh pelanggan kami.</p>
+              <span className="text-[#854523] text-xs font-bold uppercase tracking-widest mb-2 block font-body">
+                Favorit Sahabat Rewang
+              </span>
+              <h2 className="text-3xl md:text-4xl font-heading text-[#33241b] mb-2">
+                Produk Pilihan Bulan Ini
+              </h2>
+              <p className="text-stone-600 text-sm font-body">
+                Karya pangan terbaik dari Sukabumi, Grobogan, Banjarnegara, hingga Banyumas.
+              </p>
             </div>
-            <Link href="/shop" className="hidden md:flex items-center gap-1 text-amber-800 font-semibold hover:text-amber-900 transition">
-              Lihat Semua <ArrowRight size={18} />
+            <Link 
+              href="/shop" 
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#8a5225] hover:text-[#733f1b] transition font-body"
+            >
+              Lihat Semua Katalog <ArrowRight size={16} />
             </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {trendingProducts.map((product) => (
+            {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
-          </div>
-          <div className="mt-8 text-center md:hidden">
-            <Link href="/shop" className="inline-flex items-center gap-1 text-amber-800 font-semibold hover:text-amber-900 transition">
-              Lihat Semua <ArrowRight size={18} />
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* Promo Banner */}
-      <section className="py-16">
+      {/* Promo & Subscription Banner: Paket Rewang Tani (Page 22 in Catalog) */}
+      <section className="py-16 bg-[#fffaf5]">
         <div className="container mx-auto px-4">
-          <div className="bg-lime-800 rounded-3xl p-8 md:p-16 flex flex-col md:flex-row items-center justify-between relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-lime-600 rounded-full mix-blend-overlay filter blur-3xl opacity-50 translate-x-1/2 -translate-y-1/2"></div>
+          <div className="bg-[#33241b] rounded-3xl p-8 md:p-14 flex flex-col md:flex-row items-center justify-between relative overflow-hidden shadow-2xl border border-[#8a5225]/40 text-[#fffaf5]">
+            {/* Background Glow */}
+            <div className="absolute top-0 right-0 w-80 h-80 bg-[#8a5225]/30 rounded-full filter blur-3xl opacity-60 translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
             
-            <div className="md:w-1/2 relative z-10 text-center md:text-left mb-8 md:mb-0">
-              <span className="text-lime-300 font-bold uppercase tracking-wider mb-2 block">Spesial Bulan Ini</span>
-              <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight mb-4">Bundel Hemat<br/>Gula Aren & Kelapa</h2>
-              <p className="text-lime-100 mb-8 max-w-md">Dapatkan kombinasi sempurna pemanis alami untuk kebutuhan dapur Anda dengan harga lebih hemat!</p>
-              <Link href="/shop" className="bg-amber-600 text-white px-8 py-3 rounded-full font-bold hover:bg-amber-700 transition inline-block shadow-lg">
-                Beli Sekarang (Diskon 15%)
-              </Link>
+            <div className="md:w-3/5 relative z-10 text-center md:text-left mb-8 md:mb-0">
+              <span className="text-[#ffdd7d] font-bold text-xs uppercase tracking-widest mb-3 block font-body">
+                🌿 Program Dukung Petani
+              </span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading text-white leading-tight mb-4">
+                Paket Rewang Tani Bulanan
+              </h2>
+              <p className="text-stone-300 text-sm md:text-base mb-6 max-w-lg leading-relaxed font-body">
+                Bantu petani dengan langganan paket ini tiap bulan yuk! Berisi 2 kg Beras Merah Sukabumi, 1 btl Kecap Kelapa, 1 btl Garam Jono, dan 1 pack Gula Kelapa murni.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center gap-4 justify-center md:justify-start">
+                <Link 
+                  href="/product/11" 
+                  className="bg-[#ffdd7d] hover:bg-[#ffe69e] text-[#33241b] px-8 py-3.5 rounded-full font-bold transition shadow-lg text-sm md:text-base font-body inline-flex items-center gap-2"
+                >
+                  Langganan Paket Tani (Rp 110.000)
+                </Link>
+                <span className="text-xs text-stone-400 font-body">Hemat 15% dari harga satuan</span>
+              </div>
             </div>
             
-            <div className="md:w-1/2 relative z-10 flex justify-center">
-              <div className="w-64 h-64 bg-lime-700 rounded-full flex items-center justify-center border-4 border-lime-500 shadow-2xl">
-                 <span className="text-lime-300 font-medium">[Gambar Bundel]</span>
+            <div className="md:w-2/5 relative z-10 flex justify-center">
+              <div className="w-56 h-56 md:w-64 md:h-64 rounded-3xl bg-[#241913] border-2 border-[#8a5225] flex flex-col items-center justify-center p-6 text-center shadow-xl">
+                <span className="text-5xl mb-3">📦</span>
+                <span className="font-heading text-white text-lg font-bold">Paket Rewang Tani</span>
+                <span className="text-xs text-[#ffdd7d] mt-1 font-body">4 Kebutuhan Pokok Alami</span>
+                <span className="mt-3 text-[11px] bg-[#8a5225] text-white px-3 py-1 rounded-full font-body font-semibold">
+                  Langsung dari Petani
+                </span>
               </div>
             </div>
           </div>

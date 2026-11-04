@@ -2,94 +2,104 @@ import Link from 'next/link';
 import { Calendar, User, ArrowRight } from 'lucide-react';
 
 export const metadata = {
-  title: 'Artikel & Berita - Rewang Desa',
-  description: 'Informasi terbaru seputar UMKM, kearifan lokal, dan kegiatan Rewang Desa.',
+  title: 'Artikel & Cerita Desa - Rewang Desa',
+  description: 'Kisah para petani, kearifan lokal, dan kabar panen dari desa binaan Rewang Desa.',
 };
 
 const BLOG_POSTS = [
   {
     id: 1,
-    title: 'Menyusuri Tradisi Pembuatan Gula Aren Organik',
-    excerpt: 'Gula aren bukan sekadar pemanis, ia adalah saksi bisu kearifan lokal yang dijaga turun-temurun oleh para petani desa...',
+    title: 'Garam Jono: Keajaiban Garam Sumur Panas di Tengah Daratan Grobogan',
+    excerpt: 'Bukan berasal dari air laut, melainkan dari air sumur panas alami di Desa Jono yang dijemur di atas bilah bambu "klakah" oleh para petani sepuh...',
     date: '12 Agustus 2026',
-    author: 'Admin Desa',
-    image: '🌴',
-    category: 'Edukasi'
+    author: 'Tim Rewang',
+    image: '🧂',
+    category: 'Cerita Petani'
   },
   {
     id: 2,
-    title: 'Panen Raya Beras Merah Berkualitas Ekspor',
-    excerpt: 'Tahun ini membawa berkah melimpah. Kelompok tani kita berhasil memanen beras merah dengan kualitas yang diakui pasar internasional.',
+    title: 'Mengenal Beras Merah & Hitam Jampang dengan Indeks Glikemik Rendah',
+    excerpt: 'Petani Desa Jampang Sukabumi merawat varietas padi lokal yang terbukti memiliki indeks glikemik rendah, sangat ideal sebagai pangan harian yang sehat...',
     date: '28 Juli 2026',
-    author: 'Humas Tani',
+    author: 'Pangan Sehat',
     image: '🌾',
-    category: 'Berita'
+    category: 'Edukasi'
   },
   {
     id: 3,
-    title: 'Tips Menyimpan Rempah Agar Tahan Berbulan-bulan',
-    excerpt: 'Rempah-rempah asli desa memiliki aroma yang kuat. Namun jika salah simpan, aromanya bisa hilang. Simak tips berikut ini.',
+    title: 'Pak Djohan & Perjuangan Mengangkat Nilai Singkong di Banjarnegara',
+    excerpt: 'Berangkat dari kepedulian terhadap harga singkong mentah yang anjlok, seorang guru desa menggerakkan kelompok tani memproduksi Gula Singkong Manes bernilai tinggi...',
     date: '15 Juli 2026',
-    author: 'Ibu PKK',
-    image: '🌶️',
-    category: 'Tips'
+    author: 'Inspirasi Desa',
+    image: '🍯',
+    category: 'Inspirasi'
   },
   {
     id: 4,
-    title: 'Kisah Sukses: Dari Usaha Rumahan Menjadi Pengekspor',
-    excerpt: 'Mari belajar dari kesuksesan Ibu Nani yang berhasil menembus pasar luar kota berkat konsistensinya menjaga kualitas produk.',
+    title: 'Memberdayakan Mbah-Mbah Sepuh Melalui Kerupuk Bawang Pak Kamto',
+    excerpt: 'Di Gunungkidul, usaha kerupuk bawang rumahan Pak Kamto menjadi tumpuan bagi para lansia desa untuk tetap aktif, dihargai, dan mandiri secara ekonomi...',
     date: '02 Juli 2026',
-    author: 'Admin Desa',
-    image: '🌟',
-    category: 'Inspirasi'
+    author: 'Tim Rewang',
+    image: '🥨',
+    category: 'Gotong Royong'
   }
 ];
 
 export default function BlogPage() {
   return (
-    <div className="bg-[#FDFBF7] min-h-screen py-16">
+    <div className="bg-[#fffaf5] min-h-screen py-16">
       <div className="container mx-auto px-4 max-w-6xl">
         
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-stone-900 mb-4">Artikel & Berita</h1>
-          <p className="text-stone-500 max-w-2xl mx-auto text-lg">
-            Kumpulan cerita, inspirasi, dan informasi terbaru langsung dari jantung kegiatan UMKM desa kami.
+        <div className="text-center mb-16 max-w-2xl mx-auto">
+          <span className="text-[#854523] text-xs font-bold uppercase tracking-widest mb-2 block font-body">
+            Kabar &amp; Kearifan Lokal
+          </span>
+          <h1 className="text-3xl md:text-5xl font-heading text-[#33241b] mb-4">
+            Artikel &amp; Cerita dari Desa
+          </h1>
+          <p className="text-stone-600 text-sm md:text-base font-body">
+            Kumpulan kisah perjuangan, inovasi pangan lokal, dan kearifan masyarakat desa yang kami temui di setiap jengkal perjalanan.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {BLOG_POSTS.map((post) => (
-            <article key={post.id} className="bg-white rounded-3xl overflow-hidden border border-amber-900/10 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col">
-              
-              {/* Gambar / Ilustrasi */}
-              <div className="h-48 bg-stone-100 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-amber-900/5 group-hover:bg-transparent transition-colors z-10"></div>
-                <span className="text-7xl group-hover:scale-110 transition-transform duration-500 z-0">{post.image}</span>
-                <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-amber-800 z-20 shadow-sm">
-                  {post.category}
+            <article 
+              key={post.id} 
+              className="bg-white rounded-3xl border border-[#33241b]/10 overflow-hidden hover:shadow-xl hover:shadow-[#8a5225]/10 hover:border-[#8a5225]/30 transition-all duration-300 flex flex-col justify-between group"
+            >
+              <div>
+                <div className="aspect-[16/9] bg-[#f7f1ea] flex items-center justify-center text-5xl group-hover:scale-105 transition-transform duration-300">
+                  {post.image}
+                </div>
+                <div className="p-7">
+                  <div className="flex items-center gap-3 text-xs text-stone-500 mb-3 font-body">
+                    <span className="bg-[#8a5225]/10 text-[#854523] font-bold px-2.5 py-1 rounded">
+                      {post.category}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Calendar size={13} /> {post.date}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <User size={13} /> {post.author}
+                    </span>
+                  </div>
+
+                  <h2 className="text-xl md:text-2xl font-heading text-[#33241b] mb-3 group-hover:text-[#8a5225] transition leading-snug">
+                    {post.title}
+                  </h2>
+
+                  <p className="text-stone-600 text-sm font-body leading-relaxed line-clamp-3">
+                    {post.excerpt}
+                  </p>
+                </div>
+              </div>
+
+              <div className="px-7 pb-7 pt-2">
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8a5225] group-hover:text-[#733f1b] transition font-body">
+                  Baca Selengkapnya <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </span>
               </div>
-
-              {/* Konten */}
-              <div className="p-6 flex flex-col flex-1">
-                <div className="flex items-center gap-4 text-xs font-medium text-stone-400 mb-4">
-                  <span className="flex items-center gap-1"><Calendar size={14} /> {post.date}</span>
-                  <span className="flex items-center gap-1"><User size={14} /> {post.author}</span>
-                </div>
-                
-                <h3 className="text-xl font-bold text-stone-900 mb-3 group-hover:text-amber-800 transition-colors">
-                  {post.title}
-                </h3>
-                
-                <p className="text-stone-500 text-sm leading-relaxed mb-6 flex-1">
-                  {post.excerpt}
-                </p>
-
-                <Link href={`#`} className="inline-flex items-center gap-2 text-sm font-bold text-lime-700 hover:text-lime-800 transition mt-auto w-fit">
-                  Baca Selengkapnya <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-
             </article>
           ))}
         </div>
@@ -98,4 +108,3 @@ export default function BlogPage() {
     </div>
   );
 }
-

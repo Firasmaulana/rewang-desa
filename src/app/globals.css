@@ -1,1 +1,46 @@
 @import "tailwindcss";
+
+@theme {
+  --font-heading: var(--font-heading), "Tenor Sans", Georgia, serif;
+  --font-body: var(--font-body), "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mistrully: var(--font-mistrully), "Brush Script MT", cursive;
+
+  --color-brand-espresso: #33241b;
+  --color-brand-terracotta: #8a5225;
+  --color-brand-cinnamon: #854523;
+  --color-brand-caramel: #af7348;
+  --color-brand-hazelnut: #8f6b50;
+  --color-brand-gold: #ffdd7d;
+  --color-brand-cream: #fffaf5;
+  --color-brand-sand: #f7f1ea;
+  --color-brand-red: #c82929;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-body), "Poppins", sans-serif;
+    color: #33241b;
+    background-color: #fffaf5;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), "Tenor Sans", Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+
+  p, span, a, input, select, textarea, button, label, li {
+    font-family: var(--font-body), "Poppins", sans-serif;
+  }
+}
+
+.font-heading {
+  font-family: var(--font-heading), "Tenor Sans", Georgia, serif;
+}
+
+.font-body {
+  font-family: var(--font-body), "Poppins", sans-serif;
+}
+
+.font-mistrully {
+  font-family: var(--font-mistrully), "Brush Script MT", cursive;
+}

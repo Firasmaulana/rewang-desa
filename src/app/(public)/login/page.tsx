@@ -4,6 +4,7 @@ import { useActionState } from 'react';
 import { login } from '@/actions/auth';
 import { ArrowRight, Lock } from 'lucide-react';
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 
 export default function Login() {
   const [state, formAction, isPending] = useActionState(
@@ -14,42 +15,45 @@ export default function Login() {
   );
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 bg-[#FDFBF7]">
-      <div className="bg-white p-8 md:p-12 rounded-3xl border border-amber-900/10 shadow-xl shadow-amber-900/5 w-full max-w-md">
+    <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 bg-[#fffaf5] font-body">
+      <div className="bg-white p-8 md:p-12 rounded-3xl border border-[#33241b]/10 shadow-xl shadow-[#8a5225]/5 w-full max-w-md">
         
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Lock size={32} />
+          <div className="mb-4">
+            <Logo size="md" showTagline={false} />
           </div>
-          <h1 className="text-3xl font-extrabold text-stone-900 mb-2">Masuk Akun</h1>
-          <p className="text-stone-500">Silakan login untuk mengakses dasbor admin.</p>
+          <div className="w-12 h-12 bg-[#8a5225]/10 text-[#8a5225] rounded-full flex items-center justify-center mx-auto mb-3">
+            <Lock size={22} />
+          </div>
+          <h1 className="text-2xl md:text-3xl font-heading text-[#33241b] mb-1.5">Masuk Akun</h1>
+          <p className="text-stone-500 text-xs md:text-sm">Silakan login untuk mengakses dasbor pengelola Rewang Desa.</p>
         </div>
 
-        <form action={formAction} className="space-y-6">
+        <form action={formAction} className="space-y-5">
           <div>
-            <label className="block font-bold text-stone-800 mb-2">Username</label>
+            <label className="block font-medium text-xs text-[#33241b] uppercase tracking-wider mb-2">Username</label>
             <input 
               type="text" 
               name="username"
               required
-              className="w-full border border-stone-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500" 
+              className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#8a5225] bg-[#fffaf5]" 
               placeholder="Masukkan username" 
             />
           </div>
 
           <div>
-            <label className="block font-bold text-stone-800 mb-2">Password</label>
+            <label className="block font-medium text-xs text-[#33241b] uppercase tracking-wider mb-2">Password</label>
             <input 
               type="password" 
               name="password"
               required
-              className="w-full border border-stone-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500" 
+              className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#8a5225] bg-[#fffaf5]" 
               placeholder="Masukkan password" 
             />
           </div>
 
           {state?.error && (
-            <div className="bg-rose-50 text-rose-600 p-3 rounded-lg text-sm font-bold text-center">
+            <div className="bg-rose-50 text-[#c82929] p-3 rounded-xl text-xs font-semibold text-center border border-rose-100">
               {state.error}
             </div>
           )}
@@ -57,22 +61,21 @@ export default function Login() {
           <button 
             type="submit" 
             disabled={isPending}
-            className="w-full bg-amber-800 text-white font-bold py-4 rounded-xl hover:bg-amber-900 transition shadow-lg flex justify-center items-center gap-2 disabled:opacity-70"
+            className="w-full bg-[#8a5225] text-white font-semibold py-3.5 rounded-xl hover:bg-[#733f1b] transition shadow-lg shadow-[#8a5225]/20 flex justify-center items-center gap-2 disabled:opacity-70 text-sm"
           >
-            {isPending ? 'Memproses...' : 'Masuk Dasbor'} <ArrowRight size={20} />
+            {isPending ? 'Memproses...' : 'Masuk Dasbor'} <ArrowRight size={18} />
           </button>
         </form>
 
-        <div className="mt-8 text-center text-sm text-stone-500">
+        <div className="mt-8 text-center text-xs text-stone-500">
           <p>Belum punya akun?</p>
-          <Link href="/register" className="text-amber-800 font-bold hover:underline mt-1 inline-block">
+          <Link href="/register" className="text-[#8a5225] font-semibold hover:underline mt-1 inline-block">
             Daftar Sekarang
           </Link>
-          <p className="mt-4 text-xs">Atau <Link href="/" className="hover:underline">Kembali ke Beranda</Link></p>
+          <p className="mt-4 text-xs">Atau <Link href="/" className="hover:underline text-stone-400">Kembali ke Beranda</Link></p>
         </div>
 
       </div>
     </div>
   );
 }
-
