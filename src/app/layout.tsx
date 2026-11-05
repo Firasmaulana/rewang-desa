@@ -26,6 +26,14 @@ const mistrully = localFont({
 export const metadata: Metadata = {
   title: "Rewang Desa - Dari Tangan Desa",
   description: "Menghubungkan hasil bumi, produk lokal, dan cerita dari desa langsung ke tangan Anda.",
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({
