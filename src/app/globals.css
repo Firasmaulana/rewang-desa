@@ -1,9 +1,17 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Mistrully';
+  src: url('/fonts/Mistrully.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --font-heading: var(--font-heading), "Tenor Sans", Georgia, serif;
   --font-body: var(--font-body), "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mistrully: var(--font-mistrully), "Brush Script MT", cursive;
+  --font-mistrully: 'Mistrully', var(--font-mistrully, 'Mistrully'), cursive;
 
   --color-brand-espresso: #33241b;
   --color-brand-terracotta: #8a5225;
@@ -43,5 +51,5 @@
 }
 
 .font-mistrully {
-  font-family: var(--font-mistrully), "Brush Script MT", cursive;
+  font-family: 'Mistrully', var(--font-mistrully, 'Mistrully'), cursive;
 }
