@@ -8,6 +8,9 @@ export async function updateBanner(formData: FormData): Promise<{ success: boole
   const title = formData.get('title') as string;
   const description = formData.get('description') as string;
   const buttonText = formData.get('buttonText') as string;
+  const buttonLink = (formData.get('buttonLink') as string) || '/shop';
+  const imageText = (formData.get('imageText') as string) || '📦';
+  const isActive = formData.get('isActive') === 'on' || formData.get('isActive') === 'true';
 
   const supabase = await createClientServer();
   if (!supabase) {
@@ -22,6 +25,9 @@ export async function updateBanner(formData: FormData): Promise<{ success: boole
       title,
       description,
       button_text: buttonText,
+      button_link: buttonLink,
+      image_text: imageText,
+      is_active: isActive,
       updated_at: new Date().toISOString(),
     }, { onConflict: 'id' });
 

@@ -37,6 +37,14 @@ export default function RealtimeBanner({ initialBanner }: { initialBanner: Datab
 
   if (!banner.is_active) return null;
 
+  const isPhoto = Boolean(
+    banner.image_text &&
+    (banner.image_text.startsWith('http://') ||
+     banner.image_text.startsWith('https://') ||
+     banner.image_text.startsWith('/') ||
+     banner.image_text.startsWith('data:image/'))
+  );
+
   return (
     <section className="py-16 bg-[#fffaf5]">
       <div className="container mx-auto px-4">
@@ -64,13 +72,23 @@ export default function RealtimeBanner({ initialBanner }: { initialBanner: Datab
           </div>
           
           <div className="md:w-2/5 relative z-10 flex justify-center">
-            <div className="w-56 h-56 md:w-64 md:h-64 rounded-3xl bg-[#241913] border-2 border-[#8a5225] flex flex-col items-center justify-center p-6 text-center shadow-xl">
-              <span className="text-5xl mb-3">{banner.image_text}</span>
-              <span className="font-heading text-white text-lg font-bold">Paket Rewang Tani</span>
-              <span className="text-xs text-[#ffdd7d] mt-1 font-body">4 Kebutuhan Pokok Alami</span>
-              <span className="mt-3 text-[11px] bg-[#8a5225] text-white px-3 py-1 rounded-full font-body font-semibold">
-                Langsung dari Petani
-              </span>
+            <div className="w-56 h-56 md:w-64 md:h-64 rounded-3xl bg-[#241913] border-2 border-[#8a5225] flex flex-col items-center justify-center p-6 text-center shadow-xl overflow-hidden relative">
+              {isPhoto ? (
+                <img 
+                  src={banner.image_text} 
+                  alt={banner.title} 
+                  className="w-full h-full object-cover rounded-2xl" 
+                />
+              ) : (
+                <>
+                  <span className="text-5xl mb-3">{banner.image_text || '📦'}</span>
+                  <span className="font-heading text-white text-lg font-bold">Paket Rewang Tani</span>
+                  <span className="text-xs text-[#ffdd7d] mt-1 font-body">4 Kebutuhan Pokok Alami</span>
+                  <span className="mt-3 text-[11px] bg-[#8a5225] text-white px-3 py-1 rounded-full font-body font-semibold">
+                    Langsung dari Petani
+                  </span>
+                </>
+              )}
             </div>
           </div>
         </div>

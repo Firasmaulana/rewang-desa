@@ -3,6 +3,7 @@ import { products as fallbackProducts } from '@/data/products';
 import { Star, Truck, ShieldCheck, Check, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import AddToCartSection from '@/components/AddToCartSection';
+import ProductImage from '@/components/ProductImage';
 
 export default async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -38,9 +39,7 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
                     HEMAT
                   </span>
                 )}
-                <span className="text-stone-500 font-semibold text-lg md:text-2xl group-hover:scale-110 transition-transform duration-300">
-                  {product.image}
-                </span>
+                <ProductImage src={product.image} alt={product.name} />
               </div>
             </div>
 

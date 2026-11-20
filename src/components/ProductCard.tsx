@@ -4,6 +4,7 @@ import { Heart, Search, ShoppingCart, Star, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { Product } from '@/data/products';
 import { useCartStore } from '@/store/useCartStore';
+import ProductImage from './ProductImage';
 
 interface ProductCardProps {
   product: Product;
@@ -27,9 +28,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </span>
         )}
         
-        <span className="text-stone-500 font-medium text-sm md:text-base group-hover:scale-105 transition-transform duration-300">
-          {product.image}
-        </span>
+        <ProductImage src={product.image} alt={product.name} />
         
         {/* Overlay Actions */}
         <div className="absolute inset-0 bg-[#33241b]/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 z-10 backdrop-blur-[2px]">

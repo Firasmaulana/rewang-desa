@@ -1,17 +1,21 @@
 import { getProducts } from '@/lib/supabase/service';
-import { Plus } from 'lucide-react';
+import { Plus, Pencil } from 'lucide-react';
 import Link from 'next/link';
 import DeleteProductButton from '@/components/DeleteProductButton';
+import ProductImage from '@/components/ProductImage';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function AdminProducts() {
   const products = await getProducts();
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto font-body">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-heading text-[#33241b] mb-1">Manajemen Produk</h1>
-          <p className="text-stone-500 text-sm">Kelola katalog produk, harga, dan stok yang terhubung ke toko utama.</p>
+          <p className="text-stone-500 text-sm">Kelola katalog produk, foto, harga, dan stok yang terhubung ke toko utama.</p>
         </div>
         <Link 
           href="/admin/products/new" 
@@ -37,8 +41,8 @@ export default async function AdminProducts() {
               {products.map((product) => (
                 <tr key={product.id} className="hover:bg-[#fffaf5]/50 transition">
                   <td className="p-4 flex items-center gap-3">
-                    <div className="w-12 h-12 bg-[#fffaf5] border border-[#33241b]/10 rounded-xl flex items-center justify-center shrink-0 text-base">
-                      <span>{product.image}</span>
+                    <div className="w-12 h-12 bg-[#fffaf5] border border-[#33241b]/10 rounded-xl overflow-hidden flex items-center justify-center shrink-0">
+                      <ProductImage src={product.image} alt={product.name} />
                     </div>
                     <div>
                       <p className="font-semibold text-[#33241b] line-clamp-1">{product.name}</p>
@@ -55,7 +59,14 @@ export default async function AdminProducts() {
                     </span>
                   </td>
                   <td className="p-4 text-right">
-                    <div className="flex justify-end gap-1">
+                    <div className="flex justify-end items-center gap-1">
+                      <Link 
+                        href={`/admin/products/${product.id}/edit`}
+                        className="p-2 text-stone-600 hover:text-[#8a5225] hover:bg-[#8a5225]/10 rounded-lg transition"
+                        title="Edit Produk"
+                      >
+                        <Pencil size={17} />
+                      </Link>
                       <DeleteProductButton productId={product.id} productName={product.name} />
                     </div>
                   </td>
