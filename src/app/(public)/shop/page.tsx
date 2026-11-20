@@ -1,6 +1,9 @@
 import ProductCard from '@/components/ProductCard';
 import { getProducts } from '@/lib/supabase/service';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata = {
   title: 'Katalog Produk - Rewang Desa',
   description: 'Daftar produk alami dan kerajinan tangan dari desa binaan Rewang Desa.',

@@ -104,3 +104,25 @@ values (
   true
 )
 on conflict (id) do nothing;
+
+
+-- 8. Aktifkan Supabase Realtime agar perubahan instan tanpa refresh
+alter table public.banners replica identity full;
+alter table public.products replica identity full;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables 
+    where pubname = 'supabase_realtime' and tablename = 'banners'
+  ) then
+    alter publication supabase_realtime add table public.banners;
+  end if;
+
+  if not exists (
+    select 1 from pg_publication_tables 
+    where pubname = 'supabase_realtime' and tablename = 'products'
+  ) then
+    alter publication supabase_realtime add table public.products;
+  end if;
+end $$;
