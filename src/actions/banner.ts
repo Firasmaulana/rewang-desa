@@ -13,7 +13,7 @@ export async function updateBanner(formData: FormData): Promise<void> {
   const supabase = await createClientServer();
   if (!supabase) {
     console.warn('Supabase belum dikonfigurasi');
-    redirect('/admin/banner?error=Supabase%20belum%20dikonfigurasi%20di%20.env.local');
+    redirect('/admin/banner?error=Supabase%20belum%20dikonfigurasi%20di%20Environment%20Variables%20Vercel%20atau%20.env.local');
   }
 
   const { error } = await supabase

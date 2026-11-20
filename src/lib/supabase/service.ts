@@ -1,5 +1,4 @@
 import { createClientServer } from './server';
-import { isSupabaseConfigured } from './client';
 import { products as fallbackProducts, Product } from '@/data/products';
 import { DatabaseProduct, DatabaseBanner } from './types';
 
@@ -23,10 +22,6 @@ function mapDbProduct(row: DatabaseProduct): Product {
 
 // 1. Fetch All Products (with seamless fallback if Supabase not configured or on network error)
 export async function getProducts(): Promise<Product[]> {
-  if (!isSupabaseConfigured) {
-    return fallbackProducts;
-  }
-
   try {
     const supabase = await createClientServer();
     if (!supabase) return fallbackProducts;
@@ -49,10 +44,6 @@ export async function getProducts(): Promise<Product[]> {
 
 // 2. Fetch Single Product
 export async function getProductById(id: string): Promise<Product | undefined> {
-  if (!isSupabaseConfigured) {
-    return fallbackProducts.find((p) => p.id === id);
-  }
-
   try {
     const supabase = await createClientServer();
     if (!supabase) return fallbackProducts.find((p) => p.id === id);
@@ -86,10 +77,6 @@ export async function getBanner(): Promise<DatabaseBanner> {
     image_text: '📦',
     is_active: true,
   };
-
-  if (!isSupabaseConfigured) {
-    return fallbackBanner;
-  }
 
   try {
     const supabase = await createClientServer();
