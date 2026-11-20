@@ -1,12 +1,13 @@
 import ProductCard from '@/components/ProductCard';
-import { products } from '@/data/products';
+import { getProducts } from '@/lib/supabase/service';
 
 export const metadata = {
   title: 'Katalog Produk - Rewang Desa',
   description: 'Daftar produk alami dan kerajinan tangan dari desa binaan Rewang Desa.',
 };
 
-export default function Shop() {
+export default async function Shop() {
+  const products = await getProducts();
   const categories = [
     'Semua',
     'Bahan Pokok & Bumbu',

@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, Package, Image as ImageIcon, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, Image as ImageIcon, Settings, LogOut, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { logout } from '@/actions/auth';
 import Logo from '@/components/Logo';
@@ -31,6 +31,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-3 rounded-xl text-stone-300 hover:bg-[#8a5225]/20 hover:text-white transition text-sm">
             <Settings size={18} /> Pengaturan
           </Link>
+
+          <div className="pt-4 mt-4 border-t border-[#8a5225]/20">
+            <Link 
+              href="/" 
+              className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-[#ffdd7d] bg-[#8a5225]/15 hover:bg-[#8a5225]/30 transition text-xs font-semibold border border-[#8a5225]/30"
+            >
+              <Globe size={16} /> Kunjungi Halaman Utama
+            </Link>
+          </div>
         </nav>
         
         <div className="p-4 border-t border-[#8a5225]/20">
@@ -48,11 +57,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         
         {/* Topbar */}
         <header className="bg-white shadow-sm border-b border-[#33241b]/10 h-16 shrink-0 flex items-center justify-between px-6 z-10">
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center gap-2">
             <Logo size="sm" showTagline={false} />
           </div>
           <div className="flex-1 hidden md:block"></div>
           <div className="flex items-center gap-4">
+            <Link 
+              href="/" 
+              className="hidden sm:inline-flex items-center gap-1.5 text-xs text-[#8a5225] hover:text-[#33241b] font-semibold bg-[#fffaf5] border border-[#8a5225]/25 px-3 py-1.5 rounded-full transition shadow-sm"
+            >
+              <Globe size={14} /> Lihat Toko
+            </Link>
             <span className="text-xs md:text-sm font-medium text-[#33241b]">Halo, Admin Desa</span>
             <div className="w-9 h-9 bg-[#8a5225]/15 rounded-full border border-[#8a5225]/30 flex items-center justify-center text-[#8a5225] font-bold text-xs">
               AD

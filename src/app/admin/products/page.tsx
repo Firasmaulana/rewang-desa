@@ -1,25 +1,31 @@
-import { products } from '@/data/products';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { getProducts } from '@/lib/supabase/service';
+import { Plus } from 'lucide-react';
 import Link from 'next/link';
+import DeleteProductButton from '@/components/DeleteProductButton';
 
-export default function AdminProducts() {
+export default async function AdminProducts() {
+  const products = await getProducts();
+
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-extrabold text-stone-900 mb-2">Manajemen Produk</h1>
-          <p className="text-stone-500">Atur katalog produk, stok, dan harga.</p>
+          <h1 className="text-3xl font-heading text-[#33241b] mb-1">Manajemen Produk</h1>
+          <p className="text-stone-500 text-sm">Kelola katalog produk, harga, dan stok yang terhubung ke toko utama.</p>
         </div>
-        <Link href="/admin/products/new" className="bg-amber-800 text-white font-bold py-2 px-4 rounded-lg hover:bg-amber-900 transition flex items-center gap-2">
-          <Plus size={20} /> Tambah Produk
+        <Link 
+          href="/admin/products/new" 
+          className="bg-[#8a5225] text-white font-semibold py-2.5 px-5 rounded-xl hover:bg-[#733f1b] transition flex items-center gap-2 shadow-sm text-sm"
+        >
+          <Plus size={18} /> Tambah Produk Baru
         </Link>
       </div>
       
-      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-[#33241b]/10 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-stone-50 border-b border-stone-200 text-stone-500 text-sm uppercase tracking-wider">
+              <tr className="bg-[#fffaf5] border-b border-[#33241b]/10 text-stone-500 text-xs uppercase tracking-wider font-body">
                 <th className="p-4 font-bold">Produk</th>
                 <th className="p-4 font-bold">Kategori</th>
                 <th className="p-4 font-bold">Harga</th>
@@ -27,30 +33,30 @@ export default function AdminProducts() {
                 <th className="p-4 font-bold text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-stone-100 font-body text-sm">
               {products.map((product) => (
-                <tr key={product.id} className="hover:bg-stone-50 transition">
-                  <td className="p-4 flex items-center gap-4">
-                    <div className="w-12 h-12 bg-stone-100 rounded-lg flex items-center justify-center shrink-0">
-                      <span className="text-xs text-stone-400">Img</span>
+                <tr key={product.id} className="hover:bg-[#fffaf5]/50 transition">
+                  <td className="p-4 flex items-center gap-3">
+                    <div className="w-12 h-12 bg-[#fffaf5] border border-[#33241b]/10 rounded-xl flex items-center justify-center shrink-0 text-base">
+                      <span>{product.image}</span>
                     </div>
                     <div>
-                      <p className="font-bold text-stone-800 line-clamp-1">{product.name}</p>
+                      <p className="font-semibold text-[#33241b] line-clamp-1">{product.name}</p>
+                      {product.origin && (
+                        <p className="text-xs text-stone-400">{product.origin}</p>
+                      )}
                     </div>
                   </td>
-                  <td className="p-4 text-stone-600">{product.category}</td>
-                  <td className="p-4 font-bold text-stone-800">Rp {product.price.toLocaleString('id-ID')}</td>
+                  <td className="p-4 text-stone-600 text-xs font-semibold uppercase">{product.category}</td>
+                  <td className="p-4 font-bold text-[#33241b]">Rp {product.price.toLocaleString('id-ID')}</td>
                   <td className="p-4">
-                    <span className="px-3 py-1 bg-lime-100 text-lime-700 font-bold rounded-full text-sm">45</span>
+                    <span className="px-3 py-1 bg-[#5a8514]/10 text-[#5a8514] font-bold rounded-full text-xs">
+                      {product.stock ?? 50}
+                    </span>
                   </td>
                   <td className="p-4 text-right">
-                    <div className="flex justify-end gap-2">
-                      <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Edit">
-                        <Edit size={18} />
-                      </button>
-                      <button className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Hapus">
-                        <Trash2 size={18} />
-                      </button>
+                    <div className="flex justify-end gap-1">
+                      <DeleteProductButton productId={product.id} productName={product.name} />
                     </div>
                   </td>
                 </tr>
@@ -62,4 +68,3 @@ export default function AdminProducts() {
     </div>
   );
 }
-

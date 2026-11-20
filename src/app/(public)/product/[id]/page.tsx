@@ -1,11 +1,13 @@
-import { products } from '@/data/products';
+import { getProductById } from '@/lib/supabase/service';
+import { products as fallbackProducts } from '@/data/products';
 import { Star, Truck, ShieldCheck, Check, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import AddToCartSection from '@/components/AddToCartSection';
 
 export default async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const product = products.find(p => p.id === id) || products[0];
+  const fetchedProduct = await getProductById(id);
+  const product = fetchedProduct || fallbackProducts[0];
 
   return (
     <div className="bg-[#fffaf5] py-12">

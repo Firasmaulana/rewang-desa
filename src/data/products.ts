@@ -10,6 +10,7 @@ export interface Product {
   description: string;
   origin?: string;
   badge?: string;
+  stock?: number;
 }
 
 export const products: Product[] = [
