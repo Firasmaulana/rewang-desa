@@ -1,8 +1,13 @@
 import { getBanner } from '@/lib/supabase/service';
 import { updateBanner } from '@/actions/banner';
-import { Save } from 'lucide-react';
+import { Save, CheckCircle2, AlertCircle } from 'lucide-react';
 
-export default async function AdminBanner() {
+export default async function AdminBanner({
+  searchParams,
+}: {
+  searchParams?: Promise<{ success?: string; error?: string }>;
+}) {
+  const resolvedParams = searchParams ? await searchParams : {};
   const banner = await getBanner();
 
   return (
@@ -11,6 +16,23 @@ export default async function AdminBanner() {
         <h1 className="text-3xl font-heading text-[#33241b] mb-1">Banner Promo Beranda</h1>
         <p className="text-stone-500 text-sm">Sesuaikan pesan kampanye dukungan petani yang tampil di halaman depan website.</p>
       </div>
+
+      {resolvedParams.success && (
+        <div className="mb-6 p-4 bg-[#5a8514]/15 border border-[#5a8514]/30 rounded-2xl flex items-center gap-3 text-[#5a8514] font-medium text-sm animate-fade-in">
+          <CheckCircle2 size={20} className="shrink-0" />
+          <span>Perubahan banner berhasil disimpan ke Supabase dan langsung tampil di halaman depan!</span>
+        </div>
+      )}
+
+      {resolvedParams.error && (
+        <div className="mb-6 p-4 bg-rose-50 border border-rose-200 rounded-2xl flex items-start gap-3 text-rose-700 font-medium text-sm">
+          <AlertCircle size={20} className="shrink-0 mt-0.5" />
+          <div>
+            <p className="font-bold">Gagal menyimpan banner:</p>
+            <p className="text-xs text-rose-600 mt-1">{resolvedParams.error}</p>
+          </div>
+        </div>
+      )}
 
       <div className="bg-white rounded-3xl border border-[#33241b]/10 shadow-sm p-6 md:p-8">
         
@@ -47,6 +69,7 @@ export default async function AdminBanner() {
                 type="text" 
                 name="tagline" 
                 defaultValue={banner.tagline} 
+                required
                 className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#8a5225] bg-[#fffaf5]" 
               />
             </div>
@@ -56,6 +79,7 @@ export default async function AdminBanner() {
                 type="text" 
                 name="buttonText" 
                 defaultValue={banner.button_text} 
+                required
                 className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#8a5225] bg-[#fffaf5]" 
               />
             </div>
@@ -67,6 +91,7 @@ export default async function AdminBanner() {
               type="text" 
               name="title" 
               defaultValue={banner.title} 
+              required
               className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#8a5225] bg-[#fffaf5]" 
             />
           </div>
@@ -77,6 +102,7 @@ export default async function AdminBanner() {
               name="description" 
               rows={3} 
               defaultValue={banner.description} 
+              required
               className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#8a5225] bg-[#fffaf5] resize-none"
             ></textarea>
           </div>
@@ -84,7 +110,7 @@ export default async function AdminBanner() {
           <div className="pt-4 border-t border-stone-100 flex justify-end">
             <button 
               type="submit" 
-              className="bg-[#8a5225] text-white font-semibold py-2.5 px-6 rounded-xl hover:bg-[#733f1b] transition flex items-center gap-2 shadow-sm text-sm"
+              className="bg-[#8a5225] text-white font-semibold py-2.5 px-6 rounded-xl hover:bg-[#733f1b] transition flex items-center gap-2 shadow-sm text-sm cursor-pointer"
             >
               <Save size={18} /> Simpan Perubahan Banner
             </button>

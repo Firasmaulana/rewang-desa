@@ -1,11 +1,11 @@
 -- ==============================================================
--- REWANG DESA - SUPABASE DATABASE SCHEMA & INITIAL SEED
+-- REWANG DESA - SUPABASE DATABASE SCHEMA, POLICIES & SEED
 -- ==============================================================
 
--- 1. Enable UUID Extension
+-- 1. Aktifkan Ekstensi UUID
 create extension if not exists "uuid-ossp";
 
--- 2. Products Table
+-- 2. Tabel Produk (Products)
 create table if not exists public.products (
   id text primary key,
   name text not null,
@@ -23,28 +23,7 @@ create table if not exists public.products (
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- Enable RLS for products
-alter table public.products enable row level security;
-
--- Policy: Everyone can read products
-create policy "Allow public read-only access on products"
-  on public.products for select
-  using (true);
-
--- Policy: Allow all mutations for now (or restrict to service role / authenticated users)
-create policy "Allow authenticated/admin insert on products"
-  on public.products for insert
-  with check (true);
-
-create policy "Allow authenticated/admin update on products"
-  on public.products for update
-  using (true);
-
-create policy "Allow authenticated/admin delete on products"
-  on public.products for delete
-  using (true);
-
--- 3. Banners Table (Spesial Bulan Ini)
+-- 3. Tabel Banner Promo (Banners)
 create table if not exists public.banners (
   id text primary key default 'main-banner',
   tagline text default '🌿 Program Dukung Petani',
@@ -57,17 +36,45 @@ create table if not exists public.banners (
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+-- 4. PENTING: Berikan Izin Akses Tabel ke Anon & Authenticated Role
+-- (Mencegah error '42501 permission denied for table')
+grant usage on schema public to anon, authenticated, service_role;
+grant all on table public.products to anon, authenticated, service_role;
+grant all on table public.banners to anon, authenticated, service_role;
+grant all on all sequences in schema public to anon, authenticated, service_role;
+grant all on all routines in schema public to anon, authenticated, service_role;
+
+-- 5. Row Level Security (RLS)
+alter table public.products enable row level security;
 alter table public.banners enable row level security;
 
-create policy "Allow public read on banners"
-  on public.banners for select
-  using (true);
+-- Hapus policy lama jika ada untuk mencegah bentrok
+drop policy if exists "Allow public read-only access on products" on public.products;
+drop policy if exists "Allow authenticated/admin insert on products" on public.products;
+drop policy if exists "Allow authenticated/admin update on products" on public.products;
+drop policy if exists "Allow authenticated/admin delete on products" on public.products;
+drop policy if exists "Allow public all on products" on public.products;
 
-create policy "Allow update on banners"
-  on public.banners for update
-  using (true);
+create policy "Allow public all on products"
+  on public.products
+  for all
+  to anon, authenticated, service_role
+  using (true)
+  with check (true);
 
--- 4. Initial Seed for Products
+drop policy if exists "Allow public read on banners" on public.banners;
+drop policy if exists "Allow update on banners" on public.banners;
+drop policy if exists "Allow insert on banners" on public.banners;
+drop policy if exists "Allow public all on banners" on public.banners;
+
+create policy "Allow public all on banners"
+  on public.banners
+  for all
+  to anon, authenticated, service_role
+  using (true)
+  with check (true);
+
+-- 6. Seed Data Awal Produk Rewang Desa
 insert into public.products (id, name, category, price, original_price, rating, image, is_discounted, badge, origin, description, stock)
 values
   ('1', 'Beras Merah Sukabumi', 'Bahan Pokok & Bumbu', 38000, 45000, 4.9, '🌾 Beras Merah', true, 'BEST SELLER', 'Desa Jampang, Sukabumi', 'Beras dari petani di Desa Jampang, Sukabumi. Indeks glikemik: 42.3. Sangat cocok sebagai alternatif beras sehat untuk Sahabat Rewang yang menjaga kadar gula darah.', 45),
@@ -84,7 +91,7 @@ values
   ('12', 'Tas Anyam Basic Banyumas', 'Kerajinan Rumah', 45000, null, 4.7, '🧺 Tas Anyam', false, null, 'Banyumas, Jawa Tengah', 'Tas anyaman tangan dari pengrajin Banyumas. Kuat, tahan air, elegan untuk belanja pasar maupun aktivitas harian ramah lingkungan.', 15)
 on conflict (id) do nothing;
 
--- 5. Initial Seed for Banner
+-- 7. Seed Data Awal Banner
 insert into public.banners (id, tagline, title, description, button_text, button_link, image_text, is_active)
 values (
   'main-banner',

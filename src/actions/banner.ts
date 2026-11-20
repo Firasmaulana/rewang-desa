@@ -2,6 +2,7 @@
 
 import { createClientServer } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 export async function updateBanner(formData: FormData): Promise<void> {
   const tagline = formData.get('tagline') as string;
@@ -12,7 +13,7 @@ export async function updateBanner(formData: FormData): Promise<void> {
   const supabase = await createClientServer();
   if (!supabase) {
     console.warn('Supabase belum dikonfigurasi');
-    return;
+    redirect('/admin/banner?error=Supabase%20belum%20dikonfigurasi%20di%20.env.local');
   }
 
   const { error } = await supabase
@@ -24,13 +25,14 @@ export async function updateBanner(formData: FormData): Promise<void> {
       description,
       button_text: buttonText,
       updated_at: new Date().toISOString(),
-    });
+    }, { onConflict: 'id' });
 
   if (error) {
     console.error('Error updating banner:', error);
-    return;
+    redirect(`/admin/banner?error=${encodeURIComponent(error.message)}`);
   }
 
   revalidatePath('/');
   revalidatePath('/admin/banner');
+  redirect('/admin/banner?success=true');
 }
