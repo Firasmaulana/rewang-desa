@@ -39,27 +39,36 @@ export default function Header({ user }: { user?: { name: string; role: string }
           </div>
 
           {/* Search Bar (Desktop) */}
-          <div className="hidden md:flex flex-1 max-w-xl mx-6 bg-white rounded-full border border-[#33241b]/15 overflow-hidden focus-within:ring-2 focus-within:ring-[#8a5225] focus-within:border-[#8a5225] transition-all shadow-sm">
-            <select className="bg-transparent border-none py-2.5 pl-4 pr-2 text-xs md:text-sm text-[#33241b] focus:outline-none border-r border-[#33241b]/10 cursor-pointer font-body">
-              <option>Semua Kategori</option>
-              <option>Bahan Pokok & Bumbu</option>
-              <option>Gula-gulaan</option>
-              <option>Kerupuk & Kletikan</option>
-              <option>Minuman & Herbal</option>
-              <option>Kerajinan Rumah</option>
+          <form 
+            action="/shop" 
+            method="GET"
+            className="hidden md:flex flex-1 max-w-xl mx-6 bg-white rounded-full border border-[#33241b]/15 overflow-hidden focus-within:ring-2 focus-within:ring-[#8a5225] focus-within:border-[#8a5225] transition-all shadow-sm"
+          >
+            <select 
+              name="category"
+              className="bg-transparent border-none py-2.5 pl-4 pr-2 text-xs md:text-sm text-[#33241b] focus:outline-none border-r border-[#33241b]/10 cursor-pointer font-body"
+            >
+              <option value="">Semua Kategori</option>
+              <option value="Bahan Pokok & Bumbu">Bahan Pokok & Bumbu</option>
+              <option value="Gula-gulaan">Gula-gulaan</option>
+              <option value="Kerupuk & Kletikan">Kerupuk & Kletikan</option>
+              <option value="Minuman & Herbal">Minuman & Herbal</option>
+              <option value="Kerajinan Rumah">Kerajinan Rumah</option>
             </select>
             <input 
               type="text" 
+              name="q"
               placeholder="Cari produk dari tangan desa..." 
               className="w-full bg-transparent border-none px-4 py-2.5 text-sm text-[#33241b] placeholder:text-[#8f6b50]/60 focus:outline-none font-body"
             />
             <button
+              type="submit"
               aria-label="Cari"
               className="px-5 text-[#8a5225] hover:text-[#33241b] hover:bg-[#ffdd7d]/20 transition-colors"
             >
               <Search size={19} />
             </button>
-          </div>
+          </form>
 
           {/* Right Action Icons */}
           <div className="flex items-center gap-3 md:gap-4 text-[#33241b]">
