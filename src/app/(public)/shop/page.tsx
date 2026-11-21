@@ -1,5 +1,6 @@
 import ProductCard from '@/components/ProductCard';
 import { getProducts } from '@/lib/supabase/service';
+import { Sparkles } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -90,7 +91,9 @@ export default async function Shop() {
 
               {/* Special Note */}
               <div className="mt-8 p-3.5 bg-[#fffaf5] rounded-xl border border-[#8a5225]/20 text-xs text-stone-600 font-body">
-                <p className="font-semibold text-[#8a5225] mb-1">💡 Tips Sahabat Rewang</p>
+                <p className="font-semibold text-[#8a5225] mb-1 flex items-center gap-1.5">
+                  <Sparkles size={14} /> Tips Sahabat Rewang
+                </p>
                 <p>Mau mix &amp; match untuk hampers atau bingkisan acara? Hubungi kami untuk custom paket sesuai kebutuhan.</p>
               </div>
             </div>

@@ -9,7 +9,7 @@ export async function updateBanner(formData: FormData): Promise<{ success: boole
   const description = formData.get('description') as string;
   const buttonText = formData.get('buttonText') as string;
   const buttonLink = (formData.get('buttonLink') as string) || '/shop';
-  const imageText = (formData.get('imageText') as string) || '📦';
+  const imageText = (formData.get('imageText') as string) || '/products/tas-anyam-banyumas-custom-hampers-2.webp';
   const isActive = formData.get('isActive') === 'on' || formData.get('isActive') === 'true';
 
   const supabase = await createClientServer();

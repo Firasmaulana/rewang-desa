@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { ShoppingCart, Heart } from 'lucide-react';
+import { ShoppingCart, Heart, Check } from 'lucide-react';
 import { Product } from '@/data/products';
 import { useCartStore } from '@/store/useCartStore';
 
@@ -49,7 +49,17 @@ export default function AddToCartSection({ product }: Props) {
         onClick={handleAdd}
         className="flex-1 bg-[#8a5225] text-[#fffaf5] font-semibold py-3 px-8 rounded-full hover:bg-[#733f1b] transition flex items-center justify-center gap-2 shadow-lg shadow-[#8a5225]/20"
       >
-        <ShoppingCart size={19} /> {isAdded ? 'Berhasil Ditambahkan! ✓' : 'Tambah ke Keranjang'}
+        {isAdded ? (
+          <>
+            <Check size={19} />
+            <span>Berhasil Ditambahkan!</span>
+          </>
+        ) : (
+          <>
+            <ShoppingCart size={19} />
+            <span>Tambah ke Keranjang</span>
+          </>
+        )}
       </button>
       
       <button 

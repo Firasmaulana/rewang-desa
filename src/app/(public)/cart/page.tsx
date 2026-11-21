@@ -1,6 +1,6 @@
 "use client";
 
-import { Trash2, ArrowRight } from 'lucide-react';
+import { Trash2, ArrowRight, ShoppingBag, PackageCheck } from 'lucide-react';
 import Link from 'next/link';
 import { useCartStore } from '@/store/useCartStore';
 
@@ -10,8 +10,8 @@ export default function Cart() {
   if (items.length === 0) {
     return (
       <div className="bg-[#fffaf5] py-24 min-h-[70vh] flex flex-col items-center justify-center font-body">
-        <div className="w-28 h-28 bg-[#f7f1ea] rounded-full flex items-center justify-center mb-6 text-4xl border border-[#8a5225]/20">
-          🛒
+        <div className="w-20 h-20 bg-[#f7f1ea] rounded-full flex items-center justify-center mb-6 text-[#8a5225] border border-[#8a5225]/20">
+          <ShoppingBag size={36} strokeWidth={1.5} />
         </div>
         <h2 className="text-2xl md:text-3xl font-heading text-[#33241b] mb-3">Keranjang Belanja Kosong</h2>
         <p className="text-stone-600 mb-8 text-center max-w-md text-sm leading-relaxed">
@@ -70,7 +70,11 @@ export default function Cart() {
                       <Trash2 size={19} />
                     </button>
                     <div className="w-16 h-16 bg-[#fffaf5] border border-[#33241b]/10 rounded-2xl flex items-center justify-center shrink-0 overflow-hidden text-sm">
-                      <span>{item.product.image}</span>
+                      {item.product.image && (item.product.image.startsWith('http') || item.product.image.startsWith('/')) ? (
+                        <img src={item.product.image} alt={item.product.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <PackageCheck size={24} className="text-[#8a5225]" />
+                      )}
                     </div>
                     <div>
                       <span className="text-[#854523] text-[10px] font-bold uppercase tracking-wider block">

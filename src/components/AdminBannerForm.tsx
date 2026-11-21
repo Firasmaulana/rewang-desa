@@ -11,7 +11,7 @@ export default function AdminBannerForm({ initialBanner }: { initialBanner: Data
   const [description, setDescription] = useState(initialBanner.description);
   const [buttonText, setButtonText] = useState(initialBanner.button_text);
   const [buttonLink, setButtonLink] = useState(initialBanner.button_link || '/product/11');
-  const [imageText, setImageText] = useState(initialBanner.image_text || '📦');
+  const [imageText, setImageText] = useState(initialBanner.image_text || '/products/tas-anyam-banyumas-custom-hampers-2.webp');
   const [isActive, setIsActive] = useState(initialBanner.is_active ?? true);
 
   const [isPending, startTransition] = useTransition();
@@ -94,14 +94,14 @@ export default function AdminBannerForm({ initialBanner }: { initialBanner: Data
           </div>
           
           <div className="md:w-2/5 relative z-10 flex justify-center">
-            <div className="w-36 h-36 rounded-2xl bg-[#241913] border border-[#8a5225] flex flex-col items-center justify-center p-3 text-center shadow-lg overflow-hidden">
+            <div className="w-36 h-36 rounded-2xl bg-[#241913] border border-[#8a5225] flex flex-col items-center justify-center p-2 text-center shadow-lg overflow-hidden">
                {isPhoto ? (
                  <img src={imageText} alt="Banner" className="w-full h-full object-cover rounded-xl" />
                ) : (
-                 <>
-                   <span className="text-4xl mb-1">{imageText || '📦'}</span>
-                   <span className="font-heading text-white text-xs font-bold">Paket Rewang</span>
-                 </>
+                 <div className="flex flex-col items-center justify-center text-[#ffdd7d]">
+                   <ImageIcon size={32} />
+                   <span className="font-heading text-white text-xs font-bold mt-2">Paket Rewang</span>
+                 </div>
                )}
             </div>
           </div>
@@ -205,7 +205,7 @@ export default function AdminBannerForm({ initialBanner }: { initialBanner: Data
 
           <div>
             <label className="block font-medium text-xs text-[#33241b] uppercase tracking-wider mb-2">
-              Gambar atau Emoji Banner
+              Gambar Banner
             </label>
             <div className="space-y-2">
               <input 
@@ -214,7 +214,7 @@ export default function AdminBannerForm({ initialBanner }: { initialBanner: Data
                 value={imageText}
                 onChange={(e) => setImageText(e.target.value)}
                 className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#8a5225] bg-[#fffaf5]" 
-                placeholder="📦 atau URL Foto https://..."
+                placeholder="/products/tas-anyam-banyumas-custom-hampers-2.webp atau https://..."
               />
               <div className="flex gap-2">
                 <label className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 border border-stone-200 rounded-lg text-xs text-stone-600 hover:bg-stone-50 cursor-pointer">
@@ -224,7 +224,7 @@ export default function AdminBannerForm({ initialBanner }: { initialBanner: Data
                 </label>
                 <button
                   type="button"
-                  onClick={() => setImageText('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80')}
+                  onClick={() => setImageText('/products/tas-anyam-banyumas-custom-hampers-2.webp')}
                   className="py-1.5 px-3 border border-stone-200 rounded-lg text-xs text-stone-600 hover:bg-stone-50 flex items-center gap-1"
                 >
                   <Sparkles size={13} className="text-[#8a5225]" /> Contoh Foto Sembako

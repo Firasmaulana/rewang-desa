@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, ShoppingCart, Heart, Menu } from 'lucide-react';
+import { Search, ShoppingCart, Heart, Menu, Leaf, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
 import { useCartStore } from '@/store/useCartStore';
 import { logout } from '@/actions/auth';
@@ -15,7 +15,9 @@ export default function Header({ user }: { user?: { name: string; role: string }
       {/* Top Announcement Bar */}
       <div className="bg-[#33241b] text-[#fffaf5] text-xs md:text-sm py-2 px-4 text-center font-body border-b border-[#8a5225]/20">
         <div className="container mx-auto flex items-center justify-center gap-2">
-          <span>🌿 Dari Tangan Desa ke Meja Anda</span>
+          <span className="inline-flex items-center gap-1.5">
+            <Leaf size={14} className="text-[#ffdd7d]" /> Dari Tangan Desa ke Meja Anda
+          </span>
           <span className="hidden sm:inline">•</span>
           <span className="hidden sm:inline">Gunakan kode <strong className="text-[#ffdd7d] tracking-wide font-bold">REWANG20</strong> untuk diskon 20% belanja perdana</span>
         </div>
@@ -71,8 +73,8 @@ export default function Header({ user }: { user?: { name: string; role: string }
                 </div>
                 {/* Dropdown */}
                 <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-[#33241b]/10 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right scale-95 group-hover:scale-100 p-2 z-50">
-                  <Link href="/admin" className="block w-full text-left px-3 py-2 text-xs font-semibold text-[#8a5225] hover:bg-[#fffaf5] rounded-lg transition">
-                    🛠️ Dasbor Admin
+                  <Link href="/admin" className="flex items-center gap-2 w-full text-left px-3 py-2 text-xs font-semibold text-[#8a5225] hover:bg-[#fffaf5] rounded-lg transition">
+                    <LayoutDashboard size={14} /> Dasbor Admin
                   </Link>
                   <button onClick={() => logout()} className="block w-full text-left px-3 py-2 text-xs text-[#c82929] hover:bg-rose-50 rounded-lg transition">
                     Keluar Admin

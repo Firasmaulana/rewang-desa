@@ -11,7 +11,7 @@ function mapDbProduct(row: DatabaseProduct): Product {
     price: Number(row.price),
     originalPrice: row.original_price ? Number(row.original_price) : undefined,
     rating: Number(row.rating) || 5.0,
-    image: row.image || '🌾',
+    image: row.image || '/products/beras-jampang-putih.webp',
     isDiscounted: Boolean(row.is_discounted),
     badge: row.badge || undefined,
     origin: row.origin || undefined,
@@ -69,12 +69,12 @@ export async function getProductById(id: string): Promise<Product | undefined> {
 export async function getBanner(): Promise<DatabaseBanner> {
   const fallbackBanner: DatabaseBanner = {
     id: 'main-banner',
-    tagline: '🌿 Program Dukung Petani',
+    tagline: 'Program Dukung Petani',
     title: 'Paket Rewang Tani Bulanan',
     description: 'Bantu petani dengan langganan paket ini tiap bulan! Berisi 2 kg Beras Merah Sukabumi, 1 btl Kecap Kelapa, 1 btl Garam Jono, dan 1 pack Gula Kelapa murni.',
-    button_text: 'Langganan Paket Tani (Rp 110.000)',
+    button_text: 'Langganan Paket Tani',
     button_link: '/product/11',
-    image_text: '📦',
+    image_text: '/products/tas-anyam-banyumas-custom-hampers-2.webp',
     is_active: true,
   };
 

@@ -1,4 +1,4 @@
-import { ArrowRight, ShieldCheck, HeartHandshake, Sparkles, PackageCheck } from 'lucide-react';
+import { ArrowRight, ShieldCheck, HeartHandshake, Sparkles, PackageCheck, Sprout, Wheat } from 'lucide-react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import Logo from '@/components/Logo';
@@ -18,10 +18,26 @@ export default async function Home() {
   const featuredProducts = products.slice(0, 4);
 
   const categories = [
-    { name: 'Bahan Pokok & Bumbu', desc: 'Beras Jampang, Garam Jono, Kecap Kelapa', icon: '🌾' },
-    { name: 'Gula-gulaan', desc: 'Gula Singkong Manes, Gula Aren & Kelapa', icon: '🍯' },
-    { name: 'Kerupuk & Kletikan', desc: 'Kerupuk Pak Kamto, Keripik Tempe, Renggining', icon: '🥨' },
-    { name: 'Minuman & Herbal', desc: 'Kalehon Drink Honje, Madu Randu Blitar', icon: '🍹' },
+    { 
+      name: 'Bahan Pokok & Bumbu', 
+      desc: 'Beras Jampang, Garam Jono, Kecap Kelapa', 
+      image: '/products/beras-jampang-putih.webp' 
+    },
+    { 
+      name: 'Gula-gulaan', 
+      desc: 'Gula Singkong Manes, Gula Aren & Kelapa', 
+      image: '/products/gula-aren-bulat.webp' 
+    },
+    { 
+      name: 'Kerupuk & Kletikan', 
+      desc: 'Kerupuk Pak Kamto, Keripik Tempe, Renggining', 
+      image: '/products/keripik-tempe-2.webp' 
+    },
+    { 
+      name: 'Minuman & Herbal', 
+      desc: 'Kalehon Drink Honje, Madu Randu Blitar', 
+      image: '/products/kalehon.webp' 
+    },
   ];
 
   return (
@@ -90,13 +106,15 @@ export default async function Home() {
                 <span className="text-[10px] font-bold tracking-widest text-[#8a5225] uppercase bg-[#8a5225]/10 px-2.5 py-1 rounded">
                   Edisi Katalog 2026
                 </span>
-                <span className="text-2xl">🌱</span>
+                <div className="w-8 h-8 rounded-full bg-[#5a8514]/15 text-[#5a8514] flex items-center justify-center">
+                  <Sprout size={16} />
+                </div>
               </div>
 
               {/* Center Emblem with Logo */}
               <div className="text-center py-6 my-auto">
-                <div className="w-24 h-24 rounded-full bg-[#8a5225]/10 mx-auto flex items-center justify-center mb-4 border border-[#8a5225]/30">
-                  <span className="text-4xl">🌾</span>
+                <div className="w-20 h-20 rounded-full bg-[#8a5225]/10 mx-auto flex items-center justify-center mb-4 border border-[#8a5225]/25 text-[#8a5225]">
+                  <Wheat size={36} strokeWidth={1.5} />
                 </div>
                 <Logo size="lg" />
                 <p className="font-heading text-sm text-[#8a5225] mt-2 italic">
@@ -105,9 +123,9 @@ export default async function Home() {
               </div>
 
               {/* Bottom Feature Pill */}
-              <div className="bg-white/90 backdrop-blur rounded-2xl p-3.5 border border-[#33241b]/10 shadow-sm flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#ffdd7d]/40 text-[#8a5225] flex items-center justify-center shrink-0 font-bold">
-                  ✨
+              <div className="bg-white/90 backdrop-blur rounded-2xl p-3 border border-[#33241b]/10 shadow-sm flex items-center gap-3">
+                <div className="w-11 h-11 rounded-xl overflow-hidden border border-[#8a5225]/20 shrink-0 shadow-sm bg-[#fffaf5]">
+                  <img src="/products/garam-jono.webp" alt="Garam Jono" className="w-full h-full object-cover" />
                 </div>
                 <div className="text-xs">
                   <p className="font-semibold text-[#33241b]">Garam Jono &amp; Beras Sukabumi</p>
@@ -183,8 +201,12 @@ export default async function Home() {
                 className="group bg-white p-6 rounded-2xl border border-[#33241b]/10 hover:border-[#8a5225] hover:shadow-lg hover:shadow-[#8a5225]/10 transition-all duration-300 text-left flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-14 h-14 rounded-2xl bg-[#f7f1ea] group-hover:bg-[#ffdd7d]/30 text-2xl flex items-center justify-center mb-4 transition-colors">
-                    {cat.icon}
+                  <div className="w-14 h-14 rounded-2xl overflow-hidden border border-[#33241b]/10 mb-4 group-hover:border-[#8a5225]/50 group-hover:shadow-md transition-all shadow-sm bg-[#f7f1ea]">
+                    <img 
+                      src={cat.image} 
+                      alt={cat.name} 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
+                    />
                   </div>
                   <h3 className="font-heading font-bold text-lg text-[#33241b] group-hover:text-[#8a5225] transition mb-2">
                     {cat.name}

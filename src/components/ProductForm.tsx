@@ -13,18 +13,18 @@ interface ProductFormProps {
 }
 
 const PRESET_IMAGES = [
-  { label: 'Beras Merah', url: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80', icon: '🌾' },
-  { label: 'Beras Hitam', url: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=800&q=80', icon: '🌾' },
-  { label: 'Garam Alami', url: 'https://images.unsplash.com/photo-1518110925495-5fe2fda0442c?auto=format&fit=crop&w=800&q=80', icon: '🧂' },
-  { label: 'Gula Aren & Kelapa', url: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80', icon: '🍯' },
-  { label: 'Keripik & Kletikan', url: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=800&q=80', icon: '🥨' },
-  { label: 'Minuman Herbal', url: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=800&q=80', icon: '🍹' },
-  { label: 'Tas & Kerajinan', url: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80', icon: '🧺' },
-  { label: 'Paket Sembako', url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80', icon: '📦' },
+  { label: 'Beras Merah', url: '/products/beras-jampang-merah.webp' },
+  { label: 'Beras Hitam', url: '/products/beras-jampang-hitam.webp' },
+  { label: 'Garam Jono', url: '/products/garam-jono.webp' },
+  { label: 'Gula Aren', url: '/products/gula-aren-bulat.webp' },
+  { label: 'Keripik Tempe', url: '/products/keripik-tempe-2.webp' },
+  { label: 'Minuman Honje', url: '/products/kalehon.webp' },
+  { label: 'Tas Anyam', url: '/products/tas-anyam-banyumas-custom-hampers-2.webp' },
+  { label: 'Gula Singkong', url: '/products/gula-singkong-cair-manes-2.webp' },
 ];
 
 export default function ProductForm({ initialProduct, mode }: ProductFormProps) {
-  const [imageValue, setImageValue] = useState(initialProduct?.image || '🌾 Produk Alami');
+  const [imageValue, setImageValue] = useState(initialProduct?.image || '/products/beras-jampang-putih.webp');
   const [nameValue, setNameValue] = useState(initialProduct?.name || '');
   const [priceValue, setPriceValue] = useState(initialProduct?.price ? String(initialProduct.price) : '');
   const [categoryValue, setCategoryValue] = useState(initialProduct?.category || 'Bahan Pokok & Bumbu');
@@ -183,7 +183,7 @@ export default function ProductForm({ initialProduct, mode }: ProductFormProps) 
                       onChange={(e) => setImageValue(e.target.value)}
                       required
                       className="w-full border border-stone-300 rounded-xl pl-8 pr-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#8a5225] bg-white font-mono" 
-                      placeholder="https://... atau 🌾 Beras Merah" 
+                      placeholder="/products/beras-jampang-merah.webp atau https://..." 
                     />
                     <LinkIcon size={14} className="absolute left-2.5 top-3 text-stone-400" />
                   </div>
@@ -221,7 +221,9 @@ export default function ProductForm({ initialProduct, mode }: ProductFormProps) 
                         imageValue === preset.url ? 'bg-[#8a5225] text-white font-bold' : 'hover:bg-stone-100 text-stone-700'
                       }`}
                     >
-                      <span className="text-sm">{preset.icon}</span>
+                      <div className="w-5 h-5 rounded-md overflow-hidden shrink-0 border border-stone-200 bg-[#fffaf5]">
+                        <img src={preset.url} alt={preset.label} className="w-full h-full object-cover" />
+                      </div>
                       <span className="truncate">{preset.label}</span>
                     </button>
                   ))}

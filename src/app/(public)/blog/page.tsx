@@ -13,7 +13,7 @@ const BLOG_POSTS = [
     excerpt: 'Bukan berasal dari air laut, melainkan dari air sumur panas alami di Desa Jono yang dijemur di atas bilah bambu "klakah" oleh para petani sepuh...',
     date: '12 Agustus 2026',
     author: 'Tim Rewang',
-    image: '🧂',
+    image: '/products/garam-jono.webp',
     category: 'Cerita Petani'
   },
   {
@@ -22,7 +22,7 @@ const BLOG_POSTS = [
     excerpt: 'Petani Desa Jampang Sukabumi merawat varietas padi lokal yang terbukti memiliki indeks glikemik rendah, sangat ideal sebagai pangan harian yang sehat...',
     date: '28 Juli 2026',
     author: 'Pangan Sehat',
-    image: '🌾',
+    image: '/products/beras-jampang-hitam.webp',
     category: 'Edukasi'
   },
   {
@@ -31,7 +31,7 @@ const BLOG_POSTS = [
     excerpt: 'Berangkat dari kepedulian terhadap harga singkong mentah yang anjlok, seorang guru desa menggerakkan kelompok tani memproduksi Gula Singkong Manes bernilai tinggi...',
     date: '15 Juli 2026',
     author: 'Inspirasi Desa',
-    image: '🍯',
+    image: '/products/gula-singkong-cair-manes-2.webp',
     category: 'Inspirasi'
   },
   {
@@ -40,7 +40,7 @@ const BLOG_POSTS = [
     excerpt: 'Di Gunungkidul, usaha kerupuk bawang rumahan Pak Kamto menjadi tumpuan bagi para lansia desa untuk tetap aktif, dihargai, dan mandiri secara ekonomi...',
     date: '02 Juli 2026',
     author: 'Tim Rewang',
-    image: '🥨',
+    image: '/products/kerupuk-tengiri.webp',
     category: 'Gotong Royong'
   }
 ];
@@ -69,8 +69,12 @@ export default function BlogPage() {
               className="bg-white rounded-3xl border border-[#33241b]/10 overflow-hidden hover:shadow-xl hover:shadow-[#8a5225]/10 hover:border-[#8a5225]/30 transition-all duration-300 flex flex-col justify-between group"
             >
               <div>
-                <div className="aspect-[16/9] bg-[#f7f1ea] flex items-center justify-center text-5xl group-hover:scale-105 transition-transform duration-300">
-                  {post.image}
+                <div className="aspect-[16/9] bg-[#f7f1ea] overflow-hidden">
+                  <img 
+                    src={post.image} 
+                    alt={post.title} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                  />
                 </div>
                 <div className="p-7">
                   <div className="flex items-center gap-3 text-xs text-stone-500 mb-3 font-body">

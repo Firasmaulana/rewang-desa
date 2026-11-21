@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { PackageCheck } from 'lucide-react';
 
 interface ProductImageProps {
   src: string;
@@ -32,14 +33,14 @@ export default function ProductImage({ src, alt, className = '' }: ProductImageP
     );
   }
 
-  // Fallback to text / emoji representation
+  // Fallback to minimal clean placeholder
   return (
-    <div className={`flex flex-col items-center justify-center p-3 text-center w-full h-full ${className}`}>
-      <span className="text-3xl md:text-4xl mb-1 transition-transform duration-300">
-        {src?.slice(0, 4) || '🌾'}
-      </span>
+    <div className={`flex flex-col items-center justify-center p-3 text-center w-full h-full bg-[#f7f1ea] text-[#8a5225] ${className}`}>
+      <div className="w-12 h-12 rounded-full bg-[#8a5225]/10 flex items-center justify-center mb-2">
+        <PackageCheck size={24} strokeWidth={1.5} />
+      </div>
       <span className="text-xs text-stone-600 font-medium line-clamp-1 max-w-[140px]">
-        {src?.replace(/^[^\w\s]+/, '').trim() || alt}
+        {alt}
       </span>
     </div>
   );
