@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, ShoppingCart, Heart, Menu, Leaf, LayoutDashboard } from 'lucide-react';
+import { Search, ShoppingCart, Heart, Menu, Leaf, LayoutDashboard, Truck } from 'lucide-react';
 import Link from 'next/link';
 import { useCartStore } from '@/store/useCartStore';
 import { logout } from '@/actions/auth';
@@ -123,6 +123,11 @@ export default function Header({ user }: { user?: { name: string; role: string }
               <li><Link href="/about" className="hover:text-[#8a5225] transition">Tentang Kami</Link></li>
               <li><Link href="/blog" className="hover:text-[#8a5225] transition">Artikel</Link></li>
               <li><Link href="/#kontak" className="hover:text-[#8a5225] transition">Kontak</Link></li>
+              <li>
+                <Link href="/pesanan" className="text-[#8a5225] font-bold hover:text-[#733f1b] transition inline-flex items-center gap-1.5">
+                  <Truck size={14} /> Lacak Pesanan
+                </Link>
+              </li>
             </ul>
           </div>
         </nav>

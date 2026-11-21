@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, Package, Image as ImageIcon, Settings, LogOut, Globe } from 'lucide-react';
+import { LayoutDashboard, Package, Image as ImageIcon, Settings, LogOut, Globe, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
 import { logout } from '@/actions/auth';
 import Logo from '@/components/Logo';
@@ -21,6 +21,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <nav className="flex-1 p-4 space-y-2">
           <Link href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#8a5225]/30 text-[#ffdd7d] font-semibold border border-[#8a5225]/40 transition text-sm">
             <LayoutDashboard size={18} /> Dasbor
+          </Link>
+          <Link href="/admin/orders" className="flex items-center gap-3 px-4 py-3 rounded-xl text-stone-300 hover:bg-[#8a5225]/20 hover:text-white transition text-sm">
+            <ShoppingBag size={18} /> Kelola Pesanan
           </Link>
           <Link href="/admin/products" className="flex items-center gap-3 px-4 py-3 rounded-xl text-stone-300 hover:bg-[#8a5225]/20 hover:text-white transition text-sm">
             <Package size={18} /> Kelola Produk

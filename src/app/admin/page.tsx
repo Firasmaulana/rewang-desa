@@ -1,10 +1,19 @@
-import { Package, ShoppingBag, Users, DollarSign } from 'lucide-react';
+import { Package, ShoppingBag, Users, DollarSign, Clock, ArrowRight } from 'lucide-react';
 import { getProducts } from '@/lib/supabase/service';
+import { getOrders } from '@/lib/supabase/orders';
 import Link from 'next/link';
 
 export default async function AdminDashboard() {
-  const products = await getProducts();
+  const [products, orders] = await Promise.all([
+    getProducts(),
+    getOrders(),
+  ]);
   const lowStockProducts = products.filter(p => (p.stock ?? 50) <= 25).slice(0, 4);
+  const pendingOrders = orders.filter(o => o.status === 'menunggu_konfirmasi');
+  const recentOrders = orders.slice(0, 4);
+  const totalRevenue = orders
+    .filter(o => o.status !== 'dibatalkan')
+    .reduce((acc, curr) => acc + curr.total, 0);
 
   return (
     <div className="max-w-6xl mx-auto font-body">
@@ -30,7 +39,9 @@ export default async function AdminDashboard() {
           </div>
           <div>
             <p className="text-xs font-bold text-stone-500 uppercase tracking-wider">Pendapatan</p>
-            <h3 className="text-2xl font-extrabold text-[#33241b]">Rp 14.8M</h3>
+            <h3 className="text-2xl font-extrabold text-[#33241b]">
+              Rp {totalRevenue.toLocaleString('id-ID')}
+            </h3>
           </div>
         </div>
 
@@ -40,7 +51,7 @@ export default async function AdminDashboard() {
           </div>
           <div>
             <p className="text-xs font-bold text-stone-500 uppercase tracking-wider">Pesanan</p>
-            <h3 className="text-2xl font-extrabold text-[#33241b]">168</h3>
+            <h3 className="text-2xl font-extrabold text-[#33241b]">{orders.length}</h3>
           </div>
         </div>
 
@@ -68,26 +79,45 @@ export default async function AdminDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="bg-white p-8 rounded-2xl border border-[#33241b]/10 shadow-sm">
-           <h3 className="text-base font-bold text-[#33241b] mb-6 font-heading">Pesanan Terbaru</h3>
+           <div className="flex justify-between items-center mb-6">
+             <div className="flex items-center gap-2">
+               <h3 className="text-base font-bold text-[#33241b] font-heading">Pesanan Terbaru</h3>
+               {pendingOrders.length > 0 && (
+                 <span className="bg-amber-100 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-300 animate-pulse">
+                   {pendingOrders.length} Butuh ACC
+                 </span>
+               )}
+             </div>
+             <Link href="/admin/orders" className="text-xs font-semibold text-[#8a5225] hover:underline flex items-center gap-1">
+               Lihat Semua <ArrowRight size={13} />
+             </Link>
+           </div>
+
            <div className="flex flex-col gap-4">
-             {[
-               { id: 'ORD-1082', customer: 'Budi Santoso', items: '2 item (Gula Aren + Beras Merah)', total: 'Rp 75.000', status: 'Selesai' },
-               { id: 'ORD-1081', customer: 'Siti Rahmawati', items: '1 item (Paket Rewang Tani)', total: 'Rp 110.000', status: 'Diproses' },
-               { id: 'ORD-1080', customer: 'Agus Setiawan', items: '3 item (Kecap Kelapa + Garam Jono)', total: 'Rp 64.000', status: 'Selesai' },
-             ].map(order => (
-               <div key={order.id} className="flex justify-between items-center pb-4 border-b border-stone-100 last:border-0 last:pb-0">
-                 <div>
-                   <p className="font-bold text-stone-800 text-sm">{order.id}</p>
-                   <p className="text-xs text-stone-500">{order.customer} - {order.items}</p>
+             {recentOrders.length === 0 ? (
+               <p className="text-xs text-stone-400 py-4 text-center">Belum ada pesanan.</p>
+             ) : (
+               recentOrders.map(order => (
+                 <div key={order.id} className="flex justify-between items-center pb-4 border-b border-stone-100 last:border-0 last:pb-0">
+                   <div>
+                     <p className="font-bold text-stone-800 text-sm">{order.id}</p>
+                     <p className="text-xs text-stone-500">{order.customer_name} • {order.items.length} produk</p>
+                   </div>
+                   <div className="text-right">
+                     <p className="font-bold text-[#8a5225] text-sm">Rp {order.total.toLocaleString('id-ID')}</p>
+                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                       order.status === 'selesai' 
+                         ? 'bg-[#5a8514]/10 text-[#5a8514]' 
+                         : order.status === 'menunggu_konfirmasi'
+                         ? 'bg-amber-100 text-amber-800 border border-amber-300'
+                         : 'bg-sky-100 text-sky-800'
+                     }`}>
+                       {order.status === 'menunggu_konfirmasi' ? 'Menunggu ACC' : order.status}
+                     </span>
+                   </div>
                  </div>
-                 <div className="text-right">
-                   <p className="font-bold text-[#8a5225] text-sm">{order.total}</p>
-                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                     order.status === 'Selesai' ? 'bg-[#5a8514]/10 text-[#5a8514]' : 'bg-amber-100 text-amber-800'
-                   }`}>{order.status}</span>
-                 </div>
-               </div>
-             ))}
+               ))
+             )}
            </div>
         </div>
         
