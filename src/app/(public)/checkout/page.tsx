@@ -61,27 +61,36 @@ export default function Checkout() {
     }));
 
     // 3. Save order to Supabase and set tracking cookie
-    try {
-      await submitOrder({
-        id: orderId,
-        customer_name: formData.name,
-        customer_phone: formData.phone,
-        customer_address: formData.address,
-        notes: formData.notes || null,
-        items: orderItems,
-        subtotal,
-        tax,
-        total,
-        status: 'menunggu_konfirmasi',
-      });
+    const orderPayload = {
+      id: orderId,
+      customer_name: formData.name,
+      customer_phone: formData.phone,
+      customer_address: formData.address,
+      notes: formData.notes || null,
+      items: orderItems,
+      subtotal,
+      tax,
+      total,
+      status: 'menunggu_konfirmasi' as const,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
 
-      // Also save to localStorage as extra browser redundancy
+    try {
+      await submitOrder(orderPayload);
+
+      // Save to localStorage as browser redundancy for instant testing
       try {
         const localOrders = JSON.parse(localStorage.getItem('rewang_customer_orders') || '[]');
         if (!localOrders.includes(orderId)) {
           localOrders.unshift(orderId);
           localStorage.setItem('rewang_customer_orders', JSON.stringify(localOrders.slice(0, 20)));
         }
+
+        const allOrders = JSON.parse(localStorage.getItem('rewang_all_orders') || '[]');
+        allOrders.unshift(orderPayload);
+        localStorage.setItem('rewang_all_orders', JSON.stringify(allOrders.slice(0, 50)));
+        window.dispatchEvent(new Event('rewang-order-update'));
       } catch (e) {}
 
     } catch (err) {

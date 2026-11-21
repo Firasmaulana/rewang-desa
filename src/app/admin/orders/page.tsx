@@ -1,4 +1,4 @@
-import { getOrders } from '@/lib/supabase/orders';
+import { getOrders, checkOrdersTableConfigured } from '@/lib/supabase/orders';
 import AdminOrdersClient from '@/components/AdminOrdersClient';
 
 export const dynamic = 'force-dynamic';
@@ -10,7 +10,10 @@ export const metadata = {
 };
 
 export default async function AdminOrdersPage() {
-  const orders = await getOrders();
+  const [orders, isTableConfigured] = await Promise.all([
+    getOrders(),
+    checkOrdersTableConfigured(),
+  ]);
 
-  return <AdminOrdersClient initialOrders={orders} />;
+  return <AdminOrdersClient initialOrders={orders} isTableConfigured={isTableConfigured} />;
 }

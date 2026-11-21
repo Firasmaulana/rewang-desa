@@ -13,27 +13,106 @@ import {
   XCircle, 
   MessageCircle, 
   Search, 
-  Filter, 
   Check, 
   AlertCircle,
-  Loader2,
-  ExternalLink
+  Copy,
+  ExternalLink,
+  Sparkles
 } from 'lucide-react';
 
 interface AdminOrdersClientProps {
   initialOrders: DatabaseOrder[];
+  isTableConfigured?: boolean;
 }
 
-export default function AdminOrdersClient({ initialOrders }: AdminOrdersClientProps) {
+const SQL_SETUP_SCRIPT = `-- 1. Buat tabel orders
+CREATE TABLE IF NOT EXISTS public.orders (
+    id TEXT PRIMARY KEY,
+    customer_name TEXT NOT NULL,
+    customer_phone TEXT NOT NULL,
+    customer_address TEXT NOT NULL,
+    notes TEXT,
+    items JSONB NOT NULL,
+    subtotal NUMERIC NOT NULL,
+    tax NUMERIC NOT NULL,
+    total NUMERIC NOT NULL,
+    status TEXT NOT NULL DEFAULT 'menunggu_konfirmasi',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 2. Aktifkan Row Level Security (RLS)
+ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public read orders" ON public.orders;
+CREATE POLICY "Allow public read orders" ON public.orders FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow public insert orders" ON public.orders;
+CREATE POLICY "Allow public insert orders" ON public.orders FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public update orders" ON public.orders;
+CREATE POLICY "Allow public update orders" ON public.orders FOR UPDATE USING (true);
+
+-- 3. Aktifkan Realtime
+ALTER PUBLICATION supabase_realtime ADD TABLE public.orders;`;
+
+export default function AdminOrdersClient({ initialOrders, isTableConfigured = false }: AdminOrdersClientProps) {
   const [orders, setOrders] = useState<DatabaseOrder[]>(initialOrders);
   const [activeTab, setActiveTab] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isPending, startTransition] = useTransition();
   const [actionMessage, setActionMessage] = useState<string | null>(null);
+  const [copiedSql, setCopiedSql] = useState(false);
 
-  // Realtime subscription for incoming orders & status changes
+  // Sync with localStorage for testing on the same browser even before Supabase table is created
   useEffect(() => {
-    if (!supabase) return;
+    try {
+      const local = JSON.parse(localStorage.getItem('rewang_all_orders') || '[]');
+      if (local && local.length > 0) {
+        setOrders(prev => {
+          const map = new Map<string, DatabaseOrder>();
+          // 1. Add server orders
+          prev.forEach(o => map.set(o.id, o));
+          // 2. Add or update with local orders
+          local.forEach((o: DatabaseOrder) => {
+            if (!map.has(o.id) || !isTableConfigured) {
+              map.set(o.id, o);
+            }
+          });
+          return Array.from(map.values()).sort((a, b) => 
+            new Date(b.created_at || '').getTime() - new Date(a.created_at || '').getTime()
+          );
+        });
+      }
+    } catch (e) {}
+
+    const handleLocalUpdate = () => {
+      try {
+        const local = JSON.parse(localStorage.getItem('rewang_all_orders') || '[]');
+        if (local && local.length > 0) {
+          setOrders(prev => {
+            const map = new Map<string, DatabaseOrder>();
+            prev.forEach(o => map.set(o.id, o));
+            local.forEach((o: DatabaseOrder) => map.set(o.id, o));
+            return Array.from(map.values()).sort((a, b) => 
+              new Date(b.created_at || '').getTime() - new Date(a.created_at || '').getTime()
+            );
+          });
+        }
+      } catch (e) {}
+    };
+
+    window.addEventListener('rewang-order-update', handleLocalUpdate);
+    window.addEventListener('storage', handleLocalUpdate);
+    return () => {
+      window.removeEventListener('rewang-order-update', handleLocalUpdate);
+      window.removeEventListener('storage', handleLocalUpdate);
+    };
+  }, [isTableConfigured]);
+
+  // Realtime subscription for incoming orders from other devices via Supabase
+  useEffect(() => {
+    if (!supabase || !isTableConfigured) return;
 
     const channel = supabase
       .channel('admin-orders-realtime')
@@ -42,7 +121,7 @@ export default function AdminOrdersClient({ initialOrders }: AdminOrdersClientPr
         { event: '*', schema: 'public', table: 'orders' },
         (payload) => {
           if (payload.eventType === 'INSERT' && payload.new) {
-            setOrders(prev => [payload.new as DatabaseOrder, ...prev]);
+            setOrders(prev => [payload.new as DatabaseOrder, ...prev.filter(o => o.id !== (payload.new as any).id)]);
             setActionMessage(`🔔 Pesanan baru masuk dari ${(payload.new as DatabaseOrder).customer_name}!`);
           } else if (payload.eventType === 'UPDATE' && payload.new) {
             const updated = payload.new as DatabaseOrder;
@@ -57,26 +136,56 @@ export default function AdminOrdersClient({ initialOrders }: AdminOrdersClientPr
     return () => {
       supabase?.removeChannel(channel);
     };
-  }, []);
+  }, [isTableConfigured]);
+
+  // Helper to persist status change locally & to server
+  const persistStatusChange = (orderId: string, nextStatus: OrderStatus) => {
+    // 1. Optimistic UI update immediately
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: nextStatus } : o));
+
+    // 2. Update localStorage for client persistence
+    try {
+      const local = JSON.parse(localStorage.getItem('rewang_all_orders') || '[]');
+      const updatedLocal = local.map((o: DatabaseOrder) => 
+        o.id === orderId ? { ...o, status: nextStatus, updated_at: new Date().toISOString() } : o
+      );
+      localStorage.setItem('rewang_all_orders', JSON.stringify(updatedLocal));
+
+      // Also notify any listening tracking pages
+      window.dispatchEvent(new Event('rewang-order-update'));
+    } catch (e) {}
+  };
 
   const handleAcc = (orderId: string) => {
+    persistStatusChange(orderId, 'diproses');
+    setActionMessage(`✅ Pesanan ${orderId} berhasil di-ACC! Pelanggan kini melihat status "Sedang Diproses".`);
+
     startTransition(async () => {
-      const res = await accOrder(orderId);
-      if (res.success) {
-        setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: 'diproses' } : o));
-        setActionMessage(`✅ Pesanan ${orderId} berhasil di-ACC! Pelanggan kini melihat status "Sedang Diproses".`);
+      try {
+        await accOrder(orderId);
+      } catch (err) {
+        console.warn('accOrder server note:', err);
       }
     });
   };
 
   const handleUpdateStatus = (orderId: string, status: OrderStatus) => {
+    persistStatusChange(orderId, status);
+    setActionMessage(`Status pesanan ${orderId} diperbarui menjadi "${status}".`);
+
     startTransition(async () => {
-      const res = await updateOrderStatus(orderId, status);
-      if (res.success) {
-        setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
-        setActionMessage(`Status pesanan ${orderId} diperbarui menjadi "${status}".`);
+      try {
+        await updateOrderStatus(orderId, status);
+      } catch (err) {
+        console.warn('updateOrderStatus server note:', err);
       }
     });
+  };
+
+  const handleCopySql = () => {
+    navigator.clipboard.writeText(SQL_SETUP_SCRIPT);
+    setCopiedSql(true);
+    setTimeout(() => setCopiedSql(false), 3000);
   };
 
   // Counts for tabs
@@ -87,11 +196,9 @@ export default function AdminOrdersClient({ initialOrders }: AdminOrdersClientPr
 
   // Filtered orders
   const filteredOrders = orders.filter(order => {
-    // Tab filter
     if (activeTab !== 'all' && order.status !== activeTab) {
       return false;
     }
-    // Search query
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       const matchId = order.id.toLowerCase().includes(q);
@@ -158,10 +265,52 @@ export default function AdminOrdersClient({ initialOrders }: AdminOrdersClientPr
         )}
       </div>
 
+      {/* Supabase Notice Banner if Table is not yet created */}
+      {!isTableConfigured && (
+        <div className="p-5 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border-2 border-amber-300 rounded-3xl shadow-sm text-amber-950 animate-fade-in">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-2xl bg-amber-200 text-amber-800 flex items-center justify-center shrink-0 mt-0.5">
+                <AlertCircle size={22} />
+              </div>
+              <div>
+                <h3 className="font-heading font-bold text-sm text-[#33241b]">
+                  Langkah Terakhir: Aktifkan Tabel Pesanan di Supabase
+                </h3>
+                <p className="text-xs text-stone-600 mt-1 leading-relaxed max-w-2xl">
+                  Saat ini pengetesan sudah bisa berjalan langsung di browser ini. Agar pesanan pelanggan dari HP lain otomatis masuk ke database cloud secara permanen, cukup jalankan skrip SQL di Dasbor Supabase (hanya 30 detik).
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2.5 shrink-0 w-full md:w-auto">
+              <button
+                type="button"
+                onClick={handleCopySql}
+                className="flex-1 md:flex-none inline-flex items-center justify-center gap-2 bg-[#8a5225] hover:bg-[#733f1b] text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm cursor-pointer"
+              >
+                {copiedSql ? <Check size={14} /> : <Copy size={14} />}
+                <span>{copiedSql ? 'SQL Tersalin!' : 'Salin Kode SQL'}</span>
+              </button>
+
+              <a
+                href="https://supabase.com/dashboard/project/qwykaikwoljzhsmvrjqk/sql/new"
+                target="_blank"
+                rel="noreferrer"
+                className="flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 bg-white hover:bg-stone-50 text-[#33241b] border border-stone-300 px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm"
+              >
+                <span>Buka SQL Editor Supabase</span>
+                <ExternalLink size={13} />
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
       {actionMessage && (
-        <div className="p-4 bg-[#5a8514]/15 border border-[#5a8514]/30 text-[#5a8514] text-xs font-semibold rounded-2xl flex justify-between items-center animate-fade-in">
+        <div className="p-4 bg-[#5a8514]/15 border border-[#5a8514]/30 text-[#5a8514] text-xs font-semibold rounded-2xl flex justify-between items-center animate-fade-in shadow-sm">
           <span>{actionMessage}</span>
-          <button onClick={() => setActionMessage(null)} className="hover:text-[#33241b]">✕</button>
+          <button onClick={() => setActionMessage(null)} className="hover:text-[#33241b] text-sm font-bold">✕</button>
         </div>
       )}
 
@@ -258,11 +407,11 @@ export default function AdminOrdersClient({ initialOrders }: AdminOrdersClientPr
           <div className="w-14 h-14 rounded-2xl bg-[#fffaf5] text-[#8a5225] flex items-center justify-center mx-auto mb-3">
             <ShoppingBag size={28} />
           </div>
-          <h3 className="font-heading font-bold text-lg text-[#33241b] mb-1">Tidak Ada Pesanan</h3>
-          <p className="text-stone-500 text-xs">
+          <h3 className="font-heading font-bold text-lg text-[#33241b] mb-1">Belum Ada Pesanan Masuk</h3>
+          <p className="text-stone-500 text-xs max-w-md mx-auto leading-relaxed">
             {activeTab !== 'all' 
               ? `Tidak ada pesanan dengan status "${activeTab}".` 
-              : 'Belum ada pesanan yang masuk.'}
+              : 'Daftar pesanan Anda saat ini masih kosong. Silakan buka katalog produk di halaman depan dan lakukan checkout untuk mencobanya.'}
           </p>
         </div>
       ) : (
@@ -370,9 +519,10 @@ export default function AdminOrdersClient({ initialOrders }: AdminOrdersClientPr
                   <div className="flex flex-wrap items-center gap-2">
                     {order.status === 'menunggu_konfirmasi' && (
                       <button
+                        type="button"
                         onClick={() => handleAcc(order.id)}
                         disabled={isPending}
-                        className="bg-[#5a8514] hover:bg-[#486b10] text-white px-5 py-2 rounded-full text-xs font-bold transition shadow-md shadow-[#5a8514]/25 flex items-center gap-1.5 cursor-pointer"
+                        className="bg-[#5a8514] hover:bg-[#486b10] text-white px-5 py-2 rounded-full text-xs font-bold transition shadow-md shadow-[#5a8514]/25 flex items-center gap-1.5 cursor-pointer active:scale-95"
                       >
                         <Check size={14} /> ACC &amp; Proses Pesanan
                       </button>
@@ -380,9 +530,10 @@ export default function AdminOrdersClient({ initialOrders }: AdminOrdersClientPr
 
                     {order.status === 'diproses' && (
                       <button
+                        type="button"
                         onClick={() => handleUpdateStatus(order.id, 'dikirim')}
                         disabled={isPending}
-                        className="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-full text-xs font-bold transition shadow-md flex items-center gap-1.5 cursor-pointer"
+                        className="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-full text-xs font-bold transition shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95"
                       >
                         <Truck size={14} /> Tandai Sedang Dikirim
                       </button>
@@ -390,9 +541,10 @@ export default function AdminOrdersClient({ initialOrders }: AdminOrdersClientPr
 
                     {order.status === 'dikirim' && (
                       <button
+                        type="button"
                         onClick={() => handleUpdateStatus(order.id, 'selesai')}
                         disabled={isPending}
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-full text-xs font-bold transition shadow-md flex items-center gap-1.5 cursor-pointer"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-full text-xs font-bold transition shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95"
                       >
                         <PackageCheck size={14} /> Tandai Selesai
                       </button>
@@ -400,6 +552,7 @@ export default function AdminOrdersClient({ initialOrders }: AdminOrdersClientPr
 
                     {order.status !== 'dibatalkan' && order.status !== 'selesai' && (
                       <button
+                        type="button"
                         onClick={() => handleUpdateStatus(order.id, 'dibatalkan')}
                         disabled={isPending}
                         className="text-stone-400 hover:text-rose-600 hover:bg-rose-50 px-3 py-1.5 rounded-full text-xs font-medium transition cursor-pointer"

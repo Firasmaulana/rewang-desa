@@ -34,23 +34,59 @@ export default function OrderTrackingClient({ initialOrders, searchedId }: Order
 
   // 1. Check localStorage if initial orders empty (dual redundancy with cookies)
   useEffect(() => {
-    if (orders.length === 0) {
+    try {
+      // First check full objects from local storage
+      const localAll = JSON.parse(localStorage.getItem('rewang_all_orders') || '[]');
+      const localCustomer = JSON.parse(localStorage.getItem('rewang_customer_orders') || '[]');
+
+      if (orders.length === 0 && localAll && localAll.length > 0) {
+        const myOrders = localAll.filter((o: DatabaseOrder) => 
+          searchedId ? o.id === searchedId : (localCustomer.includes(o.id) || localCustomer.length === 0)
+        );
+        if (myOrders.length > 0) {
+          setOrders(myOrders);
+          if (!selectedOrderId) setSelectedOrderId(myOrders[0].id);
+        }
+      }
+
+      if (orders.length === 0 && localCustomer && localCustomer.length > 0 && !searchedId) {
+        // fetch local order ids via API
+        fetch(`/api/orders?ids=${localCustomer.join(',')}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.orders && data.orders.length > 0) {
+              setOrders(data.orders);
+              if (!selectedOrderId) setSelectedOrderId(data.orders[0].id);
+            }
+          })
+          .catch(() => {});
+      }
+    } catch (e) {}
+
+    const handleLocalUpdate = () => {
       try {
-        const local = JSON.parse(localStorage.getItem('rewang_customer_orders') || '[]');
-        if (local && local.length > 0 && !searchedId) {
-          // fetch local order ids
-          fetch(`/api/orders?ids=${local.join(',')}`)
-            .then(res => res.json())
-            .then(data => {
-              if (data && data.orders && data.orders.length > 0) {
-                setOrders(data.orders);
-                if (!selectedOrderId) setSelectedOrderId(data.orders[0].id);
+        const localAll = JSON.parse(localStorage.getItem('rewang_all_orders') || '[]');
+        if (localAll && localAll.length > 0) {
+          setOrders(prev => {
+            const map = new Map<string, DatabaseOrder>();
+            prev.forEach(o => map.set(o.id, o));
+            localAll.forEach((o: DatabaseOrder) => {
+              if (map.has(o.id)) {
+                map.set(o.id, o);
               }
-            })
-            .catch(() => {});
+            });
+            return Array.from(map.values());
+          });
         }
       } catch (e) {}
-    }
+    };
+
+    window.addEventListener('rewang-order-update', handleLocalUpdate);
+    window.addEventListener('storage', handleLocalUpdate);
+    return () => {
+      window.removeEventListener('rewang-order-update', handleLocalUpdate);
+      window.removeEventListener('storage', handleLocalUpdate);
+    };
   }, [orders.length, searchedId, selectedOrderId]);
 
   // 2. Realtime listener: auto update when admin clicks ACC / change status!
