@@ -25,19 +25,19 @@ export default function Login() {
           <div className="w-12 h-12 bg-[#8a5225]/10 text-[#8a5225] rounded-full flex items-center justify-center mx-auto mb-3">
             <Lock size={22} />
           </div>
-          <h1 className="text-2xl md:text-3xl font-heading text-[#33241b] mb-1.5">Masuk Akun</h1>
-          <p className="text-stone-500 text-xs md:text-sm">Silakan login untuk mengakses dasbor pengelola Rewang Desa.</p>
+          <h1 className="text-2xl md:text-3xl font-heading text-[#33241b] mb-1.5">Masuk Dasbor Admin</h1>
+          <p className="text-stone-500 text-xs md:text-sm">Halaman akses khusus pengelola toko Rewang Desa.</p>
         </div>
 
         <form action={formAction} className="space-y-5">
           <div>
-            <label className="block font-medium text-xs text-[#33241b] uppercase tracking-wider mb-2">Username</label>
+            <label className="block font-medium text-xs text-[#33241b] uppercase tracking-wider mb-2">Username Admin</label>
             <input 
               type="text" 
               name="username"
               required
               className="w-full border border-stone-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#8a5225] bg-[#fffaf5]" 
-              placeholder="Masukkan username" 
+              placeholder="Masukkan username admin" 
             />
           </div>
 
@@ -61,18 +61,16 @@ export default function Login() {
           <button 
             type="submit" 
             disabled={isPending}
-            className="w-full bg-[#8a5225] text-white font-semibold py-3.5 rounded-xl hover:bg-[#733f1b] transition shadow-lg shadow-[#8a5225]/20 flex justify-center items-center gap-2 disabled:opacity-70 text-sm"
+            className="w-full bg-[#8a5225] text-white font-semibold py-3.5 rounded-xl hover:bg-[#733f1b] transition shadow-lg shadow-[#8a5225]/20 flex justify-center items-center gap-2 disabled:opacity-70 text-sm cursor-pointer"
           >
-            {isPending ? 'Memproses...' : 'Masuk Dasbor'} <ArrowRight size={18} />
+            {isPending ? 'Memproses...' : 'Masuk ke Dasbor Admin'} <ArrowRight size={18} />
           </button>
         </form>
 
         <div className="mt-8 text-center text-xs text-stone-500">
-          <p>Belum punya akun?</p>
-          <Link href="/register" className="text-[#8a5225] font-semibold hover:underline mt-1 inline-block">
-            Daftar Sekarang
+          <Link href="/" className="hover:underline text-stone-500 hover:text-[#8a5225] transition">
+            &larr; Kembali ke Halaman Utama
           </Link>
-          <p className="mt-4 text-xs">Atau <Link href="/" className="hover:underline text-stone-400">Kembali ke Beranda</Link></p>
         </div>
 
       </div>

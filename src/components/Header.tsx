@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, ShoppingCart, User, Heart, Menu } from 'lucide-react';
+import { Search, ShoppingCart, Heart, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { useCartStore } from '@/store/useCartStore';
 import { logout } from '@/actions/auth';
@@ -61,30 +61,24 @@ export default function Header({ user }: { user?: { name: string; role: string }
 
           {/* Right Action Icons */}
           <div className="flex items-center gap-3 md:gap-4 text-[#33241b]">
-            {user ? (
+            {user?.role === 'admin' && (
               <div className="relative group cursor-pointer">
-                <div className="flex items-center gap-2 hover:text-[#8a5225] transition">
-                  <div className="w-8 h-8 rounded-full bg-[#8a5225]/15 text-[#8a5225] flex items-center justify-center font-bold text-sm border border-[#8a5225]/30">
+                <div className="flex items-center gap-2 hover:text-[#8a5225] transition bg-[#8a5225]/10 px-3 py-1.5 rounded-full border border-[#8a5225]/20">
+                  <div className="w-5 h-5 rounded-full bg-[#8a5225] text-white flex items-center justify-center font-bold text-[10px]">
                     {user.name.charAt(0)}
                   </div>
-                  <span className="hidden sm:block text-sm font-medium text-[#33241b]">Halo, {user.name.split(' ')[0]}</span>
+                  <span className="text-xs font-semibold text-[#8a5225]">Admin</span>
                 </div>
                 {/* Dropdown */}
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-[#33241b]/10 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right scale-95 group-hover:scale-100 p-2">
-                  {user.role === 'admin' && (
-                    <Link href="/admin" className="block w-full text-left px-3 py-2 text-sm font-semibold text-[#8a5225] hover:bg-[#fffaf5] rounded-lg transition">
-                      🛠️ Dasbor Admin
-                    </Link>
-                  )}
-                  <button onClick={() => logout()} className="block w-full text-left px-3 py-2 text-sm text-[#33241b] hover:bg-[#fffaf5] rounded-lg transition">
-                    Keluar
+                <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-[#33241b]/10 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right scale-95 group-hover:scale-100 p-2 z-50">
+                  <Link href="/admin" className="block w-full text-left px-3 py-2 text-xs font-semibold text-[#8a5225] hover:bg-[#fffaf5] rounded-lg transition">
+                    🛠️ Dasbor Admin
+                  </Link>
+                  <button onClick={() => logout()} className="block w-full text-left px-3 py-2 text-xs text-[#c82929] hover:bg-rose-50 rounded-lg transition">
+                    Keluar Admin
                   </button>
                 </div>
               </div>
-            ) : (
-              <Link href="/login" aria-label="Akun Saya" className="hover:text-[#8a5225] transition p-1">
-                <User size={22} />
-              </Link>
             )}
             
             <button aria-label="Favorit" className="hover:text-[#8a5225] transition hidden sm:block relative p-1">
