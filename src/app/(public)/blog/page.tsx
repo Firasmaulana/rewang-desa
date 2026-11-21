@@ -22,7 +22,7 @@ const BLOG_POSTS = [
     excerpt: 'Petani Desa Jampang Sukabumi merawat varietas padi lokal yang terbukti memiliki indeks glikemik rendah, sangat ideal sebagai pangan harian yang sehat...',
     date: '28 Juli 2026',
     author: 'Pangan Sehat',
-    image: '/products/beras-jampang-hitam.webp',
+    image: '/products/beras-ubi-ungu.webp',
     category: 'Edukasi'
   },
   {
@@ -31,7 +31,7 @@ const BLOG_POSTS = [
     excerpt: 'Berangkat dari kepedulian terhadap harga singkong mentah yang anjlok, seorang guru desa menggerakkan kelompok tani memproduksi Gula Singkong Manes bernilai tinggi...',
     date: '15 Juli 2026',
     author: 'Inspirasi Desa',
-    image: '/products/gula-singkong-cair-manes-2.webp',
+    image: '/products/gula-singkong.webp',
     category: 'Inspirasi'
   },
   {
@@ -40,7 +40,7 @@ const BLOG_POSTS = [
     excerpt: 'Di Gunungkidul, usaha kerupuk bawang rumahan Pak Kamto menjadi tumpuan bagi para lansia desa untuk tetap aktif, dihargai, dan mandiri secara ekonomi...',
     date: '02 Juli 2026',
     author: 'Tim Rewang',
-    image: '/products/kerupuk-tengiri.webp',
+    image: '/products/kerupuk-bawang.webp',
     category: 'Gotong Royong'
   }
 ];

@@ -21,7 +21,7 @@ export default async function Home() {
     { 
       name: 'Bahan Pokok & Bumbu', 
       desc: 'Beras Jampang, Garam Jono, Kecap Kelapa', 
-      image: '/products/beras-jampang-putih.webp' 
+      image: '/products/garam-jono.webp' 
     },
     { 
       name: 'Gula-gulaan', 

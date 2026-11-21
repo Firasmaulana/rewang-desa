@@ -11,7 +11,7 @@ function mapDbProduct(row: DatabaseProduct): Product {
     price: Number(row.price),
     originalPrice: row.original_price ? Number(row.original_price) : undefined,
     rating: Number(row.rating) || 5.0,
-    image: row.image || '/products/beras-jampang-putih.webp',
+    image: row.image || '/products/garam-jono.webp',
     isDiscounted: Boolean(row.is_discounted),
     badge: row.badge || undefined,
     origin: row.origin || undefined,

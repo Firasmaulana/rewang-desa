@@ -13,18 +13,19 @@ interface ProductFormProps {
 }
 
 const PRESET_IMAGES = [
-  { label: 'Beras Merah', url: '/products/beras-jampang-merah.webp' },
-  { label: 'Beras Hitam', url: '/products/beras-jampang-hitam.webp' },
   { label: 'Garam Jono', url: '/products/garam-jono.webp' },
+  { label: 'Kecap Kelapa', url: '/products/kecap-kelapa.webp' },
+  { label: 'Beras Ubi Ungu', url: '/products/beras-ubi-ungu.webp' },
   { label: 'Gula Aren', url: '/products/gula-aren-bulat.webp' },
   { label: 'Keripik Tempe', url: '/products/keripik-tempe-2.webp' },
+  { label: 'Kerupuk Bawang', url: '/products/kerupuk-bawang.webp' },
   { label: 'Minuman Honje', url: '/products/kalehon.webp' },
   { label: 'Tas Anyam', url: '/products/tas-anyam-banyumas-custom-hampers-2.webp' },
-  { label: 'Gula Singkong', url: '/products/gula-singkong-cair-manes-2.webp' },
+  { label: 'Gula Singkong', url: '/products/gula-singkong.webp' },
 ];
 
 export default function ProductForm({ initialProduct, mode }: ProductFormProps) {
-  const [imageValue, setImageValue] = useState(initialProduct?.image || '/products/beras-jampang-putih.webp');
+  const [imageValue, setImageValue] = useState(initialProduct?.image || '/products/garam-jono.webp');
   const [nameValue, setNameValue] = useState(initialProduct?.name || '');
   const [priceValue, setPriceValue] = useState(initialProduct?.price ? String(initialProduct.price) : '');
   const [categoryValue, setCategoryValue] = useState(initialProduct?.category || 'Bahan Pokok & Bumbu');
@@ -183,7 +184,7 @@ export default function ProductForm({ initialProduct, mode }: ProductFormProps) 
                       onChange={(e) => setImageValue(e.target.value)}
                       required
                       className="w-full border border-stone-300 rounded-xl pl-8 pr-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#8a5225] bg-white font-mono" 
-                      placeholder="/products/beras-jampang-merah.webp atau https://..." 
+                      placeholder="/products/garam-jono.webp atau https://..." 
                     />
                     <LinkIcon size={14} className="absolute left-2.5 top-3 text-stone-400" />
                   </div>

@@ -13,7 +13,7 @@ export async function createProduct(formData: FormData): Promise<void> {
   const stock = Number(formData.get('stock')) || 50;
   const origin = (formData.get('origin') as string) || 'Nusantara';
   const description = (formData.get('description') as string) || '';
-  const image = (formData.get('image') as string) || '/products/beras-jampang-putih.webp';
+  const image = (formData.get('image') as string) || '/products/garam-jono.webp';
   const badge = (formData.get('badge') as string) || null;
 
   const supabase = await createClientServer();
@@ -61,7 +61,7 @@ export async function updateProduct(formData: FormData): Promise<void> {
   const stock = Number(formData.get('stock')) || 50;
   const origin = (formData.get('origin') as string) || 'Nusantara';
   const description = (formData.get('description') as string) || '';
-  const image = (formData.get('image') as string) || '/products/beras-jampang-putih.webp';
+  const image = (formData.get('image') as string) || '/products/garam-jono.webp';
   const badge = (formData.get('badge') as string) || null;
 
   const supabase = await createClientServer();
