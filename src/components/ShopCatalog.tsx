@@ -100,8 +100,6 @@ export default function ShopCatalog({ initialProducts }: ShopCatalogProps) {
       result.sort((a, b) => a.price - b.price);
     } else if (sortBy === 'price-desc') {
       result.sort((a, b) => b.price - a.price);
-    } else if (sortBy === 'rating') {
-      result.sort((a, b) => (b.rating || 5) - (a.rating || 5));
     }
 
     return result;
@@ -133,7 +131,6 @@ export default function ShopCatalog({ initialProducts }: ShopCatalogProps) {
             <option value="rekomendasi">Urutkan: Rekomendasi</option>
             <option value="price-asc">Harga: Rendah ke Tinggi</option>
             <option value="price-desc">Harga: Tinggi ke Rendah</option>
-            <option value="rating">Rating Tertinggi</option>
           </select>
         </div>
       </div>

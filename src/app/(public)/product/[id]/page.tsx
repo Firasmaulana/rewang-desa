@@ -1,6 +1,6 @@
 import { getProductById } from '@/lib/supabase/service';
 import { products as fallbackProducts } from '@/data/products';
-import { Star, Truck, ShieldCheck, Check, MapPin } from 'lucide-react';
+import { Truck, ShieldCheck, Check, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import AddToCartSection from '@/components/AddToCartSection';
 import ProductImage from '@/components/ProductImage';
@@ -61,20 +61,8 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
               </h1>
               
               <div className="flex items-center gap-4 mb-6 font-body">
-                <div className="flex items-center gap-1 text-[#8a5225]">
-                  {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
-                      size={18} 
-                      fill="currentColor" 
-                      className={i < Math.floor(product.rating) ? 'text-[#8a5225]' : 'text-stone-200'} 
-                    />
-                  ))}
-                </div>
-                <span className="text-stone-600 text-sm">{product.rating.toFixed(1)} (Pilihan Sahabat Rewang)</span>
-                <span className="text-stone-300">|</span>
-                <span className="text-[#8a5225] text-sm font-medium flex items-center gap-1">
-                  <Check size={16} /> Stok Terjamin
+                <span className="text-[#8a5225] text-xs font-semibold flex items-center gap-1.5 bg-[#8a5225]/10 px-3 py-1 rounded-full border border-[#8a5225]/20">
+                  <Check size={14} /> Stok Terjamin ({product.stock} tersedia)
                 </span>
               </div>
 

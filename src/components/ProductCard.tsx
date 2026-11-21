@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Search, ShoppingCart, Star, MapPin } from 'lucide-react';
+import { Heart, Search, ShoppingCart, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { Product } from '@/data/products';
 import { useCartStore } from '@/store/useCartStore';
@@ -69,19 +69,6 @@ export default function ProductCard({ product }: ProductCardProps) {
             {product.name}
           </h3>
         </Link>
-
-        {/* Rating */}
-        <div className="flex items-center gap-1 text-[#8a5225] mb-3">
-          {[...Array(5)].map((_, i) => (
-            <Star 
-              key={i} 
-              size={14} 
-              fill="currentColor" 
-              className={i < Math.floor(product.rating) ? 'text-[#8a5225]' : 'text-stone-200'} 
-            />
-          ))}
-          <span className="text-stone-600 text-xs ml-1 font-body">({product.rating.toFixed(1)})</span>
-        </div>
 
         {/* Price & Action */}
         <div className="flex items-center justify-between mt-auto pt-3 border-t border-stone-100">
