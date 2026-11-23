@@ -3,6 +3,9 @@ import { getProducts } from '@/lib/supabase/service';
 import { getOrders } from '@/lib/supabase/orders';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function AdminDashboard() {
   const [products, orders] = await Promise.all([
     getProducts(),

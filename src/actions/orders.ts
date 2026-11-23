@@ -69,5 +69,9 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus): P
   revalidatePath('/pesanan');
   revalidatePath('/admin');
   revalidatePath('/admin/orders');
+  revalidatePath('/admin/products');
+  revalidatePath('/shop');
+  revalidatePath('/');
+  revalidatePath('/product/[id]', 'page');
   return { success: result.success };
 }

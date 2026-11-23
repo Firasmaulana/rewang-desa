@@ -26,11 +26,13 @@ interface AdminOrdersClientProps {
   tableError?: string;
 }
 
-const SQL_SETUP_SCRIPT = `-- 1. Buka hak izin akses penuh ke role anon dan authenticated (Wajib!)
+const SQL_SETUP_SCRIPT = `-- 1. Buka hak izin akses penuh ke role anon dan authenticated pada tabel orders & products
 GRANT ALL ON TABLE public.orders TO anon, authenticated, service_role;
+GRANT ALL ON TABLE public.products TO anon, authenticated, service_role;
 
--- 2. Pastikan RLS Policies aktif dan mengizinkan simpan & baca
+-- 2. Pastikan RLS Policies aktif dan mengizinkan simpan, baca, dan perbarui stok
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Allow public read orders" ON public.orders;
 CREATE POLICY "Allow public read orders" ON public.orders FOR SELECT USING (true);
@@ -39,7 +41,10 @@ DROP POLICY IF EXISTS "Allow public insert orders" ON public.orders;
 CREATE POLICY "Allow public insert orders" ON public.orders FOR INSERT WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Allow public update orders" ON public.orders;
-CREATE POLICY "Allow public update orders" ON public.orders FOR UPDATE USING (true);`;
+CREATE POLICY "Allow public update orders" ON public.orders FOR UPDATE USING (true);
+
+DROP POLICY IF EXISTS "Allow public all on products" ON public.products;
+CREATE POLICY "Allow public all on products" ON public.products FOR ALL USING (true) WITH CHECK (true);`;
 
 export default function AdminOrdersClient({ initialOrders, isTableConfigured = false, tableError }: AdminOrdersClientProps) {
   const [orders, setOrders] = useState<DatabaseOrder[]>(initialOrders);
@@ -156,7 +161,13 @@ export default function AdminOrdersClient({ initialOrders, isTableConfigured = f
 
   const handleUpdateStatus = (orderId: string, status: OrderStatus) => {
     persistStatusChange(orderId, status);
-    setActionMessage(`Status pesanan ${orderId} diperbarui menjadi "${status}".`);
+    if (status === 'selesai') {
+      setActionMessage(`🎉 Pesanan ${orderId} telah selesai! Jumlah stok produk di database otomatis telah dikurangi.`);
+    } else if (status === 'dibatalkan') {
+      setActionMessage(`Pesanan ${orderId} dibatalkan. Jika sebelumnya berstatus selesai, stok otomatis telah dipulihkan.`);
+    } else {
+      setActionMessage(`Status pesanan ${orderId} diperbarui menjadi "${status}".`);
+    }
 
     startTransition(async () => {
       try {
@@ -517,14 +528,25 @@ export default function AdminOrdersClient({ initialOrders, isTableConfigured = f
                     )}
 
                     {order.status === 'diproses' && (
-                      <button
-                        type="button"
-                        onClick={() => handleUpdateStatus(order.id, 'dikirim')}
-                        disabled={isPending}
-                        className="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-full text-xs font-bold transition shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95"
-                      >
-                        <Truck size={14} /> Tandai Sedang Dikirim
-                      </button>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleUpdateStatus(order.id, 'dikirim')}
+                          disabled={isPending}
+                          className="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-full text-xs font-bold transition shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95"
+                        >
+                          <Truck size={14} /> Tandai Sedang Dikirim
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleUpdateStatus(order.id, 'selesai')}
+                          disabled={isPending}
+                          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-full text-xs font-bold transition shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95"
+                          title="Tandai pesanan selesai dan otomatis kurangi stok produk dari database"
+                        >
+                          <PackageCheck size={14} /> Tandai Selesai (Kurangi Stok)
+                        </button>
+                      </div>
                     )}
 
                     {order.status === 'dikirim' && (
@@ -533,8 +555,37 @@ export default function AdminOrdersClient({ initialOrders, isTableConfigured = f
                         onClick={() => handleUpdateStatus(order.id, 'selesai')}
                         disabled={isPending}
                         className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-full text-xs font-bold transition shadow-md flex items-center gap-1.5 cursor-pointer active:scale-95"
+                        title="Tandai pesanan selesai dan otomatis kurangi stok produk dari database"
                       >
-                        <PackageCheck size={14} /> Tandai Selesai
+                        <PackageCheck size={14} /> Tandai Selesai (Kurangi Stok)
+                      </button>
+                    )}
+
+                    {order.status === 'selesai' && (
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-emerald-800 bg-emerald-100/80 border border-emerald-300">
+                          <CheckCircle2 size={13} className="text-emerald-700" /> Selesai &amp; Stok Berkurang
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => handleUpdateStatus(order.id, 'dibatalkan')}
+                          disabled={isPending}
+                          className="text-stone-400 hover:text-rose-600 hover:bg-rose-50 px-2.5 py-1 rounded-full text-[11px] font-medium transition cursor-pointer"
+                          title="Batalkan pesanan ini dan kembalikan stok produk ke database"
+                        >
+                          Batal &amp; Kembalikan Stok
+                        </button>
+                      </div>
+                    )}
+
+                    {order.status === 'dibatalkan' && (
+                      <button
+                        type="button"
+                        onClick={() => handleAcc(order.id)}
+                        disabled={isPending}
+                        className="text-stone-500 hover:text-[#5a8514] hover:bg-[#5a8514]/10 px-3 py-1.5 rounded-full text-xs font-medium transition cursor-pointer"
+                      >
+                        Aktifkan Kembali
                       </button>
                     )}
 
