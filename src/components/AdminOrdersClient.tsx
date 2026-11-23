@@ -23,9 +23,10 @@ import {
 interface AdminOrdersClientProps {
   initialOrders: DatabaseOrder[];
   isTableConfigured?: boolean;
+  tableError?: string;
 }
 
-const SQL_SETUP_SCRIPT = `-- 1. Buat tabel orders
+const SQL_SETUP_SCRIPT = `-- 1. Buat tabel orders jika belum ada
 CREATE TABLE IF NOT EXISTS public.orders (
     id TEXT PRIMARY KEY,
     customer_name TEXT NOT NULL,
@@ -41,7 +42,10 @@ CREATE TABLE IF NOT EXISTS public.orders (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 2. Aktifkan Row Level Security (RLS)
+-- 2. Berikan izin akses penuh ke role anon, authenticated, dan service_role
+GRANT ALL ON TABLE public.orders TO anon, authenticated, service_role;
+
+-- 3. Aktifkan Row Level Security (RLS)
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Allow public read orders" ON public.orders;
@@ -53,10 +57,10 @@ CREATE POLICY "Allow public insert orders" ON public.orders FOR INSERT WITH CHEC
 DROP POLICY IF EXISTS "Allow public update orders" ON public.orders;
 CREATE POLICY "Allow public update orders" ON public.orders FOR UPDATE USING (true);
 
--- 3. Aktifkan Realtime
+-- 4. Aktifkan Realtime
 ALTER PUBLICATION supabase_realtime ADD TABLE public.orders;`;
 
-export default function AdminOrdersClient({ initialOrders, isTableConfigured = false }: AdminOrdersClientProps) {
+export default function AdminOrdersClient({ initialOrders, isTableConfigured = false, tableError }: AdminOrdersClientProps) {
   const [orders, setOrders] = useState<DatabaseOrder[]>(initialOrders);
   const [activeTab, setActiveTab] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -265,7 +269,7 @@ export default function AdminOrdersClient({ initialOrders, isTableConfigured = f
         )}
       </div>
 
-      {/* Supabase Notice Banner if Table is not yet created */}
+      {/* Supabase Notice Banner if Table is not yet created or permission denied */}
       {!isTableConfigured && (
         <div className="p-5 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border-2 border-amber-300 rounded-3xl shadow-sm text-amber-950 animate-fade-in">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -275,10 +279,13 @@ export default function AdminOrdersClient({ initialOrders, isTableConfigured = f
               </div>
               <div>
                 <h3 className="font-heading font-bold text-sm text-[#33241b]">
-                  Langkah Terakhir: Aktifkan Tabel Pesanan di Supabase
+                  Izin Akses Database Supabase Perlu Diberikan (GRANT)
                 </h3>
                 <p className="text-xs text-stone-600 mt-1 leading-relaxed max-w-2xl">
-                  Saat ini pengetesan sudah bisa berjalan langsung di browser ini. Agar pesanan pelanggan dari HP lain otomatis masuk ke database cloud secara permanen, cukup jalankan skrip SQL di Dasbor Supabase (hanya 30 detik).
+                  {tableError 
+                    ? `Supabase mengembalikan respon: "${tableError}". `
+                    : 'Tabel sudah dibuat tetapi role anon/publik belum diberi izin akses. '}
+                  Cukup salin dan jalankan skrip SQL perbaikan di bawah ini di SQL Editor Supabase agar pesanan otomatis terhubung.
                 </p>
               </div>
             </div>
@@ -290,7 +297,7 @@ export default function AdminOrdersClient({ initialOrders, isTableConfigured = f
                 className="flex-1 md:flex-none inline-flex items-center justify-center gap-2 bg-[#8a5225] hover:bg-[#733f1b] text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm cursor-pointer"
               >
                 {copiedSql ? <Check size={14} /> : <Copy size={14} />}
-                <span>{copiedSql ? 'SQL Tersalin!' : 'Salin Kode SQL'}</span>
+                <span>{copiedSql ? 'SQL Tersalin!' : 'Salin Kode SQL Perbaikan'}</span>
               </button>
 
               <a

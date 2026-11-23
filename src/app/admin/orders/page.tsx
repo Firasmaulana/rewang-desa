@@ -10,10 +10,16 @@ export const metadata = {
 };
 
 export default async function AdminOrdersPage() {
-  const [orders, isTableConfigured] = await Promise.all([
+  const [orders, tableCheck] = await Promise.all([
     getOrders(),
     checkOrdersTableConfigured(),
   ]);
 
-  return <AdminOrdersClient initialOrders={orders} isTableConfigured={isTableConfigured} />;
+  return (
+    <AdminOrdersClient 
+      initialOrders={orders} 
+      isTableConfigured={tableCheck.configured} 
+      tableError={tableCheck.error} 
+    />
+  );
 }

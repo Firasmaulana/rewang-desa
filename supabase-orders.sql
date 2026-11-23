@@ -1,5 +1,5 @@
 -- ==============================================================================
--- REWANG DESA: SQL Migrasi Tabel Orders (Pesanan WhatsApp)
+-- REWANG DESA: SQL Migrasi & Izin Akses Tabel Orders (Pesanan WhatsApp)
 -- Jalankan skrip ini di Dasbor Supabase Anda: SQL Editor -> New Query -> Run
 -- ==============================================================================
 
@@ -19,10 +19,13 @@ CREATE TABLE IF NOT EXISTS public.orders (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 2. Aktifkan Row Level Security (RLS)
+-- 2. Berikan izin akses penuh ke role anon, authenticated, dan service_role
+GRANT ALL ON TABLE public.orders TO anon, authenticated, service_role;
+
+-- 3. Aktifkan Row Level Security (RLS)
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 
--- 3. Kebijakan Keamanan (RLS Policies)
+-- 4. Kebijakan Keamanan (RLS Policies)
 DROP POLICY IF EXISTS "Allow public read orders" ON public.orders;
 CREATE POLICY "Allow public read orders" ON public.orders FOR SELECT USING (true);
 
@@ -32,7 +35,7 @@ CREATE POLICY "Allow public insert orders" ON public.orders FOR INSERT WITH CHEC
 DROP POLICY IF EXISTS "Allow public update orders" ON public.orders;
 CREATE POLICY "Allow public update orders" ON public.orders FOR UPDATE USING (true);
 
--- 4. Aktifkan Realtime Replication untuk tabel orders
+-- 5. Aktifkan Realtime Replication untuk tabel orders
 DO $$
 BEGIN
     IF NOT EXISTS (

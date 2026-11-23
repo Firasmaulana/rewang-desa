@@ -4,19 +4,20 @@ import { DatabaseOrder, OrderStatus } from './types';
 // In-memory fallback (initialized empty so user can test with their own orders)
 let localOrdersFallback: DatabaseOrder[] = [];
 
-// 0. Check if orders table exists in Supabase
-export async function checkOrdersTableConfigured(): Promise<boolean> {
+// 0. Check if orders table exists and is accessible in Supabase
+export async function checkOrdersTableConfigured(): Promise<{ configured: boolean; error?: string }> {
   try {
     const supabase = await createClientServer();
-    if (!supabase) return false;
+    if (!supabase) return { configured: false, error: 'Klien Supabase belum terkonfigurasi di env' };
 
     const { error } = await supabase.from('orders').select('id').limit(1);
-    if (error && error.code === 'PGRST205') {
-      return false;
+    if (error) {
+      console.warn('Orders table check error:', error.code, error.message);
+      return { configured: false, error: error.message };
     }
-    return true;
-  } catch {
-    return false;
+    return { configured: true };
+  } catch (err: any) {
+    return { configured: false, error: err?.message };
   }
 }
 
