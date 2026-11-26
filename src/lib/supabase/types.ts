@@ -51,3 +51,16 @@ export interface DatabaseOrder {
   created_at?: string;
   updated_at?: string;
 }
+
+export interface DatabaseArticle {
+  id: string;
+  title: string;
+  category: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  date: string;
+  image?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}

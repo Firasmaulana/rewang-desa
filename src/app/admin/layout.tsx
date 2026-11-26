@@ -1,11 +1,21 @@
 "use client";
 
-import { LayoutDashboard, Package, Image as ImageIcon, Settings, LogOut, Globe, ShoppingBag } from 'lucide-react';
+import { LayoutDashboard, Package, Image as ImageIcon, Settings, LogOut, Globe, ShoppingBag, FileText } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { logout } from '@/actions/auth';
 import Logo from '@/components/Logo';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  const navLinkClass = (href: string, exact = false) => {
+    const isActive = exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
+    return isActive
+      ? 'flex items-center gap-3 px-4 py-3 rounded-xl bg-[#8a5225]/30 text-[#ffdd7d] font-semibold border border-[#8a5225]/40 transition text-sm'
+      : 'flex items-center gap-3 px-4 py-3 rounded-xl text-stone-300 hover:bg-[#8a5225]/20 hover:text-white transition text-sm';
+  };
+
   return (
     <div className="flex h-screen bg-[#fffaf5] overflow-hidden font-body">
       
@@ -19,19 +29,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
         
         <nav className="flex-1 p-4 space-y-2">
-          <Link href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#8a5225]/30 text-[#ffdd7d] font-semibold border border-[#8a5225]/40 transition text-sm">
+          <Link href="/admin" className={navLinkClass('/admin', true)}>
             <LayoutDashboard size={18} /> Dasbor
           </Link>
-          <Link href="/admin/orders" className="flex items-center gap-3 px-4 py-3 rounded-xl text-stone-300 hover:bg-[#8a5225]/20 hover:text-white transition text-sm">
+          <Link href="/admin/orders" className={navLinkClass('/admin/orders')}>
             <ShoppingBag size={18} /> Kelola Pesanan
           </Link>
-          <Link href="/admin/products" className="flex items-center gap-3 px-4 py-3 rounded-xl text-stone-300 hover:bg-[#8a5225]/20 hover:text-white transition text-sm">
+          <Link href="/admin/products" className={navLinkClass('/admin/products')}>
             <Package size={18} /> Kelola Produk
           </Link>
-          <Link href="/admin/banner" className="flex items-center gap-3 px-4 py-3 rounded-xl text-stone-300 hover:bg-[#8a5225]/20 hover:text-white transition text-sm">
+          <Link href="/admin/articles" className={navLinkClass('/admin/articles')}>
+            <FileText size={18} /> Kelola Artikel
+          </Link>
+          <Link href="/admin/banner" className={navLinkClass('/admin/banner')}>
             <ImageIcon size={18} /> Banner Promo
           </Link>
-          <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-3 rounded-xl text-stone-300 hover:bg-[#8a5225]/20 hover:text-white transition text-sm">
+          <Link href="/admin/settings" className={navLinkClass('/admin/settings')}>
             <Settings size={18} /> Pengaturan
           </Link>
         </nav>

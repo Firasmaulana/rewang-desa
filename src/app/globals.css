@@ -53,3 +53,15 @@
 .font-mistrully {
   font-family: 'Mistrully', var(--font-mistrully, 'Mistrully'), cursive;
 }
+
+/* Native modal dialog scroll containment & backdrop */
+dialog:modal {
+  overscroll-behavior: contain;
+}
+
+dialog::backdrop {
+  background-color: rgb(51 36 27 / 0.6);
+  backdrop-filter: blur(4px);
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
