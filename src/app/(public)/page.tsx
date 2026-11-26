@@ -214,34 +214,8 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Scroll-Driven Interactive Craft Marquee Ribbon (glides 1:1 with user scroll) */}
-      <div
-        aria-hidden="true"
-        className="bg-[#33241b] text-[#ffdd7d] py-3.5 overflow-hidden border-y border-[#8a5225]/40 select-none"
-      >
-        <div className="scroll-marquee-track flex items-center gap-8 whitespace-nowrap font-heading text-sm md:text-base tracking-wide">
-          <span>Bantu Desa Tanpa Harus Pergi ke Desa</span>
-          <span className="text-[#8a5225]">&bull;</span>
-          <span className="text-[#fffaf5]">Garam Jono Grobogan</span>
-          <span className="text-[#8a5225]">&bull;</span>
-          <span>100% Karya Petani Lokal</span>
-          <span className="text-[#8a5225]">&bull;</span>
-          <span className="text-[#fffaf5]">Beras Merah Jampang</span>
-          <span className="text-[#8a5225]">&bull;</span>
-          <span>Murni &amp; Tanpa Pengawet</span>
-          <span className="text-[#8a5225]">&bull;</span>
-          <span className="text-[#fffaf5]">Gula Singkong Banjarnegara</span>
-          <span className="text-[#8a5225]">&bull;</span>
-          <span>Gotong Royong UMKM Sepuh</span>
-          <span className="text-[#8a5225]">&bull;</span>
-          <span className="text-[#fffaf5]">Tas Anyam Banyumas</span>
-          <span className="text-[#8a5225]">&bull;</span>
-          <span>Bantu Desa Tanpa Harus Pergi ke Desa</span>
-        </div>
-      </div>
-
       {/* Featured Products */}
-      <section id="produk" className="py-16 bg-white overflow-x-clip">
+      <section id="produk" className="py-16 bg-white border-t border-[#33241b]/10 overflow-x-clip">
         <div className="container mx-auto px-4">
           <ScrollReveal variant="up">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-4">

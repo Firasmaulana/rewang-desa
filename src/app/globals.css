@@ -173,55 +173,11 @@ dialog::backdrop {
     }
   }
 
-  /* 6. Native CSS Scroll-Driven Reveal Variants (view() timeline) */
+  /* 6. Native CSS Scroll-Driven Accent Divider & Hero Parallax */
   @supports ((animation-timeline: view()) and (animation-range: entry)) {
-    @keyframes scroll-reveal-up-kf {
-      from {
-        opacity: 0;
-        transform: translateY(34px) scale(0.97);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes scroll-reveal-left-kf {
-      from {
-        opacity: 0;
-        transform: translateX(-38px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    @keyframes scroll-reveal-right-kf {
-      from {
-        opacity: 0;
-        transform: translateX(38px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    @keyframes scroll-reveal-zoom-kf {
-      from {
-        opacity: 0;
-        transform: translateY(20px) scale(0.92);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
     @keyframes scroll-line-expand-kf {
       from {
-        opacity: 0.25;
+        opacity: 0.2;
         transform: scaleX(0);
       }
       to {
@@ -230,65 +186,12 @@ dialog::backdrop {
       }
     }
 
-    @keyframes scroll-marquee-kf {
-      from {
-        transform: translateX(6%);
-      }
-      to {
-        transform: translateX(-18%);
-      }
-    }
-
-    .scroll-reveal-native,
-    .scroll-reveal-native-up {
-      animation: scroll-reveal-up-kf auto linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 34%;
-    }
-
-    .scroll-reveal-native-left {
-      animation: scroll-reveal-left-kf auto linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 36%;
-    }
-
-    .scroll-reveal-native-right {
-      animation: scroll-reveal-right-kf auto linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 36%;
-    }
-
-    .scroll-reveal-native-zoom {
-      animation: scroll-reveal-zoom-kf auto linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 32%;
-    }
-
-    /* Staggered scroll entry ranges for grid waves */
-    .scroll-stagger-1 {
-      animation-range: entry 4% entry 38%;
-    }
-    .scroll-stagger-2 {
-      animation-range: entry 9% entry 43%;
-    }
-    .scroll-stagger-3 {
-      animation-range: entry 14% entry 48%;
-    }
-
-    /* Animated decorative divider that draws itself on scroll */
+    /* Animated decorative divider that draws itself visibly mid-screen on scroll */
     .scroll-line-expand {
       transform-origin: center;
       animation: scroll-line-expand-kf auto linear both;
       animation-timeline: view();
-      animation-range: entry 10% entry 45%;
-    }
-
-    /* Interactive Scroll-Driven Marquee Ribbon (glides horizontally 1:1 with vertical scroll) */
-    .scroll-marquee-track {
-      will-change: transform;
-      animation: scroll-marquee-kf auto linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 100%;
+      animation-range: entry 20% contain 45%;
     }
 
     /* 7. Hero Background Smooth Vertical Parallax (starts seamlessly at 0px, no sudden zoom snap) */
@@ -311,52 +214,43 @@ dialog::backdrop {
   }
 }
 
-/* Fallback transition classes for browsers without native animation-timeline: view() */
-.scroll-reveal-fallback {
-  opacity: 0;
-  transform: translateY(24px) scale(0.98);
-  transition:
-    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-}
+/* Smooth Time-Based Scroll Reveal Transitions (clearly visible at any scroll speed) */
+@media (prefers-reduced-motion: no-preference) {
+  .sr-reveal {
+    will-change: opacity, transform;
+    transition:
+      opacity 0.78s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.78s cubic-bezier(0.16, 1, 0.3, 1);
+  }
 
-.scroll-reveal-fallback-left {
-  opacity: 0;
-  transform: translateX(-28px);
-  transition:
-    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
-}
+  .sr-reveal-up[data-state="hidden"] {
+    opacity: 0;
+    transform: translateY(44px);
+  }
 
-.scroll-reveal-fallback-right {
-  opacity: 0;
-  transform: translateX(28px);
-  transition:
-    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
-}
+  .sr-reveal-left[data-state="hidden"] {
+    opacity: 0;
+    transform: translateX(-52px);
+  }
 
-.scroll-reveal-fallback-zoom {
-  opacity: 0;
-  transform: translateY(18px) scale(0.93);
-  transition:
-    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-}
+  .sr-reveal-right[data-state="hidden"] {
+    opacity: 0;
+    transform: translateX(52px);
+  }
 
-.scroll-reveal-fallback[data-visible="true"],
-.scroll-reveal-fallback-left[data-visible="true"],
-.scroll-reveal-fallback-right[data-visible="true"],
-.scroll-reveal-fallback-zoom[data-visible="true"] {
-  opacity: 1;
-  transform: translate(0, 0) scale(1);
+  .sr-reveal-zoom[data-state="hidden"] {
+    opacity: 0;
+    transform: translateY(28px) scale(0.88);
+  }
+
+  .sr-reveal[data-state="visible"] {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-reveal-fallback,
-  .scroll-reveal-fallback-left,
-  .scroll-reveal-fallback-right,
-  .scroll-reveal-fallback-zoom {
+  .sr-reveal {
     opacity: 1;
     transform: none;
     transition: none;

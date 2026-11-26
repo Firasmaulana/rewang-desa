@@ -20,55 +20,56 @@ export default function ScrollReveal({
   staggerIndex = 0,
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [useFallback, setUseFallback] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  const [state, setState] = useState<'visible' | 'hidden'>('visible');
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const prefersMotion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
-    if (!prefersMotion) return;
-
-    // Prefer native CSS Scroll-Driven Animation when supported
-    const supportsViewTimeline = CSS.supports(
-      '(animation-timeline: view()) and (animation-range: entry)'
-    );
-    if (supportsViewTimeline) return;
-
-    // Fallback via IntersectionObserver for browsers without native view() timeline
-    setUseFallback(true);
-    setIsVisible(false);
+    if (!prefersMotion) {
+      setState('visible');
+      return;
+    }
 
     const el = ref.current;
     if (!el) return;
+
+    // Only arm scroll reveal if the element starts below the current visible area
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.92) {
+      setState('visible');
+      return;
+    }
+
+    setState('hidden');
 
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            setIsVisible(true);
+            setState('visible');
             observer.unobserve(entry.target);
           }
         }
       },
-      { threshold: 0.1, rootMargin: '0px 0px -24px 0px' }
+      {
+        threshold: 0.12,
+        rootMargin: '0px 0px -60px 0px',
+      }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
-  const nativeClass = `scroll-reveal-native-${variant}`;
-  const staggerClass = staggerIndex > 0 ? `scroll-stagger-${staggerIndex}` : '';
-  const fallbackClass =
-    variant === 'up' ? 'scroll-reveal-fallback' : `scroll-reveal-fallback-${variant}`;
+  const computedDelay = delayMs || staggerIndex * 110;
 
   return (
     <div
       ref={ref}
-      data-visible={isVisible ? 'true' : 'false'}
-      style={useFallback && delayMs ? { transitionDelay: `${delayMs}ms` } : undefined}
-      className={`${useFallback ? fallbackClass : `${nativeClass} ${staggerClass}`} ${className}`}
+      data-state={state}
+      style={computedDelay > 0 ? { transitionDelay: `${computedDelay}ms` } : undefined}
+      className={`sr-reveal sr-reveal-${variant} ${className}`}
     >
       {children}
     </div>
