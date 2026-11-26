@@ -1,6 +1,7 @@
 import { Target, Heart, Users, MapPin, Phone, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import Logo from '@/components/Logo';
+import ScrollReveal from '@/components/ScrollReveal';
 
 function InstagramIcon({ size = 20, className = "" }: { size?: number; className?: string }) {
   return (
@@ -31,7 +32,7 @@ export default function AboutPage() {
   return (
     <div className="bg-[#fffaf5] min-h-screen">
       {/* Hero Section */}
-      <section className="relative py-24 md:py-32 bg-[#241811] text-[#fffaf5] overflow-hidden">
+      <section className="hero-parallax-wrapper relative py-24 md:py-32 bg-[#241811] text-[#fffaf5] overflow-hidden">
         {/* Background Image */}
         <img
           src="/hero-background.webp"
@@ -39,20 +40,20 @@ export default function AboutPage() {
           width={1920}
           height={1071}
           fetchPriority="high"
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          className="hero-parallax-bg absolute inset-0 w-full h-full object-cover object-center"
         />
         {/* Warm Dark Overlay for Centered Text Readability */}
         <div className="absolute inset-0 bg-[#1f140e]/70 pointer-events-none"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-[#1f140e]/50 via-transparent to-[#1f140e]/75 pointer-events-none"></div>
 
         <div className="container mx-auto px-4 relative z-10 text-center max-w-3xl">
-          <span className="inline-block bg-[#fffaf5]/15 backdrop-blur-md border border-[#ffdd7d]/30 text-[#ffdd7d] text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-5 font-body">
+          <span className="hero-stagger-1 inline-block bg-[#fffaf5]/15 backdrop-blur-md border border-[#ffdd7d]/30 text-[#ffdd7d] text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-5 font-body">
             Cerita Di Balik Layar
           </span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading text-white mb-6 drop-shadow-sm">
+          <h1 className="hero-stagger-2 text-4xl md:text-5xl lg:text-6xl font-heading text-white mb-6 drop-shadow-sm">
             Tentang <span className="text-[#ffdd7d]">Rewang Desa</span>
           </h1>
-          <p className="text-stone-100 text-base md:text-lg leading-relaxed font-body drop-shadow-xs">
+          <p className="hero-stagger-3 text-stone-100 text-base md:text-lg leading-relaxed font-body drop-shadow-xs">
             Lahir dari keresahan, tumbuh menjadi jembatan gotong royong yang membawa karya dan hasil bumi dari tangan desa langsung kepada Anda.
           </p>
         </div>
@@ -61,52 +62,54 @@ export default function AboutPage() {
       {/* Main Philosophy & Story (from Catalog Page 2) */}
       <section className="py-20">
         <div className="container mx-auto px-4 max-w-5xl">
-          <div className="flex flex-col lg:flex-row gap-12 items-center">
-            
-            {/* Visual Box */}
-            <div className="lg:w-1/2 w-full">
-              <div className="relative rounded-3xl bg-gradient-to-br from-[#f7f1ea] via-white to-[#fffaf5] p-8 border border-[#8a5225]/20 shadow-xl text-center">
-                <div className="w-20 h-20 rounded-full bg-[#8a5225]/10 text-[#8a5225] flex items-center justify-center mx-auto mb-6">
-                  <Users size={36} />
-                </div>
-                <Logo size="lg" showTagline={true} />
-                <div className="my-6 border-y border-[#33241b]/10 py-4">
-                  <p className="text-xs uppercase tracking-widest text-[#854523] font-bold font-body">
-                    Makna &ldquo;Rewang&rdquo;
-                  </p>
-                  <p className="font-heading text-xl text-[#33241b] mt-1 italic">
-                    Tumbuh dan bergerak bersama
-                  </p>
-                </div>
-                <p className="text-xs text-stone-500 font-body leading-relaxed">
-                  Bagi kami, memajukan desa dimulai dari saling membantu. Sebuah ikatan tulus masyarakat nusantara untuk saling menyokong kehidupan.
-                </p>
-              </div>
-            </div>
-
-            {/* Narrative Story */}
-            <div className="lg:w-1/2 space-y-6">
-              <span className="text-[#854523] text-xs font-bold uppercase tracking-widest block font-body">
-                Awal Mula Perjalanan
-              </span>
-              <h2 className="text-3xl md:text-4xl font-heading text-[#33241b] leading-snug">
-                Dari Tangan Petani, Untuk Sahabat Rewang
-              </h2>
+          <ScrollReveal>
+            <div className="flex flex-col lg:flex-row gap-12 items-center">
               
-              <div className="space-y-4 text-stone-700 text-base leading-relaxed font-body">
-                <p>
-                  Rewang Desa lahir dari keresahan melihat potensi desa yang begitu melimpah, tetapi perputaran ekonominya masih berjalan lambat. Banyak hasil karya dari tangan petani dan pengrajin di desa yang berpotensi dan sangat berkualitas, namun belum memiliki akses pasar luas untuk berkembang.
-                </p>
-                <p>
-                  Oleh karena itu, <strong>Rewang Desa</strong> hadir sebagai jembatan untuk menghubungkan hasil bumi, produk lokal, dan kisah perjuangan dari desa dengan <strong>Sahabat Rewang</strong> yang ingin mendukung produk dari tangan desa secara nyata.
-                </p>
-                <p className="bg-[#f7f1ea] p-4 rounded-xl border-l-4 border-[#8a5225] text-sm text-[#33241b]">
-                  &ldquo;Bagi kami, memajukan desa dimulai dari saling membantu — sesuai makna &lsquo;<strong>rewang</strong>&rsquo; itu sendiri: tumbuh dan bergerak bersama.&rdquo;
-                </p>
+              {/* Visual Box */}
+              <div className="lg:w-1/2 w-full">
+                <div className="relative rounded-3xl bg-gradient-to-br from-[#f7f1ea] via-white to-[#fffaf5] p-8 border border-[#8a5225]/20 shadow-xl text-center hover:-translate-y-1 transition-transform duration-300">
+                  <div className="w-20 h-20 rounded-full bg-[#8a5225]/10 text-[#8a5225] flex items-center justify-center mx-auto mb-6">
+                    <Users size={36} />
+                  </div>
+                  <Logo size="lg" showTagline={true} />
+                  <div className="my-6 border-y border-[#33241b]/10 py-4">
+                    <p className="text-xs uppercase tracking-widest text-[#854523] font-bold font-body">
+                      Makna &ldquo;Rewang&rdquo;
+                    </p>
+                    <p className="font-heading text-xl text-[#33241b] mt-1 italic">
+                      Tumbuh dan bergerak bersama
+                    </p>
+                  </div>
+                  <p className="text-xs text-stone-500 font-body leading-relaxed">
+                    Bagi kami, memajukan desa dimulai dari saling membantu. Sebuah ikatan tulus masyarakat nusantara untuk saling menyokong kehidupan.
+                  </p>
+                </div>
               </div>
-            </div>
 
-          </div>
+              {/* Narrative Story */}
+              <div className="lg:w-1/2 space-y-6">
+                <span className="text-[#854523] text-xs font-bold uppercase tracking-widest block font-body">
+                  Awal Mula Perjalanan
+                </span>
+                <h2 className="text-3xl md:text-4xl font-heading text-[#33241b] leading-snug">
+                  Dari Tangan Petani, Untuk Sahabat Rewang
+                </h2>
+                
+                <div className="space-y-4 text-stone-700 text-base leading-relaxed font-body">
+                  <p>
+                    Rewang Desa lahir dari keresahan melihat potensi desa yang begitu melimpah, tetapi perputaran ekonominya masih berjalan lambat. Banyak hasil karya dari tangan petani dan pengrajin di desa yang berpotensi dan sangat berkualitas, namun belum memiliki akses pasar luas untuk berkembang.
+                  </p>
+                  <p>
+                    Oleh karena itu, <strong>Rewang Desa</strong> hadir sebagai jembatan untuk menghubungkan hasil bumi, produk lokal, dan kisah perjuangan dari desa dengan <strong>Sahabat Rewang</strong> yang ingin mendukung produk dari tangan desa secara nyata.
+                  </p>
+                  <p className="bg-[#f7f1ea] p-4 rounded-xl border-l-4 border-[#8a5225] text-sm text-[#33241b]">
+                    &ldquo;Bagi kami, memajukan desa dimulai dari saling membantu — sesuai makna &lsquo;<strong>rewang</strong>&rsquo; itu sendiri: tumbuh dan bergerak bersama.&rdquo;
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -116,41 +119,45 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             
             {/* Visi */}
-            <div className="bg-[#fffaf5] p-8 rounded-3xl border border-[#33241b]/10">
-              <div className="w-12 h-12 bg-[#8a5225]/10 text-[#8a5225] rounded-2xl flex items-center justify-center mb-6">
-                <Target size={26} />
+            <ScrollReveal delayMs={0} className="h-full">
+              <div className="h-full bg-[#fffaf5] p-8 rounded-3xl border border-[#33241b]/10 hover:border-[#8a5225]/35 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                <div className="w-12 h-12 bg-[#8a5225]/10 text-[#8a5225] rounded-2xl flex items-center justify-center mb-6">
+                  <Target size={26} />
+                </div>
+                <h3 className="text-2xl font-heading text-[#33241b] mb-4">Visi Kami</h3>
+                <p className="text-stone-700 text-sm md:text-base leading-relaxed font-body">
+                  Menjadi wadah utama penghubung kemandirian pangan dan kerajinan lokal desa, di mana setiap petani, perajin lansia, dan keluarga desa memperoleh apresiasi dan nilai ekonomi yang adil atas ketulusan karyanya.
+                </p>
               </div>
-              <h3 className="text-2xl font-heading text-[#33241b] mb-4">Visi Kami</h3>
-              <p className="text-stone-700 text-sm md:text-base leading-relaxed font-body">
-                Menjadi wadah utama penghubung kemandirian pangan dan kerajinan lokal desa, di mana setiap petani, perajin lansia, dan keluarga desa memperoleh apresiasi dan nilai ekonomi yang adil atas ketulusan karyanya.
-              </p>
-            </div>
+            </ScrollReveal>
 
             {/* Misi */}
-            <div className="bg-[#fffaf5] p-8 rounded-3xl border border-[#33241b]/10">
-              <div className="w-12 h-12 bg-[#8a5225]/10 text-[#8a5225] rounded-2xl flex items-center justify-center mb-6">
-                <Heart size={26} />
+            <ScrollReveal delayMs={100} className="h-full">
+              <div className="h-full bg-[#fffaf5] p-8 rounded-3xl border border-[#33241b]/10 hover:border-[#8a5225]/35 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                <div className="w-12 h-12 bg-[#8a5225]/10 text-[#8a5225] rounded-2xl flex items-center justify-center mb-6">
+                  <Heart size={26} />
+                </div>
+                <h3 className="text-2xl font-heading text-[#33241b] mb-4">Misi Gotong Royong</h3>
+                <ul className="space-y-3 text-stone-700 text-sm font-body">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 size={18} className="text-[#8a5225] shrink-0 mt-0.5" />
+                    <span>Mengangkat produk warisan desa (seperti Garam Jono, Gula Singkong, Beras Jampang) ke panggung nasional.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 size={18} className="text-[#8a5225] shrink-0 mt-0.5" />
+                    <span>Membuka akses pasar yang adil dan transparan bagi kelompok tani dan pengrajin sepuh.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 size={18} className="text-[#8a5225] shrink-0 mt-0.5" />
+                    <span>Menyediakan pilihan pangan sehat alami dan bebas bahan kimia berbahaya bagi masyarakat perkotaan.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 size={18} className="text-[#8a5225] shrink-0 mt-0.5" />
+                    <span>Membangun ekosistem langganan gotong royong melalui Paket Rewang Tani bulanan.</span>
+                  </li>
+                </ul>
               </div>
-              <h3 className="text-2xl font-heading text-[#33241b] mb-4">Misi Gotong Royong</h3>
-              <ul className="space-y-3 text-stone-700 text-sm font-body">
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 size={18} className="text-[#8a5225] shrink-0 mt-0.5" />
-                  <span>Mengangkat produk warisan desa (seperti Garam Jono, Gula Singkong, Beras Jampang) ke panggung nasional.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 size={18} className="text-[#8a5225] shrink-0 mt-0.5" />
-                  <span>Membuka akses pasar yang adil dan transparan bagi kelompok tani dan pengrajin sepuh.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 size={18} className="text-[#8a5225] shrink-0 mt-0.5" />
-                  <span>Menyediakan pilihan pangan sehat alami dan bebas bahan kimia berbahaya bagi masyarakat perkotaan.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 size={18} className="text-[#8a5225] shrink-0 mt-0.5" />
-                  <span>Membangun ekosistem langganan gotong royong melalui Paket Rewang Tani bulanan.</span>
-                </li>
-              </ul>
-            </div>
+            </ScrollReveal>
 
           </div>
         </div>

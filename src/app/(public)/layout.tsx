@@ -1,5 +1,8 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ScrollProgressBar from "@/components/ScrollProgressBar";
+import PageTransition from "@/components/PageTransition";
+import BackToTopButton from "@/components/BackToTopButton";
 import { cookies } from 'next/headers';
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
@@ -17,11 +20,13 @@ export default async function PublicLayout({ children }: { children: React.React
 
   return (
     <div className="min-h-full flex flex-col bg-[#fffaf5] text-[#33241b]">
+      <ScrollProgressBar />
       <Header user={user} />
-      <main className="flex-1">
-        {children}
+      <main className="flex-1 flex flex-col">
+        <PageTransition>{children}</PageTransition>
       </main>
       <Footer />
+      <BackToTopButton />
     </div>
   );
 }

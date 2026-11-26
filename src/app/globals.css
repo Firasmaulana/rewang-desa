@@ -65,3 +65,173 @@ dialog::backdrop {
   overflow: hidden;
   overscroll-behavior: contain;
 }
+
+/* Smooth anchor scrolling (only when user allows motion) */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ==========================================================================
+   REWANG DESA MOTION SYSTEM (Compositor-Only + Reduced-Motion Compliant)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 1. Page Navigation Transition */
+  @keyframes page-enter {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-page-enter {
+    animation: page-enter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* 2. Staggered Hero Entrance */
+  @keyframes hero-glide-up {
+    from {
+      opacity: 0;
+      transform: translateY(22px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .hero-stagger-1 {
+    animation: hero-glide-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+  }
+  .hero-stagger-2 {
+    animation: hero-glide-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.16s both;
+  }
+  .hero-stagger-3 {
+    animation: hero-glide-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both;
+  }
+  .hero-stagger-4 {
+    animation: hero-glide-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+  }
+
+  /* 3. Cart Pop & Tactile Feedback */
+  @keyframes cart-pop {
+    0% {
+      transform: scale(1);
+    }
+    35% {
+      transform: scale(1.24);
+    }
+    65% {
+      transform: scale(0.92);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .animate-cart-pop {
+    animation: cart-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* 4. Mobile Drawer Slide-In */
+  @keyframes drawer-slide-in {
+    from {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-drawer-in {
+    animation: drawer-slide-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* 5. Native CSS Scroll Progress Bar (scroll() timeline) */
+  @supports (animation-timeline: scroll()) {
+    @keyframes grow-scroll-progress {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    .scroll-progress-bar {
+      transform-origin: 0 50%;
+      animation: grow-scroll-progress auto linear;
+      animation-timeline: scroll(root block);
+    }
+  }
+
+  /* 6. Native CSS Scroll-Driven Reveal (view() timeline) */
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes scroll-card-reveal {
+      from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .scroll-reveal-native {
+      animation: scroll-card-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 32%;
+    }
+
+    /* 7. Hero Background Parallax on Scroll */
+    @keyframes hero-bg-parallax {
+      from {
+        transform: translateY(0) scale(1.04);
+      }
+      to {
+        transform: translateY(64px) scale(1.12);
+      }
+    }
+
+    .hero-parallax-wrapper {
+      view-timeline: --hero-section block;
+    }
+
+    .hero-parallax-bg {
+      animation: hero-bg-parallax linear both;
+      animation-timeline: --hero-section;
+      animation-range: exit-crossing 0% exit 100%;
+    }
+  }
+}
+
+/* Fallback transition classes for browsers without native animation-timeline: view() */
+.scroll-reveal-fallback {
+  opacity: 0;
+  transform: translateY(24px) scale(0.98);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-reveal-fallback[data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal-fallback {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

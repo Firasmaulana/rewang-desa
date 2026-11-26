@@ -1,6 +1,7 @@
 "use client";
 
-import { Heart, Search, ShoppingCart, MapPin } from 'lucide-react';
+import { useState } from 'react';
+import { Heart, Search, ShoppingCart, MapPin, Check } from 'lucide-react';
 import Link from 'next/link';
 import { Product } from '@/data/products';
 import { useCartStore } from '@/store/useCartStore';
@@ -12,9 +13,17 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const addToCart = useCartStore((state) => state.addToCart);
+  const [justAdded, setJustAdded] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const handleAddToCart = () => {
+    addToCart(product, 1);
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 1100);
+  };
 
   return (
-    <div className="bg-white rounded-2xl border border-[#33241b]/10 overflow-hidden hover:shadow-xl hover:shadow-[#8a5225]/10 hover:border-[#8a5225]/40 transition-all duration-300 group flex flex-col h-full">
+    <div className="bg-white rounded-2xl border border-[#33241b]/10 overflow-hidden hover:shadow-xl hover:shadow-[#8a5225]/12 hover:border-[#8a5225]/40 hover:-translate-y-1.5 transition-all duration-300 group flex flex-col h-full">
       {/* Product Image / Visual */}
       <div className="relative aspect-[4/3] bg-[#fffaf5] flex items-center justify-center border-b border-[#33241b]/5 overflow-hidden">
         {product.badge && (
@@ -28,20 +37,28 @@ export default function ProductCard({ product }: ProductCardProps) {
           </span>
         )}
         
-        <ProductImage src={product.image} alt={product.name} />
+        <div className="w-full h-full group-hover:scale-105 transition-transform duration-500">
+          <ProductImage src={product.image} alt={product.name} />
+        </div>
         
         {/* Overlay Actions */}
-        <div className="absolute inset-0 bg-[#33241b]/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 z-10 backdrop-blur-[2px]">
+        <div className="absolute inset-0 bg-[#33241b]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2.5 z-10 backdrop-blur-[2px]">
           <button 
+            type="button"
+            onClick={() => setIsFavorite((prev) => !prev)}
             aria-label="Simpan ke favorit"
-            className="bg-white text-[#33241b] p-2.5 rounded-full hover:bg-[#8a5225] hover:text-white transition shadow-md"
+            className={`p-2.5 rounded-full transition-all duration-200 shadow-md cursor-pointer active:scale-90 translate-y-2 group-hover:translate-y-0 ${
+              isFavorite
+                ? 'bg-[#c82929] text-white'
+                : 'bg-white text-[#33241b] hover:bg-[#8a5225] hover:text-white'
+            }`}
           >
-            <Heart size={18} />
+            <Heart size={18} className={isFavorite ? 'fill-current' : ''} />
           </button>
           <Link 
             href={`/product/${product.id}`}
             aria-label="Lihat detail"
-            className="bg-white text-[#33241b] p-2.5 rounded-full hover:bg-[#8a5225] hover:text-white transition shadow-md"
+            className="bg-white text-[#33241b] p-2.5 rounded-full hover:bg-[#8a5225] hover:text-white transition-all duration-200 delay-75 shadow-md active:scale-90 translate-y-2 group-hover:translate-y-0"
           >
             <Search size={18} />
           </Link>
@@ -83,11 +100,17 @@ export default function ProductCard({ product }: ProductCardProps) {
             </span>
           </div>
           <button 
-            onClick={() => addToCart(product, 1)}
-            className="w-10 h-10 rounded-full bg-[#f7f1ea] hover:bg-[#8a5225] text-[#33241b] hover:text-white flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105"
-            title="Tambah ke Keranjang"
+            type="button"
+            onClick={handleAddToCart}
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 shadow-sm cursor-pointer active:scale-90 ${
+              justAdded
+                ? 'bg-[#5a8514] text-white scale-110 shadow-[#5a8514]/30'
+                : 'bg-[#f7f1ea] hover:bg-[#8a5225] text-[#33241b] hover:text-white hover:scale-105'
+            }`}
+            title={justAdded ? 'Ditambahkan ke Keranjang!' : 'Tambah ke Keranjang'}
+            aria-label={justAdded ? 'Ditambahkan ke Keranjang' : 'Tambah ke Keranjang'}
           >
-            <ShoppingCart size={18} />
+            {justAdded ? <Check size={18} /> : <ShoppingCart size={18} />}
           </button>
         </div>
       </div>

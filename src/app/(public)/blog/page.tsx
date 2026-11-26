@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Calendar, User, ArrowRight, FileText } from 'lucide-react';
 import { getArticles } from '@/lib/supabase/articles';
+import ScrollReveal from '@/components/ScrollReveal';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -41,7 +42,7 @@ export default async function BlogPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {articles.map((post) => {
+            {articles.map((post, i) => {
               const hasImage =
                 typeof post.image === 'string' &&
                 post.image.trim().length > 0 &&
@@ -50,56 +51,57 @@ export default async function BlogPage() {
                   post.image.startsWith('data:image'));
 
               return (
-                <article 
-                  key={post.id} 
-                  className="bg-white rounded-3xl border border-[#33241b]/10 overflow-hidden hover:shadow-xl hover:shadow-[#8a5225]/10 hover:border-[#8a5225]/30 transition-all duration-300 flex flex-col justify-between group"
-                >
-                  <div>
-                    {hasImage && (
-                      <Link href={`/blog/${post.id}`} className="block aspect-[16/9] bg-[#f7f1ea] overflow-hidden">
-                        <img 
-                          src={post.image!} 
-                          alt={post.title}
-                          loading="lazy"
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                        />
-                      </Link>
-                    )}
+                <ScrollReveal key={post.id} delayMs={i * 90} className="h-full">
+                  <article 
+                    className="h-full bg-white rounded-3xl border border-[#33241b]/10 overflow-hidden hover:shadow-xl hover:shadow-[#8a5225]/12 hover:border-[#8a5225]/35 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group"
+                  >
+                    <div>
+                      {hasImage && (
+                        <Link href={`/blog/${post.id}`} className="block aspect-[16/9] bg-[#f7f1ea] overflow-hidden">
+                          <img 
+                            src={post.image!} 
+                            alt={post.title}
+                            loading="lazy"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                          />
+                        </Link>
+                      )}
 
-                    <div className={`p-7 ${!hasImage ? 'pt-8 border-t-4 border-t-[#8a5225]/25' : ''}`}>
-                      <div className="flex flex-wrap items-center gap-3 text-xs text-stone-500 mb-3 font-body">
-                        <span className="bg-[#8a5225]/10 text-[#854523] font-bold px-2.5 py-1 rounded">
-                          {post.category}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Calendar size={13} /> {post.date}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <User size={13} /> {post.author}
-                        </span>
+                      <div className={`p-7 ${!hasImage ? 'pt-8 border-t-4 border-t-[#8a5225]/25' : ''}`}>
+                        <div className="flex flex-wrap items-center gap-3 text-xs text-stone-500 mb-3 font-body">
+                          <span className="bg-[#8a5225]/10 text-[#854523] font-bold px-2.5 py-1 rounded">
+                            {post.category}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Calendar size={13} /> {post.date}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <User size={13} /> {post.author}
+                          </span>
+                        </div>
+
+                        <Link href={`/blog/${post.id}`}>
+                          <h2 className="text-xl md:text-2xl font-heading text-[#33241b] mb-3 group-hover:text-[#8a5225] transition leading-snug">
+                            {post.title}
+                          </h2>
+                        </Link>
+
+                        <p className="text-stone-600 text-sm font-body leading-relaxed line-clamp-3">
+                          {post.excerpt}
+                        </p>
                       </div>
-
-                      <Link href={`/blog/${post.id}`}>
-                        <h2 className="text-xl md:text-2xl font-heading text-[#33241b] mb-3 group-hover:text-[#8a5225] transition leading-snug">
-                          {post.title}
-                        </h2>
-                      </Link>
-
-                      <p className="text-stone-600 text-sm font-body leading-relaxed line-clamp-3">
-                        {post.excerpt}
-                      </p>
                     </div>
-                  </div>
 
-                  <div className="px-7 pb-7 pt-2">
-                    <Link 
-                      href={`/blog/${post.id}`}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8a5225] group-hover:text-[#733f1b] transition font-body"
-                    >
-                      Baca Selengkapnya <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
-                </article>
+                    <div className="px-7 pb-7 pt-2">
+                      <Link 
+                        href={`/blog/${post.id}`}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8a5225] group-hover:text-[#733f1b] transition font-body"
+                      >
+                        Baca Selengkapnya <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                      </Link>
+                    </div>
+                  </article>
+                </ScrollReveal>
               );
             })}
           </div>
