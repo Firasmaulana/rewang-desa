@@ -212,21 +212,21 @@ export default function RealtimeBanner({ initialBanners }: RealtimeBannerProps) 
           setIsHovering(false);
         }
       }}
-      className="py-8 md:py-10 bg-[#fffaf5] border-b border-[#33241b]/10"
+      className="py-4 md:py-5 bg-[#fffaf5] border-b border-[#33241b]/10"
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 max-w-5xl">
         {/* Top Bar: Label + Controls (in DOM before track per carousel accessibility guidance) */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#854523] font-body">
-            <span className="w-7 h-7 rounded-full bg-[#8a5225]/12 text-[#8a5225] flex items-center justify-center">
-              <Megaphone size={14} />
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+          <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#854523] font-body">
+            <span className="w-6 h-6 rounded-full bg-[#8a5225]/12 text-[#8a5225] flex items-center justify-center">
+              <Megaphone size={12} />
             </span>
             <span>Info &amp; Kegiatan Terbaru</span>
           </div>
 
           {totalSlides > 1 && (
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-stone-500 mr-1 font-body tabular-nums">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[11px] font-semibold text-stone-500 mr-1 font-body tabular-nums">
                 {activeIndex + 1} / {totalSlides}
               </span>
 
@@ -236,9 +236,9 @@ export default function RealtimeBanner({ initialBanners }: RealtimeBannerProps) 
                 onClick={() => setIsPaused((prev) => !prev)}
                 aria-label={isPaused ? 'Putar geser otomatis' : 'Jeda geser otomatis'}
                 title={isPaused ? 'Putar otomatis' : 'Jeda otomatis'}
-                className="inline-flex items-center gap-1.5 px-3 h-9 rounded-full bg-white hover:bg-[#f7f1ea] text-[#33241b] border border-[#33241b]/15 text-xs font-semibold transition cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8a5225] touch-manipulation"
+                className="inline-flex items-center gap-1 px-2.5 h-7 rounded-full bg-white hover:bg-[#f7f1ea] text-[#33241b] border border-[#33241b]/15 text-[11px] font-semibold transition cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8a5225] touch-manipulation"
               >
-                {isPaused ? <Play size={13} /> : <Pause size={13} />}
+                {isPaused ? <Play size={11} /> : <Pause size={11} />}
                 <span className="hidden sm:inline">{isPaused ? 'Putar' : 'Jeda'}</span>
               </button>
 
@@ -246,18 +246,18 @@ export default function RealtimeBanner({ initialBanners }: RealtimeBannerProps) 
                 type="button"
                 onClick={() => handleStep(-1, true)}
                 aria-label="Slide sebelumnya"
-                className="w-9 h-9 rounded-full bg-white hover:bg-[#8a5225] text-[#33241b] hover:text-white border border-[#33241b]/15 hover:border-[#8a5225] flex items-center justify-center transition shadow-xs cursor-pointer active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8a5225] touch-manipulation"
+                className="w-7 h-7 rounded-full bg-white hover:bg-[#8a5225] text-[#33241b] hover:text-white border border-[#33241b]/15 hover:border-[#8a5225] flex items-center justify-center transition shadow-xs cursor-pointer active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8a5225] touch-manipulation"
               >
-                <ChevronLeft size={18} />
+                <ChevronLeft size={15} />
               </button>
 
               <button
                 type="button"
                 onClick={() => handleStep(1, true)}
                 aria-label="Slide berikutnya"
-                className="w-9 h-9 rounded-full bg-white hover:bg-[#8a5225] text-[#33241b] hover:text-white border border-[#33241b]/15 hover:border-[#8a5225] flex items-center justify-center transition shadow-xs cursor-pointer active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8a5225] touch-manipulation"
+                className="w-7 h-7 rounded-full bg-white hover:bg-[#8a5225] text-[#33241b] hover:text-white border border-[#33241b]/15 hover:border-[#8a5225] flex items-center justify-center transition shadow-xs cursor-pointer active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8a5225] touch-manipulation"
               >
-                <ChevronRight size={18} />
+                <ChevronRight size={15} />
               </button>
             </div>
           )}
@@ -269,7 +269,7 @@ export default function RealtimeBanner({ initialBanners }: RealtimeBannerProps) 
           tabIndex={0}
           role="group"
           aria-label="Daftar banner informasi"
-          className="info-carousel-track rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8a5225]"
+          className="info-carousel-track rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8a5225]"
         >
           {activeBanners.map((banner, idx) => {
             const isPhoto = Boolean(
@@ -292,11 +292,11 @@ export default function RealtimeBanner({ initialBanners }: RealtimeBannerProps) 
                 aria-label={`${idx + 1} dari ${totalSlides}`}
                 className="info-carousel-slide"
               >
-                <div className="bg-[#33241b] rounded-3xl overflow-hidden border border-[#8a5225]/35 shadow-xl text-[#fffaf5] grid grid-cols-1 md:grid-cols-12 relative">
-                  <div className="absolute top-0 right-0 w-72 h-72 bg-[#8a5225]/25 rounded-full filter blur-3xl opacity-60 translate-x-1/3 -translate-y-1/3 pointer-events-none" />
+                <div className="bg-[#33241b] rounded-2xl overflow-hidden border border-[#8a5225]/35 shadow-md text-[#fffaf5] grid grid-cols-1 sm:grid-cols-12 relative">
+                  <div className="absolute top-0 right-0 w-48 h-48 bg-[#8a5225]/25 rounded-full filter blur-3xl opacity-50 translate-x-1/3 -translate-y-1/3 pointer-events-none" />
 
-                  {/* Banner Image / Poster (Left on Desktop, Top on Mobile) */}
-                  <div className="md:col-span-5 relative bg-[#241913] min-h-[210px] sm:min-h-[250px] md:min-h-[270px] overflow-hidden">
+                  {/* Compact Banner Image / Poster */}
+                  <div className="sm:col-span-4 md:col-span-3 relative bg-[#241913] h-36 sm:h-[152px] overflow-hidden">
                     <img
                       src={isPhoto ? banner.image_text : '/hero-background.webp'}
                       alt={banner.title}
@@ -305,39 +305,41 @@ export default function RealtimeBanner({ initialBanners }: RealtimeBannerProps) 
                     />
                   </div>
 
-                  {/* Short Information Content (Right on Desktop, Bottom on Mobile) */}
-                  <div className="md:col-span-7 p-6 sm:p-8 md:p-10 flex flex-col justify-center relative z-10 text-left">
-                    {banner.tagline && (
-                      <span className="inline-block self-start bg-[#ffdd7d]/15 border border-[#ffdd7d]/30 text-[#ffdd7d] font-bold text-[11px] uppercase tracking-widest px-3 py-1 rounded-full mb-3 font-body">
-                        {banner.tagline}
-                      </span>
-                    )}
+                  {/* Compact Short Information Content */}
+                  <div className="sm:col-span-8 md:col-span-9 p-4 sm:px-6 sm:py-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3 relative z-10 text-left">
+                    <div className="flex-1 min-w-0">
+                      {banner.tagline && (
+                        <span className="inline-block bg-[#ffdd7d]/15 border border-[#ffdd7d]/30 text-[#ffdd7d] font-bold text-[10px] uppercase tracking-widest px-2.5 py-0.5 rounded-full mb-1.5 font-body">
+                          {banner.tagline}
+                        </span>
+                      )}
 
-                    <h2 className="text-2xl sm:text-3xl font-heading text-white leading-snug mb-3">
-                      {banner.title}
-                    </h2>
+                      <h2 className="text-base sm:text-lg md:text-xl font-heading text-white leading-snug mb-1 line-clamp-1">
+                        {banner.title}
+                      </h2>
 
-                    <p className="text-stone-200 text-sm md:text-base leading-relaxed font-body mb-5 max-w-xl whitespace-pre-line">
-                      {banner.description}
-                    </p>
+                      <p className="text-stone-200 text-xs sm:text-sm leading-relaxed font-body line-clamp-2">
+                        {banner.description}
+                      </p>
+                    </div>
 
                     {hasCta && (
-                      <div>
+                      <div className="shrink-0">
                         {isExternal ? (
                           <a
                             href={ctaLink}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-2 bg-[#ffdd7d] hover:bg-[#ffe69e] text-[#33241b] px-6 py-2.5 rounded-full font-bold transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shadow-md text-xs sm:text-sm font-body"
+                            className="inline-flex items-center gap-1.5 bg-[#ffdd7d] hover:bg-[#ffe69e] text-[#33241b] px-4 py-2 rounded-full font-bold transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shadow-sm text-xs font-body"
                           >
-                            {banner.button_text} <ArrowRight size={15} />
+                            {banner.button_text} <ArrowRight size={13} />
                           </a>
                         ) : (
                           <Link
                             href={ctaLink}
-                            className="inline-flex items-center gap-2 bg-[#ffdd7d] hover:bg-[#ffe69e] text-[#33241b] px-6 py-2.5 rounded-full font-bold transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shadow-md text-xs sm:text-sm font-body"
+                            className="inline-flex items-center gap-1.5 bg-[#ffdd7d] hover:bg-[#ffe69e] text-[#33241b] px-4 py-2 rounded-full font-bold transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shadow-sm text-xs font-body"
                           >
-                            {banner.button_text} <ArrowRight size={15} />
+                            {banner.button_text} <ArrowRight size={13} />
                           </Link>
                         )}
                       </div>
@@ -358,7 +360,7 @@ export default function RealtimeBanner({ initialBanners }: RealtimeBannerProps) 
         {totalSlides > 1 && (
           <nav
             aria-label="Pilih slide banner informasi"
-            className="flex items-center justify-center gap-1 mt-4"
+            className="flex items-center justify-center gap-0.5 mt-2"
           >
             {activeBanners.map((banner, idx) => {
               const isActive = idx === activeIndex;
@@ -372,10 +374,10 @@ export default function RealtimeBanner({ initialBanners }: RealtimeBannerProps) 
                   className="p-2 flex items-center justify-center cursor-pointer focus-visible:outline-2 focus-visible:outline-[#8a5225] rounded-full touch-manipulation"
                 >
                   <span
-                    className={`block h-2.5 rounded-full transition-all duration-300 ${
+                    className={`block h-2 rounded-full transition-all duration-300 ${
                       isActive
-                        ? 'w-8 bg-[#8a5225] ring-2 ring-[#8a5225]/25'
-                        : 'w-2.5 bg-[#33241b]/25 hover:bg-[#8a5225]/50'
+                        ? 'w-6 bg-[#8a5225] ring-2 ring-[#8a5225]/25'
+                        : 'w-2 bg-[#33241b]/25 hover:bg-[#8a5225]/50'
                     }`}
                   />
                 </button>
