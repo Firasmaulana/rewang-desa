@@ -1,20 +1,16 @@
-import { getBanner } from '@/lib/supabase/service';
-import AdminBannerForm from '@/components/AdminBannerForm';
+import { getBanners } from '@/lib/supabase/service';
+import AdminBannersClient from '@/components/AdminBannersClient';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default async function AdminBanner() {
-  const banner = await getBanner();
+export const metadata = {
+  title: 'Kelola Banner Info - Admin Rewang Desa',
+  description: 'Tambah, edit, aktifkan, atau hapus slide banner informasi singkat dan kegiatan booth Rewang Desa.',
+};
 
-  return (
-    <div className="max-w-4xl mx-auto font-body">
-      <div className="mb-8">
-        <h1 className="text-3xl font-heading text-[#33241b] mb-1">Banner Promo Beranda</h1>
-        <p className="text-stone-500 text-sm">Sesuaikan pesan kampanye dukungan petani yang tampil di halaman depan website.</p>
-      </div>
+export default async function AdminBannerPage() {
+  const banners = await getBanners();
 
-      <AdminBannerForm initialBanner={banner} />
-    </div>
-  );
+  return <AdminBannersClient initialBanners={banners} />;
 }

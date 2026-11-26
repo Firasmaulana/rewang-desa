@@ -233,3 +233,29 @@ dialog::backdrop {
     transition: none;
   }
 }
+
+/* Native Scroll-Snap Horizontal Info Banner Carousel */
+.info-carousel-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+  scrollbar-width: none;
+}
+
+.info-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .info-carousel-track {
+    scroll-behavior: smooth;
+  }
+}
+
+.info-carousel-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}

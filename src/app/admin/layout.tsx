@@ -42,7 +42,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <FileText size={18} /> Kelola Artikel
           </Link>
           <Link href="/admin/banner" className={navLinkClass('/admin/banner')}>
-            <ImageIcon size={18} /> Banner Promo
+            <ImageIcon size={18} /> Banner Info
           </Link>
           <Link href="/admin/settings" className={navLinkClass('/admin/settings')}>
             <Settings size={18} /> Pengaturan

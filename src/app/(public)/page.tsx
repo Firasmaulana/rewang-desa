@@ -3,15 +3,15 @@ import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import RealtimeBanner from '@/components/RealtimeBanner';
 import ScrollReveal from '@/components/ScrollReveal';
-import { getProducts, getBanner } from '@/lib/supabase/service';
+import { getProducts, getBanners } from '@/lib/supabase/service';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function Home() {
-  const [products, banner] = await Promise.all([
+  const [products, banners] = await Promise.all([
     getProducts(),
-    getBanner(),
+    getBanners({ onlyActive: true }),
   ]);
 
   // Top featured products from catalog
@@ -106,6 +106,9 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* Dynamic Multi-Slide Info & Booth Banner Carousel (Placed at Top) */}
+      <RealtimeBanner initialBanners={banners} />
 
       {/* Philosophy / Features Section */}
       <section className="py-12 border-y border-[#33241b]/10 bg-white">
@@ -238,9 +241,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
-      {/* Dynamic Promo Banner with Instant Realtime Sync */}
-      <RealtimeBanner initialBanner={banner} />
     </>
   );
 }

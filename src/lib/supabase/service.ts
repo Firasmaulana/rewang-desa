@@ -65,36 +65,58 @@ export async function getProductById(id: string): Promise<Product | undefined> {
   }
 }
 
-// 3. Fetch Promo Banner
-export async function getBanner(): Promise<DatabaseBanner> {
-  const fallbackBanner: DatabaseBanner = {
+// 3. Fetch All Banners (for multi-slide Info Carousel & Admin Manager)
+const DEFAULT_BANNERS: DatabaseBanner[] = [
+  {
     id: 'main-banner',
-    tagline: 'Program Dukung Petani',
-    title: 'Paket Rewang Tani Bulanan',
-    description: 'Bantu petani dengan langganan paket ini tiap bulan! Berisi 2 kg Beras Merah Sukabumi, 1 btl Kecap Kelapa, 1 btl Garam Jono, dan 1 pack Gula Kelapa murni.',
-    button_text: 'Langganan Paket Tani',
-    button_link: '/product/11',
-    image_text: '/products/tas-anyam-banyumas-custom-hampers-2.webp',
+    tagline: 'Info Booth & Kegiatan',
+    title: 'Kunjungi Booth Rewang Desa!',
+    description:
+      'Temukan aneka produk pangan alami, keripik renyah, minuman honje segar, dan kerajinan tangan desa secara langsung di gerai kami.',
+    button_text: 'Lihat Katalog',
+    button_link: '/shop',
+    image_text: '/hero-background.webp',
     is_active: true,
-  };
+  },
+];
 
+export async function getBanners(options?: { onlyActive?: boolean }): Promise<DatabaseBanner[]> {
   try {
     const supabase = await createClientServer();
-    if (!supabase) return fallbackBanner;
-
-    const { data, error } = await supabase
-      .from('banners')
-      .select('*')
-      .eq('id', 'main-banner')
-      .single();
-
-    if (error || !data) {
-      return fallbackBanner;
+    if (!supabase) {
+      return options?.onlyActive
+        ? DEFAULT_BANNERS.filter((b) => b.is_active)
+        : DEFAULT_BANNERS;
     }
 
-    return data as DatabaseBanner;
+    let query = supabase
+      .from('banners')
+      .select('*')
+      .order('updated_at', { ascending: false });
+
+    if (options?.onlyActive) {
+      query = query.eq('is_active', true);
+    }
+
+    const { data, error } = await query;
+
+    if (error || !data) {
+      return options?.onlyActive
+        ? DEFAULT_BANNERS.filter((b) => b.is_active)
+        : DEFAULT_BANNERS;
+    }
+
+    return data as DatabaseBanner[];
   } catch (err) {
-    console.error('Supabase getBanner error:', err);
-    return fallbackBanner;
+    console.error('Supabase getBanners error:', err);
+    return options?.onlyActive
+      ? DEFAULT_BANNERS.filter((b) => b.is_active)
+      : DEFAULT_BANNERS;
   }
+}
+
+// 4. Fetch Single Promo Banner (retained for backward compatibility)
+export async function getBanner(): Promise<DatabaseBanner> {
+  const banners = await getBanners();
+  return banners[0] || DEFAULT_BANNERS[0];
 }
