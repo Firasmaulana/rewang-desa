@@ -1,7 +1,8 @@
-import { Package, ShoppingBag, Users, DollarSign, Clock, ArrowRight } from 'lucide-react';
+import { Package, ShoppingBag, Users, Clock, ArrowRight } from 'lucide-react';
 import { getProducts } from '@/lib/supabase/service';
 import { getOrders } from '@/lib/supabase/orders';
 import Link from 'next/link';
+import ProductImage from '@/components/ProductImage';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -14,9 +15,6 @@ export default async function AdminDashboard() {
   const lowStockProducts = products.filter(p => (p.stock ?? 50) <= 25).slice(0, 4);
   const pendingOrders = orders.filter(o => o.status === 'menunggu_konfirmasi');
   const recentOrders = orders.slice(0, 4);
-  const totalRevenue = orders
-    .filter(o => o.status !== 'dibatalkan')
-    .reduce((acc, curr) => acc + curr.total, 0);
 
   return (
     <div className="max-w-6xl mx-auto font-body">
@@ -34,19 +32,7 @@ export default async function AdminDashboard() {
       </div>
       
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        
-        <div className="bg-white p-6 rounded-2xl border border-[#33241b]/10 shadow-sm flex items-center gap-4">
-          <div className="w-14 h-14 rounded-xl bg-amber-100 text-[#8a5225] flex items-center justify-center shrink-0">
-            <DollarSign size={28} />
-          </div>
-          <div>
-            <p className="text-xs font-bold text-stone-500 uppercase tracking-wider">Pendapatan</p>
-            <h3 className="text-2xl font-extrabold text-[#33241b]">
-              Rp {totalRevenue.toLocaleString('id-ID')}
-            </h3>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
         <div className="bg-white p-6 rounded-2xl border border-[#33241b]/10 shadow-sm flex items-center gap-4">
           <div className="w-14 h-14 rounded-xl bg-[#5a8514]/15 text-[#5a8514] flex items-center justify-center shrink-0">
@@ -134,8 +120,8 @@ export default async function AdminDashboard() {
                lowStockProducts.map(product => (
                  <div key={product.id} className="flex justify-between items-center pb-4 border-b border-stone-100 last:border-0 last:pb-0">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-[#fffaf5] border border-stone-200 rounded-lg flex items-center justify-center text-sm">
-                        {product.image}
+                      <div className="w-10 h-10 bg-[#fffaf5] border border-stone-200 rounded-xl overflow-hidden flex items-center justify-center shrink-0">
+                        <ProductImage src={product.image} alt={product.name} />
                       </div>
                       <div>
                         <p className="font-bold text-stone-800 text-sm">{product.name}</p>

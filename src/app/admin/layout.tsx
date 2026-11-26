@@ -34,15 +34,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-3 rounded-xl text-stone-300 hover:bg-[#8a5225]/20 hover:text-white transition text-sm">
             <Settings size={18} /> Pengaturan
           </Link>
-
-          <div className="pt-4 mt-4 border-t border-[#8a5225]/20">
-            <Link 
-              href="/" 
-              className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-[#ffdd7d] bg-[#8a5225]/15 hover:bg-[#8a5225]/30 transition text-xs font-semibold border border-[#8a5225]/30"
-            >
-              <Globe size={16} /> Kunjungi Halaman Utama
-            </Link>
-          </div>
         </nav>
         
         <div className="p-4 border-t border-[#8a5225]/20">
