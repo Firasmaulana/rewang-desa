@@ -86,11 +86,7 @@ export default function Header({ user }: { user?: { name: string; role: string }
             : 'bg-[#fffaf5]/90 backdrop-blur-md shadow-sm border-[#33241b]/10'
         }`}
       >
-        <div
-          className={`container mx-auto px-4 flex items-center justify-between gap-4 transition-all duration-300 ${
-            isScrolled ? 'py-2.5 md:py-3' : 'py-3 md:py-4'
-          }`}
-        >
+        <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between gap-4">
           
           {/* Mobile Menu & Logo */}
           <div className="flex items-center gap-3">
