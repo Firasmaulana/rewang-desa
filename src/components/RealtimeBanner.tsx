@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { DatabaseBanner } from '@/lib/supabase/types';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, Pause, Play, Megaphone, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 interface RealtimeBannerProps {
   initialBanners: DatabaseBanner[];
@@ -13,7 +13,6 @@ interface RealtimeBannerProps {
 export default function RealtimeBanner({ initialBanners }: RealtimeBannerProps) {
   const [banners, setBanners] = useState<DatabaseBanner[]>(initialBanners);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [statusAnnouncement, setStatusAnnouncement] = useState('');
 
@@ -181,9 +180,9 @@ export default function RealtimeBanner({ initialBanners }: RealtimeBannerProps) 
     };
   }, [totalSlides, getNearestIndex]);
 
-  // Auto-advance every 5 seconds (respects reduced motion, hover, and Pause control)
+  // Auto-advance every 5 seconds (respects reduced motion and pauses on hover/focus)
   useEffect(() => {
-    if (totalSlides <= 1 || isPaused || isHovering) return;
+    if (totalSlides <= 1 || isHovering) return;
     if (
       typeof window !== 'undefined' &&
       !window.matchMedia('(prefers-reduced-motion: no-preference)').matches
@@ -196,7 +195,7 @@ export default function RealtimeBanner({ initialBanners }: RealtimeBannerProps) 
     }, 5000);
 
     return () => clearInterval(timer);
-  }, [totalSlides, isPaused, isHovering, handleStep]);
+  }, [totalSlides, isHovering, handleStep]);
 
   if (totalSlides === 0) return null;
 
@@ -215,62 +214,37 @@ export default function RealtimeBanner({ initialBanners }: RealtimeBannerProps) 
       className="py-4 md:py-5 bg-[#fffaf5] border-b border-[#33241b]/10"
     >
       <div className="container mx-auto px-4 max-w-5xl">
-        {/* Top Bar: Label + Controls (in DOM before track per carousel accessibility guidance) */}
-        <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
-          <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-[#854523] font-body">
-            <span className="w-6 h-6 rounded-full bg-[#8a5225]/12 text-[#8a5225] flex items-center justify-center">
-              <Megaphone size={12} />
-            </span>
-            <span>Info &amp; Kegiatan Terbaru</span>
-          </div>
-
+        <div className="relative group">
+          {/* Subtle Prev/Next Controls overlaid on edges (in DOM before track) */}
           {totalSlides > 1 && (
-            <div className="flex items-center gap-1.5">
-              <span className="text-[11px] font-semibold text-stone-500 mr-1 font-body tabular-nums">
-                {activeIndex + 1} / {totalSlides}
-              </span>
-
-              {/* WCAG 2.2.2 Pause / Play control for auto-scrolling carousel */}
-              <button
-                type="button"
-                onClick={() => setIsPaused((prev) => !prev)}
-                aria-label={isPaused ? 'Putar geser otomatis' : 'Jeda geser otomatis'}
-                title={isPaused ? 'Putar otomatis' : 'Jeda otomatis'}
-                className="inline-flex items-center gap-1 px-2.5 h-7 rounded-full bg-white hover:bg-[#f7f1ea] text-[#33241b] border border-[#33241b]/15 text-[11px] font-semibold transition cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8a5225] touch-manipulation"
-              >
-                {isPaused ? <Play size={11} /> : <Pause size={11} />}
-                <span className="hidden sm:inline">{isPaused ? 'Putar' : 'Jeda'}</span>
-              </button>
-
+            <div className="pointer-events-none absolute inset-y-0 left-2 right-2 z-20 flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => handleStep(-1, true)}
                 aria-label="Slide sebelumnya"
-                className="w-7 h-7 rounded-full bg-white hover:bg-[#8a5225] text-[#33241b] hover:text-white border border-[#33241b]/15 hover:border-[#8a5225] flex items-center justify-center transition shadow-xs cursor-pointer active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8a5225] touch-manipulation"
+                className="pointer-events-auto w-8 h-8 rounded-full bg-[#33241b]/70 hover:bg-[#8a5225] text-white backdrop-blur-xs border border-white/20 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus-visible:opacity-100 shadow-md cursor-pointer active:scale-90 touch-manipulation"
               >
-                <ChevronLeft size={15} />
+                <ChevronLeft size={16} />
               </button>
-
               <button
                 type="button"
                 onClick={() => handleStep(1, true)}
                 aria-label="Slide berikutnya"
-                className="w-7 h-7 rounded-full bg-white hover:bg-[#8a5225] text-[#33241b] hover:text-white border border-[#33241b]/15 hover:border-[#8a5225] flex items-center justify-center transition shadow-xs cursor-pointer active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8a5225] touch-manipulation"
+                className="pointer-events-auto w-8 h-8 rounded-full bg-[#33241b]/70 hover:bg-[#8a5225] text-white backdrop-blur-xs border border-white/20 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus-visible:opacity-100 shadow-md cursor-pointer active:scale-90 touch-manipulation"
               >
-                <ChevronRight size={15} />
+                <ChevronRight size={16} />
               </button>
             </div>
           )}
-        </div>
 
-        {/* Native Scroll-Snap Carousel Track */}
-        <div
-          ref={trackRef}
-          tabIndex={0}
-          role="group"
-          aria-label="Daftar banner informasi"
-          className="info-carousel-track rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8a5225]"
-        >
+          {/* Native Scroll-Snap Carousel Track */}
+          <div
+            ref={trackRef}
+            tabIndex={0}
+            role="group"
+            aria-label="Daftar banner informasi"
+            className="info-carousel-track rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8a5225]"
+          >
           {activeBanners.map((banner, idx) => {
             const isPhoto = Boolean(
               banner.image_text &&
@@ -349,6 +323,7 @@ export default function RealtimeBanner({ initialBanners }: RealtimeBannerProps) 
               </div>
             );
           })}
+          </div>
         </div>
 
         {/* Visually hidden live status region for assistive technology */}
