@@ -111,10 +111,10 @@ export default async function Home() {
       <RealtimeBanner initialBanners={banners} />
 
       {/* Philosophy / Features Section */}
-      <section className="py-12 border-y border-[#33241b]/10 bg-white">
+      <section className="py-12 border-y border-[#33241b]/10 bg-white overflow-x-clip">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <ScrollReveal delayMs={0}>
+            <ScrollReveal variant="left" delayMs={0}>
               <div className="h-full flex items-start gap-4 bg-[#fffaf5] p-6 rounded-2xl border border-[#33241b]/5 hover:border-[#8a5225]/35 hover:-translate-y-1 hover:shadow-md hover:shadow-[#8a5225]/8 transition-all duration-300 group">
                 <div className="w-12 h-12 bg-[#8a5225]/10 text-[#8a5225] rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#8a5225] group-hover:text-white group-hover:scale-105 transition-all duration-200">
                   <PackageCheck size={24} />
@@ -128,7 +128,7 @@ export default async function Home() {
               </div>
             </ScrollReveal>
 
-            <ScrollReveal delayMs={90}>
+            <ScrollReveal variant="up" staggerIndex={1} delayMs={90}>
               <div className="h-full flex items-start gap-4 bg-[#fffaf5] p-6 rounded-2xl border border-[#33241b]/5 hover:border-[#8a5225]/35 hover:-translate-y-1 hover:shadow-md hover:shadow-[#8a5225]/8 transition-all duration-300 group">
                 <div className="w-12 h-12 bg-[#8a5225]/10 text-[#8a5225] rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#8a5225] group-hover:text-white group-hover:scale-105 transition-all duration-200">
                   <ShieldCheck size={24} />
@@ -142,7 +142,7 @@ export default async function Home() {
               </div>
             </ScrollReveal>
 
-            <ScrollReveal delayMs={180}>
+            <ScrollReveal variant="right" delayMs={180}>
               <div className="h-full flex items-start gap-4 bg-[#fffaf5] p-6 rounded-2xl border border-[#33241b]/5 hover:border-[#8a5225]/35 hover:-translate-y-1 hover:shadow-md hover:shadow-[#8a5225]/8 transition-all duration-300 group">
                 <div className="w-12 h-12 bg-[#8a5225]/10 text-[#8a5225] rounded-xl flex items-center justify-center shrink-0 group-hover:bg-[#8a5225] group-hover:text-white group-hover:scale-105 transition-all duration-200">
                   <HeartHandshake size={24} />
@@ -160,15 +160,16 @@ export default async function Home() {
       </section>
 
       {/* Categories Section */}
-      <section id="kategori" className="py-16 md:py-24 bg-[#fffaf5]">
+      <section id="kategori" className="py-16 md:py-24 bg-[#fffaf5] overflow-x-clip">
         <div className="container mx-auto px-4 text-center">
-          <ScrollReveal>
+          <ScrollReveal variant="up">
             <span className="text-[#854523] text-xs font-bold uppercase tracking-widest mb-2 block font-body">
               Kurasi Pilihan
             </span>
-            <h2 className="text-3xl md:text-4xl font-heading text-[#33241b] mb-4">
+            <h2 className="text-3xl md:text-4xl font-heading text-[#33241b] mb-3">
               Kategori Hasil Bumi &amp; Kerajinan
             </h2>
+            <div aria-hidden="true" className="scroll-line-expand w-24 h-1 rounded-full bg-gradient-to-r from-[#8a5225] via-[#ffdd7d] to-[#5a8514] mx-auto mb-5" />
             <p className="text-stone-600 mb-12 max-w-xl mx-auto text-sm md:text-base font-body">
               Jelajahi komoditas unggulan desa yang diproduksi dengan ketulusan tangan para pengrajin dan petani nusantara.
             </p>
@@ -176,7 +177,13 @@ export default async function Home() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {categories.map((cat, i) => (
-              <ScrollReveal key={i} delayMs={i * 80} className="h-full">
+              <ScrollReveal
+                key={i}
+                variant="zoom"
+                staggerIndex={(i % 4) as 0 | 1 | 2 | 3}
+                delayMs={i * 80}
+                className="h-full"
+              >
                 <Link 
                   href={`/shop?category=${encodeURIComponent(cat.name)}`} 
                   className="h-full group bg-white p-6 rounded-2xl border border-[#33241b]/10 hover:border-[#8a5225] hover:shadow-xl hover:shadow-[#8a5225]/12 hover:-translate-y-1.5 active:scale-[0.99] transition-all duration-300 text-left flex flex-col justify-between"
@@ -207,10 +214,36 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Scroll-Driven Interactive Craft Marquee Ribbon (glides 1:1 with user scroll) */}
+      <div
+        aria-hidden="true"
+        className="bg-[#33241b] text-[#ffdd7d] py-3.5 overflow-hidden border-y border-[#8a5225]/40 select-none"
+      >
+        <div className="scroll-marquee-track flex items-center gap-8 whitespace-nowrap font-heading text-sm md:text-base tracking-wide">
+          <span>Bantu Desa Tanpa Harus Pergi ke Desa</span>
+          <span className="text-[#8a5225]">&bull;</span>
+          <span className="text-[#fffaf5]">Garam Jono Grobogan</span>
+          <span className="text-[#8a5225]">&bull;</span>
+          <span>100% Karya Petani Lokal</span>
+          <span className="text-[#8a5225]">&bull;</span>
+          <span className="text-[#fffaf5]">Beras Merah Jampang</span>
+          <span className="text-[#8a5225]">&bull;</span>
+          <span>Murni &amp; Tanpa Pengawet</span>
+          <span className="text-[#8a5225]">&bull;</span>
+          <span className="text-[#fffaf5]">Gula Singkong Banjarnegara</span>
+          <span className="text-[#8a5225]">&bull;</span>
+          <span>Gotong Royong UMKM Sepuh</span>
+          <span className="text-[#8a5225]">&bull;</span>
+          <span className="text-[#fffaf5]">Tas Anyam Banyumas</span>
+          <span className="text-[#8a5225]">&bull;</span>
+          <span>Bantu Desa Tanpa Harus Pergi ke Desa</span>
+        </div>
+      </div>
+
       {/* Featured Products */}
-      <section id="produk" className="py-16 bg-white border-t border-[#33241b]/10">
+      <section id="produk" className="py-16 bg-white overflow-x-clip">
         <div className="container mx-auto px-4">
-          <ScrollReveal>
+          <ScrollReveal variant="up">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-4">
               <div>
                 <span className="text-[#854523] text-xs font-bold uppercase tracking-widest mb-2 block font-body">
@@ -234,7 +267,13 @@ export default async function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredProducts.map((product, i) => (
-              <ScrollReveal key={product.id} delayMs={i * 80} className="h-full">
+              <ScrollReveal
+                key={product.id}
+                variant="up"
+                staggerIndex={(i % 4) as 0 | 1 | 2 | 3}
+                delayMs={i * 80}
+                className="h-full"
+              >
                 <ProductCard product={product} />
               </ScrollReveal>
             ))}

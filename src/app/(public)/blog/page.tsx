@@ -15,16 +15,17 @@ export default async function BlogPage() {
   const articles = await getArticles();
 
   return (
-    <div className="bg-[#fffaf5] min-h-screen py-16">
+    <div className="bg-[#fffaf5] min-h-screen py-16 overflow-x-clip">
       <div className="container mx-auto px-4 max-w-6xl">
         
         <div className="text-center mb-16 max-w-2xl mx-auto">
           <span className="text-[#854523] text-xs font-bold uppercase tracking-widest mb-2 block font-body">
             Kabar &amp; Kearifan Lokal
           </span>
-          <h1 className="text-3xl md:text-5xl font-heading text-[#33241b] mb-4">
+          <h1 className="text-3xl md:text-5xl font-heading text-[#33241b] mb-3">
             Artikel &amp; Cerita dari Desa
           </h1>
+          <div aria-hidden="true" className="scroll-line-expand w-20 h-1 rounded-full bg-gradient-to-r from-[#8a5225] via-[#ffdd7d] to-[#5a8514] mx-auto mb-4" />
           <p className="text-stone-600 text-sm md:text-base font-body">
             Kumpulan kisah perjuangan, inovasi pangan lokal, dan kearifan masyarakat desa yang kami temui di setiap jengkal perjalanan.
           </p>
@@ -51,7 +52,12 @@ export default async function BlogPage() {
                   post.image.startsWith('data:image'));
 
               return (
-                <ScrollReveal key={post.id} delayMs={i * 90} className="h-full">
+                <ScrollReveal
+                  key={post.id}
+                  variant={i % 2 === 0 ? 'left' : 'right'}
+                  delayMs={(i % 2) * 100}
+                  className="h-full"
+                >
                   <article 
                     className="h-full bg-white rounded-3xl border border-[#33241b]/10 overflow-hidden hover:shadow-xl hover:shadow-[#8a5225]/12 hover:border-[#8a5225]/35 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group"
                   >

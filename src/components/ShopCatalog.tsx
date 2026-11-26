@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Product } from '@/data/products';
 import ProductCard from '@/components/ProductCard';
+import ScrollReveal from '@/components/ScrollReveal';
 import { Sparkles, X, ArrowRight, PackageOpen } from 'lucide-react';
 import Link from 'next/link';
 
@@ -250,8 +251,16 @@ export default function ShopCatalog({ initialProducts }: ShopCatalogProps) {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+              {filteredProducts.map((product, idx) => (
+                <ScrollReveal
+                  key={product.id}
+                  variant="zoom"
+                  staggerIndex={(idx % 3) as 0 | 1 | 2}
+                  delayMs={(idx % 3) * 70}
+                  className="h-full"
+                >
+                  <ProductCard product={product} />
+                </ScrollReveal>
               ))}
             </div>
           )}

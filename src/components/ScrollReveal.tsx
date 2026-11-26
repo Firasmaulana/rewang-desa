@@ -2,16 +2,22 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+type RevealVariant = 'up' | 'left' | 'right' | 'zoom';
+
 interface ScrollRevealProps {
   children: React.ReactNode;
   className?: string;
   delayMs?: number;
+  variant?: RevealVariant;
+  staggerIndex?: 0 | 1 | 2 | 3;
 }
 
 export default function ScrollReveal({
   children,
   className = '',
   delayMs = 0,
+  variant = 'up',
+  staggerIndex = 0,
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [useFallback, setUseFallback] = useState(false);
@@ -45,19 +51,24 @@ export default function ScrollReveal({
           }
         }
       },
-      { threshold: 0.12, rootMargin: '0px 0px -30px 0px' }
+      { threshold: 0.1, rootMargin: '0px 0px -24px 0px' }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
+  const nativeClass = `scroll-reveal-native-${variant}`;
+  const staggerClass = staggerIndex > 0 ? `scroll-stagger-${staggerIndex}` : '';
+  const fallbackClass =
+    variant === 'up' ? 'scroll-reveal-fallback' : `scroll-reveal-fallback-${variant}`;
+
   return (
     <div
       ref={ref}
       data-visible={isVisible ? 'true' : 'false'}
       style={useFallback && delayMs ? { transitionDelay: `${delayMs}ms` } : undefined}
-      className={`${useFallback ? 'scroll-reveal-fallback' : 'scroll-reveal-native'} ${className}`}
+      className={`${useFallback ? fallbackClass : `${nativeClass} ${staggerClass}`} ${className}`}
     >
       {children}
     </div>

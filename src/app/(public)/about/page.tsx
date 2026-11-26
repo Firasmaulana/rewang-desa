@@ -60,66 +60,64 @@ export default function AboutPage() {
       </section>
 
       {/* Main Philosophy & Story (from Catalog Page 2) */}
-      <section className="py-20">
+      <section className="py-20 overflow-x-clip">
         <div className="container mx-auto px-4 max-w-5xl">
-          <ScrollReveal>
-            <div className="flex flex-col lg:flex-row gap-12 items-center">
+          <div className="flex flex-col lg:flex-row gap-12 items-center">
+            
+            {/* Visual Box */}
+            <ScrollReveal variant="left" className="lg:w-1/2 w-full">
+              <div className="relative rounded-3xl bg-gradient-to-br from-[#f7f1ea] via-white to-[#fffaf5] p-8 border border-[#8a5225]/20 shadow-xl text-center hover:-translate-y-1 transition-transform duration-300">
+                <div className="w-20 h-20 rounded-full bg-[#8a5225]/10 text-[#8a5225] flex items-center justify-center mx-auto mb-6">
+                  <Users size={36} />
+                </div>
+                <Logo size="lg" showTagline={true} />
+                <div className="my-6 border-y border-[#33241b]/10 py-4">
+                  <p className="text-xs uppercase tracking-widest text-[#854523] font-bold font-body">
+                    Makna &ldquo;Rewang&rdquo;
+                  </p>
+                  <p className="font-heading text-xl text-[#33241b] mt-1 italic">
+                    Tumbuh dan bergerak bersama
+                  </p>
+                </div>
+                <p className="text-xs text-stone-500 font-body leading-relaxed">
+                  Bagi kami, memajukan desa dimulai dari saling membantu. Sebuah ikatan tulus masyarakat nusantara untuk saling menyokong kehidupan.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            {/* Narrative Story */}
+            <ScrollReveal variant="right" delayMs={100} className="lg:w-1/2 space-y-6">
+              <span className="text-[#854523] text-xs font-bold uppercase tracking-widest block font-body">
+                Awal Mula Perjalanan
+              </span>
+              <h2 className="text-3xl md:text-4xl font-heading text-[#33241b] leading-snug">
+                Dari Tangan Petani, Untuk Sahabat Rewang
+              </h2>
               
-              {/* Visual Box */}
-              <div className="lg:w-1/2 w-full">
-                <div className="relative rounded-3xl bg-gradient-to-br from-[#f7f1ea] via-white to-[#fffaf5] p-8 border border-[#8a5225]/20 shadow-xl text-center hover:-translate-y-1 transition-transform duration-300">
-                  <div className="w-20 h-20 rounded-full bg-[#8a5225]/10 text-[#8a5225] flex items-center justify-center mx-auto mb-6">
-                    <Users size={36} />
-                  </div>
-                  <Logo size="lg" showTagline={true} />
-                  <div className="my-6 border-y border-[#33241b]/10 py-4">
-                    <p className="text-xs uppercase tracking-widest text-[#854523] font-bold font-body">
-                      Makna &ldquo;Rewang&rdquo;
-                    </p>
-                    <p className="font-heading text-xl text-[#33241b] mt-1 italic">
-                      Tumbuh dan bergerak bersama
-                    </p>
-                  </div>
-                  <p className="text-xs text-stone-500 font-body leading-relaxed">
-                    Bagi kami, memajukan desa dimulai dari saling membantu. Sebuah ikatan tulus masyarakat nusantara untuk saling menyokong kehidupan.
-                  </p>
-                </div>
+              <div className="space-y-4 text-stone-700 text-base leading-relaxed font-body">
+                <p>
+                  Rewang Desa lahir dari keresahan melihat potensi desa yang begitu melimpah, tetapi perputaran ekonominya masih berjalan lambat. Banyak hasil karya dari tangan petani dan pengrajin di desa yang berpotensi dan sangat berkualitas, namun belum memiliki akses pasar luas untuk berkembang.
+                </p>
+                <p>
+                  Oleh karena itu, <strong>Rewang Desa</strong> hadir sebagai jembatan untuk menghubungkan hasil bumi, produk lokal, dan kisah perjuangan dari desa dengan <strong>Sahabat Rewang</strong> yang ingin mendukung produk dari tangan desa secara nyata.
+                </p>
+                <p className="bg-[#f7f1ea] p-4 rounded-xl border-l-4 border-[#8a5225] text-sm text-[#33241b]">
+                  &ldquo;Bagi kami, memajukan desa dimulai dari saling membantu — sesuai makna &lsquo;<strong>rewang</strong>&rsquo; itu sendiri: tumbuh dan bergerak bersama.&rdquo;
+                </p>
               </div>
+            </ScrollReveal>
 
-              {/* Narrative Story */}
-              <div className="lg:w-1/2 space-y-6">
-                <span className="text-[#854523] text-xs font-bold uppercase tracking-widest block font-body">
-                  Awal Mula Perjalanan
-                </span>
-                <h2 className="text-3xl md:text-4xl font-heading text-[#33241b] leading-snug">
-                  Dari Tangan Petani, Untuk Sahabat Rewang
-                </h2>
-                
-                <div className="space-y-4 text-stone-700 text-base leading-relaxed font-body">
-                  <p>
-                    Rewang Desa lahir dari keresahan melihat potensi desa yang begitu melimpah, tetapi perputaran ekonominya masih berjalan lambat. Banyak hasil karya dari tangan petani dan pengrajin di desa yang berpotensi dan sangat berkualitas, namun belum memiliki akses pasar luas untuk berkembang.
-                  </p>
-                  <p>
-                    Oleh karena itu, <strong>Rewang Desa</strong> hadir sebagai jembatan untuk menghubungkan hasil bumi, produk lokal, dan kisah perjuangan dari desa dengan <strong>Sahabat Rewang</strong> yang ingin mendukung produk dari tangan desa secara nyata.
-                  </p>
-                  <p className="bg-[#f7f1ea] p-4 rounded-xl border-l-4 border-[#8a5225] text-sm text-[#33241b]">
-                    &ldquo;Bagi kami, memajukan desa dimulai dari saling membantu — sesuai makna &lsquo;<strong>rewang</strong>&rsquo; itu sendiri: tumbuh dan bergerak bersama.&rdquo;
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </ScrollReveal>
+          </div>
         </div>
       </section>
 
       {/* Visi & Misi */}
-      <section className="py-20 bg-white border-y border-[#33241b]/10">
+      <section className="py-20 bg-white border-y border-[#33241b]/10 overflow-x-clip">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             
             {/* Visi */}
-            <ScrollReveal delayMs={0} className="h-full">
+            <ScrollReveal variant="left" delayMs={0} className="h-full">
               <div className="h-full bg-[#fffaf5] p-8 rounded-3xl border border-[#33241b]/10 hover:border-[#8a5225]/35 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
                 <div className="w-12 h-12 bg-[#8a5225]/10 text-[#8a5225] rounded-2xl flex items-center justify-center mb-6">
                   <Target size={26} />
@@ -132,7 +130,7 @@ export default function AboutPage() {
             </ScrollReveal>
 
             {/* Misi */}
-            <ScrollReveal delayMs={100} className="h-full">
+            <ScrollReveal variant="right" delayMs={100} className="h-full">
               <div className="h-full bg-[#fffaf5] p-8 rounded-3xl border border-[#33241b]/10 hover:border-[#8a5225]/35 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
                 <div className="w-12 h-12 bg-[#8a5225]/10 text-[#8a5225] rounded-2xl flex items-center justify-center mb-6">
                   <Heart size={26} />
@@ -164,57 +162,66 @@ export default function AboutPage() {
       </section>
 
       {/* Contact & Location Block */}
-      <section className="py-20 bg-[#fffaf5]">
+      <section className="py-20 bg-[#fffaf5] overflow-x-clip">
         <div className="container mx-auto px-4 max-w-4xl text-center">
-          <span className="text-[#854523] text-xs font-bold uppercase tracking-widest mb-2 block font-body">
-            Kunjungi &amp; Sapa Kami
-          </span>
-          <h2 className="text-3xl md:text-4xl font-heading text-[#33241b] mb-10">
-            Hubungi Rewang Desa
-          </h2>
+          <ScrollReveal variant="up">
+            <span className="text-[#854523] text-xs font-bold uppercase tracking-widest mb-2 block font-body">
+              Kunjungi &amp; Sapa Kami
+            </span>
+            <h2 className="text-3xl md:text-4xl font-heading text-[#33241b] mb-3">
+              Hubungi Rewang Desa
+            </h2>
+            <div aria-hidden="true" className="scroll-line-expand w-20 h-1 rounded-full bg-gradient-to-r from-[#8a5225] via-[#ffdd7d] to-[#5a8514] mx-auto mb-10" />
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-            <div className="bg-white p-6 rounded-2xl border border-[#33241b]/10 flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-[#8a5225]/10 text-[#8a5225] flex items-center justify-center shrink-0">
-                <MapPin size={20} />
+            <ScrollReveal variant="zoom" staggerIndex={0} delayMs={0}>
+              <div className="h-full bg-white p-6 rounded-2xl border border-[#33241b]/10 hover:border-[#8a5225]/35 hover:-translate-y-1 hover:shadow-md transition-all duration-300 flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#8a5225]/10 text-[#8a5225] flex items-center justify-center shrink-0">
+                  <MapPin size={20} />
+                </div>
+                <div>
+                  <h4 className="font-heading font-bold text-base text-[#33241b] mb-1">Lokasi</h4>
+                  <p className="text-xs text-stone-600 font-body">Pondok Kelapa, Jakarta Timur</p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-heading font-bold text-base text-[#33241b] mb-1">Lokasi</h4>
-                <p className="text-xs text-stone-600 font-body">Pondok Kelapa, Jakarta Timur</p>
-              </div>
-            </div>
+            </ScrollReveal>
 
-            <div className="bg-white p-6 rounded-2xl border border-[#33241b]/10 flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-[#8a5225]/10 text-[#8a5225] flex items-center justify-center shrink-0">
-                <Phone size={20} />
+            <ScrollReveal variant="zoom" staggerIndex={1} delayMs={90}>
+              <div className="h-full bg-white p-6 rounded-2xl border border-[#33241b]/10 hover:border-[#8a5225]/35 hover:-translate-y-1 hover:shadow-md transition-all duration-300 flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#8a5225]/10 text-[#8a5225] flex items-center justify-center shrink-0">
+                  <Phone size={20} />
+                </div>
+                <div>
+                  <h4 className="font-heading font-bold text-base text-[#33241b] mb-1">WhatsApp</h4>
+                  <a href="https://wa.me/6281317533522" className="text-xs text-[#8a5225] font-semibold hover:underline font-body">
+                    0813-1753-3522
+                  </a>
+                </div>
               </div>
-              <div>
-                <h4 className="font-heading font-bold text-base text-[#33241b] mb-1">WhatsApp</h4>
-                <a href="https://wa.me/6281317533522" className="text-xs text-[#8a5225] font-semibold hover:underline font-body">
-                  0813-1753-3522
-                </a>
-              </div>
-            </div>
+            </ScrollReveal>
 
-            <div className="bg-white p-6 rounded-2xl border border-[#33241b]/10 flex items-start gap-4">
-              <div className="w-10 h-10 rounded-xl bg-[#8a5225]/10 text-[#8a5225] flex items-center justify-center shrink-0">
-                <InstagramIcon size={20} />
+            <ScrollReveal variant="zoom" staggerIndex={2} delayMs={180}>
+              <div className="h-full bg-white p-6 rounded-2xl border border-[#33241b]/10 hover:border-[#8a5225]/35 hover:-translate-y-1 hover:shadow-md transition-all duration-300 flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-[#8a5225]/10 text-[#8a5225] flex items-center justify-center shrink-0">
+                  <InstagramIcon size={20} />
+                </div>
+                <div>
+                  <h4 className="font-heading font-bold text-base text-[#33241b] mb-1">Instagram</h4>
+                  <p className="text-xs text-stone-600 font-body">@rewangdesa &amp; @rewang_desa</p>
+                </div>
               </div>
-              <div>
-                <h4 className="font-heading font-bold text-base text-[#33241b] mb-1">Instagram</h4>
-                <p className="text-xs text-stone-600 font-body">@rewangdesa &amp; @rewang_desa</p>
-              </div>
-            </div>
+            </ScrollReveal>
           </div>
 
-          <div className="mt-12">
+          <ScrollReveal variant="up" className="mt-12">
             <Link 
               href="/shop" 
-              className="inline-block bg-[#8a5225] text-[#fffaf5] px-8 py-3.5 rounded-full font-semibold hover:bg-[#733f1b] transition shadow-lg shadow-[#8a5225]/25 text-sm md:text-base font-body"
+              className="inline-block bg-[#8a5225] text-[#fffaf5] px-8 py-3.5 rounded-full font-semibold hover:bg-[#733f1b] hover:-translate-y-0.5 active:scale-95 transition-all duration-200 shadow-lg shadow-[#8a5225]/25 text-sm md:text-base font-body"
             >
               Mulai Belanja Produk Desa
             </Link>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
     </div>

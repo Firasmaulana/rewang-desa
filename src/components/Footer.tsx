@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Logo from '@/components/Logo';
+import ScrollReveal from '@/components/ScrollReveal';
 import { MapPin, Phone, Mail } from 'lucide-react';
 
 function InstagramIcon({ size = 17, className = "" }: { size?: number; className?: string }) {
@@ -24,9 +25,10 @@ function InstagramIcon({ size = 17, className = "" }: { size?: number; className
 
 export default function Footer() {
   return (
-    <footer id="kontak" className="bg-[#33241b] text-[#f7f1ea] pt-16 pb-10 mt-auto border-t border-[#8a5225]/30">
+    <footer id="kontak" className="bg-[#33241b] text-[#f7f1ea] pt-16 pb-10 mt-auto border-t border-[#8a5225]/30 overflow-x-clip">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        <ScrollReveal variant="up">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           
           {/* Brand Info */}
           <div className="lg:pr-6 flex flex-col items-start">
@@ -127,7 +129,8 @@ export default function Footer() {
             </form>
           </div>
 
-        </div>
+          </div>
+        </ScrollReveal>
 
         {/* Bottom Bar */}
         <div className="border-t border-[#8a5225]/25 pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-stone-400 font-body gap-4">
