@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useTransition } from 'react';
 import { supabase } from '@/lib/supabase/client';
-import { DatabaseOrder, OrderStatus } from '@/lib/supabase/types';
-import { accOrder, updateOrderStatus } from '@/actions/orders';
+import { DatabaseOrder, OrderStatus, OrderItem } from '@/lib/supabase/types';
+import { accOrder, updateOrderStatus, updateOrderItems } from '@/actions/orders';
+import { Product, products as defaultFallbackProducts } from '@/data/products';
 import { 
   ShoppingBag, 
   Clock, 
@@ -17,13 +18,21 @@ import {
   AlertCircle,
   Copy,
   ExternalLink,
-  Sparkles
+  Sparkles,
+  Edit3,
+  Plus,
+  Minus,
+  Trash2,
+  X,
+  PackagePlus,
+  Loader2
 } from 'lucide-react';
 
 interface AdminOrdersClientProps {
   initialOrders: DatabaseOrder[];
   isTableConfigured?: boolean;
   tableError?: string;
+  availableProducts?: Product[];
 }
 
 const SQL_SETUP_SCRIPT = `-- 1. Buka hak izin akses penuh ke role anon dan authenticated pada tabel orders & products
@@ -46,13 +55,28 @@ CREATE POLICY "Allow public update orders" ON public.orders FOR UPDATE USING (tr
 DROP POLICY IF EXISTS "Allow public all on products" ON public.products;
 CREATE POLICY "Allow public all on products" ON public.products FOR ALL USING (true) WITH CHECK (true);`;
 
-export default function AdminOrdersClient({ initialOrders, isTableConfigured = false, tableError }: AdminOrdersClientProps) {
+export default function AdminOrdersClient({ 
+  initialOrders, 
+  isTableConfigured = false, 
+  tableError,
+  availableProducts = []
+}: AdminOrdersClientProps) {
   const [orders, setOrders] = useState<DatabaseOrder[]>(initialOrders);
   const [activeTab, setActiveTab] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isPending, startTransition] = useTransition();
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [copiedSql, setCopiedSql] = useState(false);
+
+  // Fallback product list for catalog picker
+  const productList = availableProducts && availableProducts.length > 0 ? availableProducts : defaultFallbackProducts;
+
+  // Modal State for Editing Order Items
+  const [editingOrder, setEditingOrder] = useState<DatabaseOrder | null>(null);
+  const [editItems, setEditItems] = useState<OrderItem[]>([]);
+  const [editNotes, setEditNotes] = useState<string>('');
+  const [selectedProductId, setSelectedProductId] = useState<string>('');
+  const [selectedProductQty, setSelectedProductQty] = useState<number>(1);
 
   // Sync with localStorage for testing on the same browser even before Supabase table is created
   useEffect(() => {
@@ -182,6 +206,124 @@ export default function AdminOrdersClient({ initialOrders, isTableConfigured = f
     navigator.clipboard.writeText(SQL_SETUP_SCRIPT);
     setCopiedSql(true);
     setTimeout(() => setCopiedSql(false), 3000);
+  };
+
+  // Modal Handlers for Editing Order Items
+  const handleOpenEditModal = (order: DatabaseOrder) => {
+    setEditingOrder(order);
+    const rawItems = order.items;
+    const items: OrderItem[] = typeof rawItems === 'string' ? JSON.parse(rawItems) : (rawItems || []);
+    setEditItems(items.map(it => ({ ...it })));
+    setEditNotes(order.notes || '');
+    setSelectedProductId('');
+    setSelectedProductQty(1);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditingOrder(null);
+    setEditItems([]);
+    setEditNotes('');
+    setSelectedProductId('');
+    setSelectedProductQty(1);
+  };
+
+  const handleUpdateItemQty = (index: number, newQty: number) => {
+    if (newQty < 1) return;
+    setEditItems(prev => prev.map((item, idx) => idx === index ? { ...item, quantity: newQty } : item));
+  };
+
+  const handleRemoveItem = (index: number) => {
+    setEditItems(prev => prev.filter((_, idx) => idx !== index));
+  };
+
+  const handleAddNewItem = () => {
+    if (!selectedProductId) return;
+    const prod = productList.find(p => p.id === selectedProductId);
+    if (!prod) return;
+
+    const qty = Math.max(1, Number(selectedProductQty) || 1);
+
+    setEditItems(prev => {
+      const existingIdx = prev.findIndex(it => String(it.productId) === String(prod.id));
+      if (existingIdx !== -1) {
+        return prev.map((it, idx) => idx === existingIdx ? { ...it, quantity: it.quantity + qty } : it);
+      }
+      return [
+        ...prev,
+        {
+          productId: prod.id,
+          name: prod.name,
+          price: prod.price,
+          quantity: qty,
+          image: prod.image,
+        }
+      ];
+    });
+
+    setSelectedProductId('');
+    setSelectedProductQty(1);
+  };
+
+  const editSubtotal = editItems.reduce((acc, it) => acc + (it.price * it.quantity), 0);
+  const editTax = Math.round(editSubtotal * 0.11);
+  const editTotal = editSubtotal + editTax;
+
+  const handleSaveEdit = () => {
+    if (!editingOrder) return;
+    if (editItems.length === 0) {
+      alert('Pesanan harus memiliki minimal 1 barang. Jika ingin membatalkan pesanan, silakan gunakan tombol Batalkan.');
+      return;
+    }
+
+    const orderId = editingOrder.id;
+
+    // 1. Optimistic UI update
+    setOrders(prev => prev.map(o => o.id === orderId ? {
+      ...o,
+      items: editItems,
+      subtotal: editSubtotal,
+      tax: editTax,
+      total: editTotal,
+      notes: editNotes.trim() ? editNotes.trim() : null,
+      updated_at: new Date().toISOString()
+    } : o));
+
+    // 2. Local storage update
+    try {
+      const local = JSON.parse(localStorage.getItem('rewang_all_orders') || '[]');
+      const updatedLocal = local.map((o: DatabaseOrder) => 
+        o.id === orderId ? {
+          ...o,
+          items: editItems,
+          subtotal: editSubtotal,
+          tax: editTax,
+          total: editTotal,
+          notes: editNotes.trim() ? editNotes.trim() : null,
+          updated_at: new Date().toISOString()
+        } : o
+      );
+      localStorage.setItem('rewang_all_orders', JSON.stringify(updatedLocal));
+      window.dispatchEvent(new Event('rewang-order-update'));
+    } catch (e) {}
+
+    setActionMessage(`✅ Isi keranjang pesanan ${orderId} berhasil diperbarui! Total baru: Rp ${editTotal.toLocaleString('id-ID')}`);
+    setEditingOrder(null);
+
+    // 3. Server action
+    startTransition(async () => {
+      try {
+        await updateOrderItems(
+          orderId,
+          editItems,
+          editSubtotal,
+          editTax,
+          editTotal,
+          editNotes.trim() ? editNotes.trim() : null
+        );
+      } catch (err) {
+        console.warn('updateOrderItems server error:', err);
+      }
+    });
   };
 
   // Counts for tabs
@@ -478,9 +620,22 @@ export default function AdminOrdersClient({ initialOrders, isTableConfigured = f
 
                   {/* Items summary */}
                   <div className="md:col-span-2 space-y-2">
-                    <span className="text-[10px] uppercase font-bold text-stone-400 block">
-                      Rincian Barang ({order.items.length})
-                    </span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] uppercase font-bold text-stone-400 block">
+                        Rincian Barang ({order.items.length})
+                      </span>
+                      {order.status !== 'selesai' && order.status !== 'dibatalkan' && (
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEditModal(order)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-[#8a5225] bg-[#8a5225]/10 hover:bg-[#8a5225]/20 transition cursor-pointer"
+                          title="Ubah isi barang pesanan sesuai kesepakatan WhatsApp"
+                        >
+                          <Edit3 size={13} />
+                          <span>Ubah Keranjang</span>
+                        </button>
+                      )}
+                    </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {order.items.map((item, i) => (
                         <div key={i} className="flex items-center gap-2.5 p-2 bg-[#fffaf5] rounded-xl border border-stone-100">
@@ -517,14 +672,24 @@ export default function AdminOrdersClient({ initialOrders, isTableConfigured = f
 
                   <div className="flex flex-wrap items-center gap-2">
                     {order.status === 'menunggu_konfirmasi' && (
-                      <button
-                        type="button"
-                        onClick={() => handleAcc(order.id)}
-                        disabled={isPending}
-                        className="bg-[#5a8514] hover:bg-[#486b10] text-white px-5 py-2 rounded-full text-xs font-bold transition shadow-md shadow-[#5a8514]/25 flex items-center gap-1.5 cursor-pointer active:scale-95"
-                      >
-                        <Check size={14} /> ACC &amp; Proses Pesanan
-                      </button>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEditModal(order)}
+                          className="bg-white hover:bg-stone-50 text-[#8a5225] border border-[#8a5225]/30 px-3.5 py-2 rounded-full text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+                          title="Ubah isi barang pesanan sebelum di-ACC"
+                        >
+                          <Edit3 size={14} /> Ubah Keranjang
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleAcc(order.id)}
+                          disabled={isPending}
+                          className="bg-[#5a8514] hover:bg-[#486b10] text-white px-5 py-2 rounded-full text-xs font-bold transition shadow-md shadow-[#5a8514]/25 flex items-center gap-1.5 cursor-pointer active:scale-95"
+                        >
+                          <Check size={14} /> ACC &amp; Proses Pesanan
+                        </button>
+                      </div>
                     )}
 
                     {order.status === 'diproses' && (
@@ -605,6 +770,231 @@ export default function AdminOrdersClient({ initialOrders, isTableConfigured = f
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Modal Edit Isi Keranjang */}
+      {editingOrder && (
+        <div className="fixed inset-0 z-50 bg-[#33241b]/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-[#33241b]/10 my-8 flex flex-col max-h-[90vh] animate-scale-up font-body">
+            
+            {/* Header */}
+            <div className="flex justify-between items-start pb-4 border-b border-stone-100">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-heading font-extrabold text-xl text-[#33241b]">
+                    Ubah Keranjang: {editingOrder.id}
+                  </span>
+                  {getStatusBadge(editingOrder.status)}
+                </div>
+                <p className="text-xs text-stone-500">
+                  Pemesan: <strong className="text-[#33241b]">{editingOrder.customer_name}</strong> ({editingOrder.customer_phone})
+                </p>
+              </div>
+              <button 
+                type="button"
+                onClick={handleCloseEditModal}
+                className="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center transition cursor-pointer"
+                title="Tutup"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Scrollable Body */}
+            <div className="flex-1 overflow-y-auto py-4 space-y-6 pr-1">
+              
+              {/* Alert Tips */}
+              <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-2xl text-xs flex items-start gap-2.5">
+                <Sparkles size={16} className="text-amber-700 shrink-0 mt-0.5" />
+                <span>
+                  Sesuaikan jumlah barang, hapus item, atau tambah produk baru sesuai kesepakatan WhatsApp. Halaman pelacakan pesanan customer akan otomatis tersinkron seketika.
+                </span>
+              </div>
+
+              {/* Items List */}
+              <div className="space-y-2.5">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-stone-400">
+                  Daftar Barang Pesanan ({editItems.length})
+                </h4>
+
+                {editItems.length === 0 ? (
+                  <p className="text-xs text-rose-600 italic bg-rose-50 p-3 rounded-xl border border-rose-200">
+                    Tidak ada barang di keranjang. Silakan tambahkan produk di bawah.
+                  </p>
+                ) : (
+                  <div className="space-y-2">
+                    {editItems.map((item, idx) => (
+                      <div 
+                        key={idx} 
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-[#fffaf5] rounded-2xl border border-stone-200/80 shadow-xs"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-11 h-11 rounded-xl bg-white overflow-hidden border border-stone-200 shrink-0">
+                            {item.image?.startsWith('/') || item.image?.startsWith('http') ? (
+                              <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <span className="text-xs flex items-center justify-center h-full">🌾</span>
+                            )}
+                          </div>
+                          <div>
+                            <p className="text-xs font-bold text-[#33241b] line-clamp-1">{item.name}</p>
+                            <p className="text-[11px] text-stone-500">Rp {item.price.toLocaleString('id-ID')} / pcs</p>
+                          </div>
+                        </div>
+
+                        {/* Quantity and Subtotal Controls */}
+                        <div className="flex items-center justify-between sm:justify-end gap-3 self-end sm:self-center w-full sm:w-auto">
+                          <div className="flex items-center border border-stone-300 rounded-full bg-white overflow-hidden">
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateItemQty(idx, item.quantity - 1)}
+                              disabled={item.quantity <= 1}
+                              className="w-7 h-7 flex items-center justify-center text-stone-600 hover:bg-stone-100 disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer"
+                            >
+                              <Minus size={12} />
+                            </button>
+                            <span className="w-8 text-center text-xs font-bold text-[#33241b]">
+                              {item.quantity}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateItemQty(idx, item.quantity + 1)}
+                              className="w-7 h-7 flex items-center justify-center text-stone-600 hover:bg-stone-100 cursor-pointer"
+                            >
+                              <Plus size={12} />
+                            </button>
+                          </div>
+
+                          <div className="text-right min-w-[90px]">
+                            <span className="text-xs font-bold text-[#8a5225]">
+                              Rp {(item.price * item.quantity).toLocaleString('id-ID')}
+                            </span>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveItem(idx)}
+                            className="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer"
+                            title="Hapus barang ini dari pesanan"
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Add New Product From Catalog */}
+              <div className="p-4 bg-stone-50 rounded-2xl border border-stone-200/70 space-y-3">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-[#33241b]">
+                  <PackagePlus size={15} className="text-[#8a5225]" />
+                  <span>Tambah Produk dari Katalog Toko</span>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center">
+                  <select
+                    value={selectedProductId}
+                    onChange={(e) => setSelectedProductId(e.target.value)}
+                    className="flex-1 bg-white border border-stone-300 rounded-xl px-3 py-2 text-xs text-[#33241b] focus:outline-none focus:ring-2 focus:ring-[#8a5225]"
+                  >
+                    <option value="">-- Pilih Produk Tambahan --</option>
+                    {productList.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name} - Rp {p.price.toLocaleString('id-ID')} (Tersedia: {p.stock ?? 50})
+                      </option>
+                    ))}
+                  </select>
+
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min={1}
+                      max={999}
+                      value={selectedProductQty}
+                      onChange={(e) => setSelectedProductQty(Math.max(1, parseInt(e.target.value) || 1))}
+                      className="w-16 bg-white border border-stone-300 rounded-xl px-2.5 py-2 text-xs text-center font-bold text-[#33241b] focus:outline-none focus:ring-2 focus:ring-[#8a5225]"
+                      placeholder="Qty"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddNewItem}
+                      disabled={!selectedProductId}
+                      className="bg-[#8a5225] hover:bg-[#733f1b] disabled:opacity-40 disabled:hover:bg-[#8a5225] text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shrink-0 cursor-pointer"
+                    >
+                      <Plus size={14} /> Tambahkan
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Edit Customer Notes */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-stone-400 block">
+                  Catatan Pesanan / Kesepakatan WA (Opsional)
+                </label>
+                <textarea
+                  rows={2}
+                  value={editNotes}
+                  onChange={(e) => setEditNotes(e.target.value)}
+                  placeholder="Contoh: Ada tambahan produk via WA dan ganti varian"
+                  className="w-full bg-[#fffaf5] border border-stone-200 rounded-2xl p-3 text-xs text-[#33241b] focus:outline-none focus:ring-2 focus:ring-[#8a5225]"
+                />
+              </div>
+
+              {/* Total Calculation Preview */}
+              <div className="p-4 bg-[#fffaf5] rounded-2xl border border-[#8a5225]/20 space-y-1.5 text-xs">
+                <div className="flex justify-between text-stone-600">
+                  <span>Subtotal Barang:</span>
+                  <span className="font-semibold">Rp {editSubtotal.toLocaleString('id-ID')}</span>
+                </div>
+                <div className="flex justify-between text-stone-600">
+                  <span>Pajak (11%):</span>
+                  <span className="font-semibold">Rp {editTax.toLocaleString('id-ID')}</span>
+                </div>
+                <div className="flex justify-between text-[#33241b] font-bold text-sm pt-2 border-t border-stone-200">
+                  <span>Total Baru Pesanan:</span>
+                  <span className="text-[#8a5225] font-extrabold text-base">
+                    Rp {editTotal.toLocaleString('id-ID')}
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Footer Buttons */}
+            <div className="pt-4 border-t border-stone-100 flex justify-end items-center gap-2.5">
+              <button
+                type="button"
+                onClick={handleCloseEditModal}
+                disabled={isPending}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-stone-600 hover:bg-stone-100 transition cursor-pointer"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveEdit}
+                disabled={isPending || editItems.length === 0}
+                className="bg-[#5a8514] hover:bg-[#486b10] disabled:opacity-50 text-white px-6 py-2.5 rounded-xl text-xs font-bold transition shadow-md shadow-[#5a8514]/25 flex items-center gap-2 cursor-pointer active:scale-95"
+              >
+                {isPending ? (
+                  <>
+                    <Loader2 size={14} className="animate-spin" />
+                    <span>Menyimpan...</span>
+                  </>
+                ) : (
+                  <>
+                    <Check size={14} />
+                    <span>Simpan Perubahan Pesanan</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+          </div>
         </div>
       )}
 

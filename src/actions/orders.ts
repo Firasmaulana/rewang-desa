@@ -2,8 +2,8 @@
 
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import { DatabaseOrder, OrderStatus } from '@/lib/supabase/types';
-import { createOrderRecord, updateOrderStatusRecord } from '@/lib/supabase/orders';
+import { DatabaseOrder, OrderStatus, OrderItem } from '@/lib/supabase/types';
+import { createOrderRecord, updateOrderStatusRecord, updateOrderItemsRecord } from '@/lib/supabase/orders';
 
 // 1. Submit Order & Store Order ID in Customer's Cookie
 export async function submitOrder(orderData: Omit<DatabaseOrder, 'created_at' | 'updated_at'>): Promise<{ success: boolean; orderId: string }> {
@@ -74,4 +74,20 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus): P
   revalidatePath('/');
   revalidatePath('/product/[id]', 'page');
   return { success: result.success };
+}
+
+// 4. Admin Update Items / Keranjang (Sebelum ACC atau Negosiasi WA)
+export async function updateOrderItems(
+  orderId: string,
+  items: OrderItem[],
+  subtotal: number,
+  tax: number,
+  total: number,
+  notes?: string | null
+): Promise<{ success: boolean; error?: string }> {
+  const result = await updateOrderItemsRecord(orderId, items, subtotal, tax, total, notes);
+  revalidatePath('/pesanan');
+  revalidatePath('/admin');
+  revalidatePath('/admin/orders');
+  return { success: result.success, error: result.error };
 }

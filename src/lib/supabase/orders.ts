@@ -325,3 +325,61 @@ export async function updateOrderStatusRecord(
     return { success: true };
   }
 }
+
+// 7. Update Order Items & Total (Admin adjusts cart before ACC)
+export async function updateOrderItemsRecord(
+  orderId: string,
+  items: OrderItem[],
+  subtotal: number,
+  tax: number,
+  total: number,
+  notes?: string | null
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const updatedAt = new Date().toISOString();
+
+    // 1. Update in-memory fallback
+    const idx = localOrdersFallback.findIndex((o) => o.id === orderId);
+    if (idx !== -1) {
+      localOrdersFallback[idx].items = items;
+      localOrdersFallback[idx].subtotal = subtotal;
+      localOrdersFallback[idx].tax = tax;
+      localOrdersFallback[idx].total = total;
+      if (notes !== undefined) {
+        localOrdersFallback[idx].notes = notes;
+      }
+      localOrdersFallback[idx].updated_at = updatedAt;
+    }
+
+    const supabase = await createClientServer();
+    if (!supabase) {
+      return { success: true };
+    }
+
+    const updatePayload: Record<string, any> = {
+      items,
+      subtotal,
+      tax,
+      total,
+      updated_at: updatedAt,
+    };
+    if (notes !== undefined) {
+      updatePayload.notes = notes;
+    }
+
+    const { error } = await supabase
+      .from('orders')
+      .update(updatePayload)
+      .eq('id', orderId);
+
+    if (error) {
+      console.warn('Supabase update order items error:', error.message);
+      return { success: true, error: error.message };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    console.error('Update order items error:', err);
+    return { success: true };
+  }
+}
