@@ -1,7 +1,6 @@
-import { ArrowRight, ShieldCheck, HeartHandshake, Sparkles, PackageCheck, Sprout, Wheat } from 'lucide-react';
+import { ArrowRight, ShieldCheck, HeartHandshake, Sparkles, PackageCheck } from 'lucide-react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
-import Logo from '@/components/Logo';
 import RealtimeBanner from '@/components/RealtimeBanner';
 import { getProducts, getBanner } from '@/lib/supabase/service';
 
@@ -43,94 +42,64 @@ export default async function Home() {
   return (
     <>
       {/* Hero Section */}
-      <section className="py-16 md:py-24 relative overflow-hidden bg-gradient-to-b from-[#fffaf5] via-[#f7f1ea]/60 to-[#fffaf5]">
-        {/* Soft Organic Warm Blurs */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#8a5225]/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#ffdd7d]/25 rounded-full mix-blend-multiply filter blur-3xl opacity-70 -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
+      <section className="relative min-h-[540px] md:min-h-[620px] flex items-center py-20 md:py-28 overflow-hidden bg-[#241811]">
+        {/* Full-bleed Hero Background Image */}
+        <img
+          src="/hero-background.webp"
+          alt="Gerai Rewang Desa dengan aneka produk hasil bumi dan kerajinan desa"
+          width={1920}
+          height={1071}
+          fetchPriority="high"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
 
-        <div className="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center gap-12">
-          <div className="md:w-1/2 text-center md:text-left">
+        {/* Warm Earthy Gradient Overlays for Text Readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1f140e]/90 via-[#2c1d15]/70 to-[#2c1d15]/30 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1f140e]/70 via-transparent to-[#1f140e]/25 pointer-events-none"></div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-2xl text-center md:text-left">
             
-            {/* Tagline Badge */}
-            <div className="inline-flex items-center gap-2 bg-[#8a5225]/10 text-[#854523] px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest mb-6 border border-[#8a5225]/20 font-body">
-              <Sparkles size={14} className="text-[#8a5225]" />
-              <span>Dari Tangan Desa</span>
+            {/* Brand Eyebrow Badge */}
+            <div className="inline-flex items-center gap-2 bg-[#fffaf5]/15 backdrop-blur-md text-[#ffdd7d] px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest mb-6 border border-[#ffdd7d]/30 font-body">
+              <Sparkles size={14} className="text-[#ffdd7d]" />
+              <span>Rewang Desa &bull; Dari Tangan Desa</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading text-[#33241b] leading-[1.15] mb-6">
-              Menghubungkan <span className="text-[#8a5225] italic font-normal">Hasil Bumi</span> Desa dengan Anda
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading text-[#fffaf5] leading-[1.15] mb-8 drop-shadow-sm">
+              Bantu Desa <span className="text-[#ffdd7d] italic font-normal">Tanpa Harus Pergi</span> ke Desa
             </h1>
-            
-            <p className="text-base sm:text-lg text-stone-600 mb-8 max-w-xl mx-auto md:mx-0 font-body leading-relaxed">
-              Lahir dari keresahan melihat potensi desa yang besar. Rewang Desa hadir sebagai jembatan menghubungkan produk alami, karya pengrajin, dan cerita petani langsung ke tangan Sahabat Rewang.
-            </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
               <Link 
                 href="/shop" 
-                className="bg-[#8a5225] text-[#fffaf5] px-8 py-3.5 rounded-full font-semibold hover:bg-[#733f1b] transition shadow-lg shadow-[#8a5225]/25 flex items-center justify-center gap-2 group text-sm md:text-base"
+                className="bg-[#8a5225] text-[#fffaf5] px-8 py-3.5 rounded-full font-semibold hover:bg-[#a6622b] transition shadow-lg shadow-black/25 flex items-center justify-center gap-2 group text-sm md:text-base"
               >
                 Jelajahi Katalog <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link 
                 href="/about" 
-                className="bg-white text-[#33241b] border border-[#33241b]/15 px-8 py-3.5 rounded-full font-semibold hover:bg-[#f7f1ea] hover:border-[#8a5225]/40 transition flex items-center justify-center text-sm md:text-base"
+                className="bg-white/15 backdrop-blur-md text-[#fffaf5] border border-white/30 px-8 py-3.5 rounded-full font-semibold hover:bg-white/25 hover:border-[#ffdd7d]/50 transition flex items-center justify-center text-sm md:text-base"
               >
                 Cerita Kami
               </Link>
             </div>
 
             {/* Quick Stats / Values */}
-            <div className="mt-10 pt-6 border-t border-[#33241b]/10 flex items-center justify-center md:justify-start gap-8 text-xs text-stone-500 font-body">
+            <div className="mt-12 pt-6 border-t border-white/20 flex items-center justify-center md:justify-start gap-8 text-xs text-stone-200 font-body">
               <div>
-                <p className="font-heading font-bold text-lg text-[#33241b]">100%</p>
+                <p className="font-heading font-bold text-lg text-[#ffdd7d]">100%</p>
                 <p>Karya Petani Lokal</p>
               </div>
-              <div className="w-px h-8 bg-[#33241b]/10"></div>
+              <div className="w-px h-8 bg-white/20"></div>
               <div>
-                <p className="font-heading font-bold text-lg text-[#33241b]">Alami</p>
+                <p className="font-heading font-bold text-lg text-[#ffdd7d]">Alami</p>
                 <p>Tanpa Pengawet Buatan</p>
               </div>
-              <div className="w-px h-8 bg-[#33241b]/10"></div>
+              <div className="w-px h-8 bg-white/20"></div>
               <div>
-                <p className="font-heading font-bold text-lg text-[#33241b]">Berdampak</p>
+                <p className="font-heading font-bold text-lg text-[#ffdd7d]">Berdampak</p>
                 <p>Membantu UMKM Sepuh</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Visual Showcase Card */}
-          <div className="md:w-1/2 flex justify-center w-full">
-            <div className="relative w-full max-w-md aspect-square rounded-3xl bg-gradient-to-br from-[#f7f1ea] via-white to-[#fffaf5] shadow-2xl shadow-[#8a5225]/15 p-8 flex flex-col justify-between border border-[#8a5225]/20">
-              <div className="flex justify-between items-start">
-                <span className="text-[10px] font-bold tracking-widest text-[#8a5225] uppercase bg-[#8a5225]/10 px-2.5 py-1 rounded">
-                  Edisi Katalog 2026
-                </span>
-                <div className="w-8 h-8 rounded-full bg-[#5a8514]/15 text-[#5a8514] flex items-center justify-center">
-                  <Sprout size={16} />
-                </div>
-              </div>
-
-              {/* Center Emblem with Logo */}
-              <div className="text-center py-6 my-auto">
-                <div className="w-20 h-20 rounded-full bg-[#8a5225]/10 mx-auto flex items-center justify-center mb-4 border border-[#8a5225]/25 text-[#8a5225]">
-                  <Wheat size={36} strokeWidth={1.5} />
-                </div>
-                <Logo size="lg" />
-                <p className="font-heading text-sm text-[#8a5225] mt-2 italic">
-                  &ldquo;Tumbuh dan bergerak bersama desa&rdquo;
-                </p>
-              </div>
-
-              {/* Bottom Feature Pill */}
-              <div className="bg-white/90 backdrop-blur rounded-2xl p-3 border border-[#33241b]/10 shadow-sm flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl overflow-hidden border border-[#8a5225]/20 shrink-0 shadow-sm bg-[#fffaf5]">
-                  <img src="/products/garam-jono.webp" alt="Garam Jono" className="w-full h-full object-cover" />
-                </div>
-                <div className="text-xs">
-                  <p className="font-semibold text-[#33241b]">Garam Jono &amp; Beras Sukabumi</p>
-                  <p className="text-stone-500">Pilihan favorit Sahabat Rewang bulan ini</p>
-                </div>
               </div>
             </div>
           </div>
@@ -205,6 +174,7 @@ export default async function Home() {
                     <img 
                       src={cat.image} 
                       alt={cat.name} 
+                      loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
                     />
                   </div>

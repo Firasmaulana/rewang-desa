@@ -16,7 +16,7 @@ export default function Header({ user }: { user?: { name: string; role: string }
       <div className="bg-[#33241b] text-[#fffaf5] text-xs md:text-sm py-2 px-4 text-center font-body border-b border-[#8a5225]/20">
         <div className="container mx-auto flex items-center justify-center gap-2">
           <span className="inline-flex items-center gap-1.5">
-            <Leaf size={14} className="text-[#ffdd7d]" /> Dari Tangan Desa ke Meja Anda
+            <Leaf size={14} className="text-[#ffdd7d]" /> Bantu Desa Tanpa Harus Pergi ke Desa
           </span>
           <span className="hidden sm:inline">•</span>
           <span className="hidden sm:inline">Gunakan kode <strong className="text-[#ffdd7d] tracking-wide font-bold">REWANG20</strong> untuk diskon 20% belanja perdana</span>

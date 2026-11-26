@@ -24,7 +24,7 @@ const mistrully = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Rewang Desa - Dari Tangan Desa",
+  title: "Rewang Desa - Bantu Desa Tanpa Harus Pergi ke Desa",
   description: "Menghubungkan hasil bumi, produk lokal, dan cerita dari desa langsung ke tangan Anda.",
   icons: {
     icon: [
