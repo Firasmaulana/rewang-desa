@@ -1,6 +1,7 @@
-import { Package, ShoppingBag, Users, Clock, ArrowRight } from 'lucide-react';
+import { Package, ShoppingBag, Mail, ArrowRight } from 'lucide-react';
 import { getProducts } from '@/lib/supabase/service';
 import { getOrders } from '@/lib/supabase/orders';
+import { getSubscribers } from '@/lib/supabase/subscribers';
 import Link from 'next/link';
 import ProductImage from '@/components/ProductImage';
 
@@ -8,9 +9,10 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function AdminDashboard() {
-  const [products, orders] = await Promise.all([
+  const [products, orders, subscribers] = await Promise.all([
     getProducts(),
     getOrders(),
+    getSubscribers(),
   ]);
   const lowStockProducts = products.filter(p => (p.stock ?? 50) <= 25).slice(0, 4);
   const pendingOrders = orders.filter(o => o.status === 'menunggu_konfirmasi');
@@ -54,15 +56,21 @@ export default async function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-[#33241b]/10 shadow-sm flex items-center gap-4">
-          <div className="w-14 h-14 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center shrink-0">
-            <Users size={28} />
+        <Link
+          href="/admin/subscribers"
+          className="bg-white p-6 rounded-2xl border border-[#33241b]/10 shadow-sm flex items-center gap-4 hover:border-[#8a5225]/40 hover:shadow-md transition group"
+        >
+          <div className="w-14 h-14 rounded-xl bg-[#8a5225]/10 text-[#8a5225] flex items-center justify-center shrink-0 group-hover:bg-[#8a5225] group-hover:text-white transition">
+            <Mail size={26} />
           </div>
-          <div>
-            <p className="text-xs font-bold text-stone-500 uppercase tracking-wider">Sahabat Rewang</p>
-            <h3 className="text-2xl font-extrabold text-[#33241b]">1,240</h3>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-bold text-stone-500 uppercase tracking-wider">Kabar Desa</p>
+            <div className="flex items-baseline gap-2">
+              <h3 className="text-2xl font-extrabold text-[#33241b]">{subscribers.length}</h3>
+              <span className="text-xs font-medium text-[#8a5225]">Email &rarr;</span>
+            </div>
           </div>
-        </div>
+        </Link>
 
       </div>
 

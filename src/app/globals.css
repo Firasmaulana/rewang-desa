@@ -282,3 +282,13 @@ dialog::backdrop {
   scroll-snap-align: center;
   scroll-snap-stop: always;
 }
+
+/* Post-interaction form validation (:user-invalid / :user-valid) */
+.newsletter-email-input:user-invalid {
+  border-color: #f87171;
+  background-color: #361c1c;
+}
+
+.newsletter-email-input:user-valid {
+  border-color: #84cc16;
+}

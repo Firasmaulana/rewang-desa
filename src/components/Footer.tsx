@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Logo from '@/components/Logo';
 import ScrollReveal from '@/components/ScrollReveal';
+import NewsletterForm from '@/components/NewsletterForm';
 import { MapPin, Phone, Mail } from 'lucide-react';
 
 function InstagramIcon({ size = 17, className = "" }: { size?: number; className?: string }) {
@@ -114,19 +115,7 @@ export default function Footer() {
             <p className="text-stone-300 text-sm mb-4 font-body leading-relaxed">
               Daftarkan email Anda untuk kabar panen raya, cerita inspiratif dari desa, dan penawaran katalog eksklusif.
             </p>
-            <form className="flex flex-col gap-2.5">
-              <input 
-                type="email" 
-                placeholder="Alamat Email Anda" 
-                className="bg-[#241913] border border-[#8a5225]/40 px-3.5 py-2.5 rounded-lg text-white text-sm placeholder:text-stone-400 focus:outline-none focus:border-[#ffdd7d] transition font-body"
-              />
-              <button 
-                type="button" 
-                className="bg-[#8a5225] hover:bg-[#a6622b] text-[#fffaf5] font-semibold text-sm px-4 py-2.5 rounded-lg transition duration-200 shadow-md font-body"
-              >
-                Langganan Kabar Desa
-              </button>
-            </form>
+            <NewsletterForm />
           </div>
 
           </div>

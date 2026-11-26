@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, Package, Image as ImageIcon, Settings, LogOut, Globe, ShoppingBag, FileText } from 'lucide-react';
+import { LayoutDashboard, Package, Image as ImageIcon, Settings, LogOut, Globe, ShoppingBag, FileText, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { logout } from '@/actions/auth';
@@ -43,6 +43,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
           <Link href="/admin/banner" className={navLinkClass('/admin/banner')}>
             <ImageIcon size={18} /> Banner Info
+          </Link>
+          <Link href="/admin/subscribers" className={navLinkClass('/admin/subscribers')}>
+            <Mail size={18} /> Kabar Desa
           </Link>
           <Link href="/admin/settings" className={navLinkClass('/admin/settings')}>
             <Settings size={18} /> Pengaturan
