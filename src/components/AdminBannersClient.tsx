@@ -19,7 +19,6 @@ import {
   Check,
   Loader2,
   Image as ImageIcon,
-  Megaphone,
   ExternalLink,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -184,8 +183,6 @@ export default function AdminBannersClient({
     });
   };
 
-  const activeCount = banners.filter((b) => b.is_active).length;
-
   const isPreviewPhoto =
     imageText.trim().length > 0 &&
     (imageText.startsWith('http://') ||
@@ -219,24 +216,6 @@ export default function AdminBannersClient({
             <Plus size={18} /> Tambah Banner Info
           </button>
         </div>
-      </div>
-
-      {/* Info Status Pill */}
-      <div className="bg-white p-4 rounded-2xl border border-[#33241b]/10 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-2.5 text-stone-600">
-          <span className="w-8 h-8 rounded-xl bg-[#8a5225]/10 text-[#8a5225] flex items-center justify-center">
-            <Megaphone size={16} />
-          </span>
-          <span>
-            Total <strong>{banners.length}</strong> banner tersimpan &bull;{' '}
-            <strong className="text-[#5a8514]">{activeCount} aktif</strong> tampil bergeser otomatis di Beranda.
-          </span>
-        </div>
-        {activeCount >= 2 && (
-          <span className="text-[11px] font-semibold text-[#5a8514] bg-[#5a8514]/10 px-3 py-1 rounded-full">
-            Auto-Scroll &amp; Geser Manual Aktif
-          </span>
-        )}
       </div>
 
       {/* Feedback Message */}
