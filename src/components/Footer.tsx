@@ -72,7 +72,6 @@ export default function Footer() {
               <li><Link href="/" className="hover:text-[#ffdd7d] transition">Beranda</Link></li>
               <li><Link href="/about" className="hover:text-[#ffdd7d] transition">Tentang Kami</Link></li>
               <li><Link href="/shop" className="hover:text-[#ffdd7d] transition">Katalog Produk</Link></li>
-              <li><Link href="/#kategori" className="hover:text-[#ffdd7d] transition">Kategori Pilihan</Link></li>
               <li><Link href="/blog" className="hover:text-[#ffdd7d] transition">Artikel & Cerita Desa</Link></li>
             </ul>
           </div>

@@ -11,7 +11,6 @@ import Logo from '@/components/Logo';
 const NAV_ITEMS = [
   { href: '/', label: 'Beranda', exact: true },
   { href: '/shop', label: 'Katalog' },
-  { href: '/#kategori', label: 'Kategori' },
   { href: '/about', label: 'Tentang Kami' },
   { href: '/blog', label: 'Artikel' },
   { href: '/#kontak', label: 'Kontak' },
@@ -197,6 +196,11 @@ export default function Header({ user }: { user?: { name: string; role: string }
                   <li key={item.href}>
                     <Link
                       href={item.href}
+                      onClick={() => {
+                        if (!item.href.includes('#') && pathname === item.href) {
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                      }}
                       className={`relative py-1 inline-block transition-colors duration-200 active:scale-95 after:content-[''] after:absolute after:left-0 after:right-0 after:-bottom-0.5 after:h-[2px] after:rounded-full after:bg-[#8a5225] after:origin-center after:transition-transform after:duration-300 ${
                         active
                           ? 'text-[#8a5225] font-bold after:scale-x-100'
@@ -250,14 +254,18 @@ export default function Header({ user }: { user?: { name: string; role: string }
 
             {/* Mobile Search */}
             <form action="/shop" method="GET" className="p-4 border-b border-[#33241b]/10">
-              <div className="flex bg-white rounded-full border border-[#33241b]/15 overflow-hidden focus-within:ring-2 focus-within:ring-[#8a5225]">
+              <div className="flex items-center w-full bg-white rounded-full border border-[#33241b]/15 overflow-hidden focus-within:ring-2 focus-within:ring-[#8a5225]">
                 <input
                   type="text"
                   name="q"
                   placeholder="Cari produk desa..."
-                  className="flex-1 bg-transparent px-4 py-2 text-xs text-[#33241b] focus:outline-none"
+                  className="flex-1 min-w-0 w-full bg-transparent pl-4 pr-2 py-2.5 text-xs text-[#33241b] focus:outline-none"
                 />
-                <button type="submit" aria-label="Cari" className="px-3.5 text-[#8a5225]">
+                <button
+                  type="submit"
+                  aria-label="Cari"
+                  className="shrink-0 flex items-center justify-center px-3.5 py-2.5 text-[#8a5225] hover:text-[#33241b] transition cursor-pointer"
+                >
                   <Search size={16} />
                 </button>
               </div>
@@ -271,7 +279,12 @@ export default function Header({ user }: { user?: { name: string; role: string }
                   <Link
                     key={item.href}
                     href={item.href}
-                    onClick={() => setMobileOpen(false)}
+                    onClick={() => {
+                      setMobileOpen(false);
+                      if (!item.href.includes('#') && pathname === item.href) {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }}
                     className={`block px-4 py-3 rounded-xl text-sm font-semibold transition-all active:scale-98 ${
                       active
                         ? 'bg-[#8a5225] text-white shadow-sm'
