@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { getProductById } from '@/lib/supabase/service';
 import { products as fallbackProducts } from '@/data/products';
 import { Truck, ShieldCheck, Check, MapPin } from 'lucide-react';
@@ -8,13 +9,120 @@ import ProductImage from '@/components/ProductImage';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
+function toAbsoluteUrl(path?: string) {
+  if (!path) return 'https://rewangdesa.com/logo-google.png';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  if (path.startsWith('data:')) return 'https://rewangdesa.com/logo-google.png';
+  return `https://rewangdesa.com${path.startsWith('/') ? path : `/${path}`}`;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const product = (await getProductById(id)) || fallbackProducts[0];
+  const originPart = product.origin ? ` dari ${product.origin}` : '';
+  const priceText = `Rp ${product.price.toLocaleString('id-ID')}`;
+  const description = `${product.name}${originPart} (${priceText}). ${product.description} Beli produk hasil bumi alami tanpa pengawet langsung dari petani desa di Rewang Desa.`;
+  const imageUrl = toAbsoluteUrl(product.image);
+
+  return {
+    title: `${product.name} - ${product.category}`,
+    description,
+    alternates: {
+      canonical: `/product/${product.id}`,
+    },
+    openGraph: {
+      type: 'website',
+      url: `https://rewangdesa.com/product/${product.id}`,
+      title: `${product.name} | Rewang Desa`,
+      description,
+      images: [
+        {
+          url: imageUrl,
+          alt: product.name,
+        },
+      ],
+    },
+  };
+}
+
 export default async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const fetchedProduct = await getProductById(id);
   const product = fetchedProduct || fallbackProducts[0];
 
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Product',
+        name: product.name,
+        description: product.description,
+        image: [toAbsoluteUrl(product.image)],
+        sku: product.id,
+        category: product.category,
+        brand: {
+          '@type': 'Brand',
+          name: 'Rewang Desa',
+        },
+        ...(product.origin
+          ? {
+              countryOfOrigin: {
+                '@type': 'Country',
+                name: 'Indonesia',
+              },
+            }
+          : {}),
+        offers: {
+          '@type': 'Offer',
+          url: `https://rewangdesa.com/product/${product.id}`,
+          priceCurrency: 'IDR',
+          price: product.price,
+          availability:
+            (product.stock ?? 0) > 0
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock',
+          itemCondition: 'https://schema.org/NewCondition',
+          seller: {
+            '@id': 'https://rewangdesa.com/#organization',
+          },
+        },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Beranda',
+            item: 'https://rewangdesa.com/',
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Katalog Produk',
+            item: 'https://rewangdesa.com/shop',
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: product.name,
+            item: `https://rewangdesa.com/product/${product.id}`,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <div className="bg-[#fffaf5] py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
       <div className="container mx-auto px-4">
         
         {/* Breadcrumb */}

@@ -7,8 +7,18 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export const metadata = {
-  title: 'Artikel & Cerita Desa - Rewang Desa',
-  description: 'Kisah para petani, kearifan lokal, dan kabar panen dari desa binaan Rewang Desa.',
+  title: 'Artikel & Cerita dari Desa',
+  description:
+    'Kisah para petani, kearifan lokal nusantara, manfaat pangan sehat alami, dan kabar panen dari desa binaan Rewang Desa.',
+  alternates: {
+    canonical: '/blog',
+  },
+  openGraph: {
+    url: 'https://rewangdesa.com/blog',
+    title: 'Artikel & Cerita dari Desa | Rewang Desa',
+    description:
+      'Kumpulan kisah perjuangan, inovasi pangan lokal, dan kearifan masyarakat desa bersama Rewang Desa.',
+  },
 };
 
 export default async function BlogPage() {

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Calendar, User, ArrowLeft, ShoppingBag } from 'lucide-react';
@@ -5,6 +6,50 @@ import { getArticleById } from '@/lib/supabase/articles';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+function toAbsoluteArticleImage(path?: string | null) {
+  if (!path || path.startsWith('data:')) return 'https://rewangdesa.com/hero-background.webp';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `https://rewangdesa.com${path.startsWith('/') ? path : `/${path}`}`;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const article = await getArticleById(id);
+
+  if (!article) {
+    return {
+      title: 'Artikel Tidak Ditemukan',
+    };
+  }
+
+  const imageUrl = toAbsoluteArticleImage(article.image);
+
+  return {
+    title: article.title,
+    description: article.excerpt,
+    alternates: {
+      canonical: `/blog/${article.id}`,
+    },
+    openGraph: {
+      type: 'article',
+      url: `https://rewangdesa.com/blog/${article.id}`,
+      title: `${article.title} | Rewang Desa`,
+      description: article.excerpt,
+      authors: [article.author || 'Tim Rewang Desa'],
+      images: [
+        {
+          url: imageUrl,
+          alt: article.title,
+        },
+      ],
+    },
+  };
+}
 
 export default async function ArticleDetailPage({
   params,
@@ -17,6 +62,57 @@ export default async function ArticleDetailPage({
   if (!article) {
     notFound();
   }
+
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BlogPosting',
+        headline: article.title,
+        description: article.excerpt,
+        image: toAbsoluteArticleImage(article.image),
+        articleSection: article.category,
+        inLanguage: 'id-ID',
+        datePublished: article.created_at || undefined,
+        dateModified: article.updated_at || article.created_at || undefined,
+        author: {
+          '@type': 'Organization',
+          name: article.author || 'Rewang Desa',
+          url: 'https://rewangdesa.com',
+        },
+        publisher: {
+          '@id': 'https://rewangdesa.com/#organization',
+        },
+        mainEntityOfPage: {
+          '@type': 'WebPage',
+          '@id': `https://rewangdesa.com/blog/${article.id}`,
+        },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Beranda',
+            item: 'https://rewangdesa.com/',
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Artikel & Cerita Desa',
+            item: 'https://rewangdesa.com/blog',
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: article.title,
+            item: `https://rewangdesa.com/blog/${article.id}`,
+          },
+        ],
+      },
+    ],
+  };
 
   const hasImage =
     typeof article.image === 'string' &&
@@ -32,6 +128,10 @@ export default async function ArticleDetailPage({
 
   return (
     <div className="bg-[#fffaf5] min-h-screen py-12 md:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <div className="container mx-auto px-4 max-w-3xl">
         {/* Back link */}
         <Link

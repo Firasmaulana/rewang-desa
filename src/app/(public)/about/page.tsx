@@ -24,8 +24,18 @@ function InstagramIcon({ size = 20, className = "" }: { size?: number; className
 }
 
 export const metadata = {
-  title: 'Tentang Kami - Rewang Desa',
-  description: 'Mengenal Rewang Desa: Lahir dari keresahan, tumbuh untuk menghubungkan hasil karya tangan desa dengan Sahabat Rewang.',
+  title: 'Tentang Kami - Cerita & Misi Gotong Royong',
+  description:
+    'Mengenal Rewang Desa: lahir dari keresahan, tumbuh menjadi jembatan gotong royong yang menghubungkan hasil bumi dan karya tangan petani serta UMKM desa dengan Sahabat Rewang.',
+  alternates: {
+    canonical: '/about',
+  },
+  openGraph: {
+    url: 'https://rewangdesa.com/about',
+    title: 'Tentang Kami | Rewang Desa',
+    description:
+      'Kisah awal, makna gotong royong "rewang", visi, dan misi Rewang Desa dalam memberdayakan petani dan pengrajin desa Indonesia.',
+  },
 };
 
 export default function AboutPage() {

@@ -1,4 +1,4 @@
-import { ArrowRight, ShieldCheck, HeartHandshake, Sparkles, PackageCheck } from 'lucide-react';
+import { ArrowRight, ShieldCheck, HeartHandshake, Sparkles, PackageCheck, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import RealtimeBanner from '@/components/RealtimeBanner';
@@ -7,6 +7,42 @@ import { getProducts, getBanners } from '@/lib/supabase/service';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+const HOME_FAQS = [
+  {
+    question: 'Apa itu Rewang Desa?',
+    answer:
+      'Rewang Desa adalah toko dan platform pemberdayaan hasil bumi, produk pangan sehat alami tanpa pengawet, serta kerajinan tangan langsung dari petani dan UMKM desa di Indonesia dengan semangat gotong royong "Bantu Desa Tanpa Harus Pergi ke Desa".',
+  },
+  {
+    question: 'Produk unggulan apa saja yang tersedia di Rewang Desa?',
+    answer:
+      'Rewang Desa menyediakan aneka bahan pokok, camilan, dan minuman alami seperti Garam Jono Grobogan, Beras Merah dan Beras Hitam Jampang, Kecap Kelapa tanpa pengawet, Gula Singkong Manes, Gula Aren, Madu Randu Blitar, Keripik Tempe Banyumas, Kerupuk Pak Kamto, hingga minuman herbal Kalehon Drink Honje.',
+  },
+  {
+    question: 'Dari mana asal desa petani dan pengrajin mitra Rewang Desa?',
+    answer:
+      'Seluruh produk dikurasi langsung dari petani, pengrajin, dan UMKM sepuh di berbagai desa Indonesia, termasuk Desa Jampang Sukabumi, Grobogan, Banyumas, Banjarnegara, Gunungkidul, hingga Blitar.',
+  },
+  {
+    question: 'Bagaimana cara memesan dan ke mana saja pengirimannya?',
+    answer:
+      'Anda dapat langsung memilih produk di halaman Katalog Rewang Desa (rewangdesa.com/shop), menyelesaikan pesanan di keranjang, atau berkonsultasi lewat WhatsApp 0813-1753-3522. Pesanan dikirim dari gudang kami di Pondok Kelapa, Jakarta Timur ke seluruh Indonesia.',
+  },
+];
+
+const homeFaqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: HOME_FAQS.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
 
 export default async function Home() {
   const [products, banners] = await Promise.all([
@@ -249,6 +285,51 @@ export default async function Home() {
                 className="h-full"
               >
                 <ProductCard product={product} />
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section for Visitors, Google Rich Results & AI Search (Gemini) */}
+      <section className="py-16 md:py-20 bg-[#fffaf5] border-t border-[#33241b]/10 overflow-x-clip">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(homeFaqJsonLd) }}
+        />
+        <div className="container mx-auto px-4 max-w-3xl">
+          <ScrollReveal variant="up">
+            <div className="text-center mb-10">
+              <span className="text-[#854523] text-xs font-bold uppercase tracking-widest mb-2 block font-body">
+                Informasi Singkat
+              </span>
+              <h2 className="text-2xl md:text-3xl font-heading text-[#33241b] mb-3">
+                Pertanyaan Umum tentang Rewang Desa
+              </h2>
+              <p className="text-stone-600 text-sm font-body">
+                Kenali lebih dekat produk pangan alami, asal desa mitra, dan cara berbelanja di Rewang Desa.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="space-y-3">
+            {HOME_FAQS.map((item, idx) => (
+              <ScrollReveal key={idx} variant="up" delayMs={idx * 60}>
+                <details
+                  name="rewang-faq"
+                  className="group bg-white rounded-2xl border border-[#33241b]/10 hover:border-[#8a5225]/40 transition shadow-xs overflow-hidden"
+                >
+                  <summary className="flex items-center justify-between gap-4 cursor-pointer list-none px-6 py-4.5 font-heading font-semibold text-sm md:text-base text-[#33241b] select-none [&::-webkit-details-marker]:hidden">
+                    <span>{item.question}</span>
+                    <ChevronDown
+                      size={18}
+                      className="text-[#8a5225] shrink-0 transition-transform duration-300 group-open:rotate-180"
+                    />
+                  </summary>
+                  <div className="px-6 pb-5 pt-1 text-stone-600 text-xs md:text-sm leading-relaxed font-body border-t border-stone-100">
+                    {item.answer}
+                  </div>
+                </details>
               </ScrollReveal>
             ))}
           </div>
