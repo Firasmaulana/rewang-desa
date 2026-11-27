@@ -66,6 +66,17 @@ dialog::backdrop {
   overscroll-behavior: contain;
 }
 
+/* Keep focus targets and anchor jumps clear of the sticky header (WCAG 2.4.11) */
+html {
+  scroll-padding-top: 84px;
+}
+
+@media (min-width: 768px) {
+  html {
+    scroll-padding-top: 132px;
+  }
+}
+
 /* Smooth anchor scrolling (only when user allows motion) */
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -291,4 +302,74 @@ dialog::backdrop {
 
 .newsletter-email-input:user-valid {
   border-color: #84cc16;
+}
+
+/* Smart Sticky Header: Smoothly tuck top bar upward on scroll down, reveal on scroll up */
+.smart-header {
+  will-change: transform;
+  transition:
+    transform 0.52s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.smart-header[data-top-hidden="true"] {
+  transform: translate3d(0, calc(var(--header-top-h, 76px) * -1), 0);
+}
+
+.smart-header-top-inner {
+  will-change: transform, opacity;
+  transition:
+    transform 0.46s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.smart-header[data-top-hidden="true"] .smart-header-top-inner {
+  opacity: 0;
+  transform: translate3d(0, -14px, 0) scale(0.985);
+  pointer-events: none;
+}
+
+.smart-nav-bar {
+  transition:
+    background-color 0.38s ease,
+    box-shadow 0.38s ease,
+    border-color 0.38s ease;
+}
+
+.smart-nav-dock-left,
+.smart-nav-dock-right {
+  will-change: transform, opacity;
+  transition:
+    opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.46s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.smart-header[data-top-hidden="false"] .smart-nav-dock-left {
+  opacity: 0;
+  transform: translate3d(-16px, 0, 0) scale(0.94);
+  pointer-events: none;
+}
+
+.smart-header[data-top-hidden="false"] .smart-nav-dock-right {
+  opacity: 0;
+  transform: translate3d(16px, 0, 0) scale(0.94);
+  pointer-events: none;
+}
+
+.smart-header[data-top-hidden="true"] .smart-nav-dock-left,
+.smart-header[data-top-hidden="true"] .smart-nav-dock-right {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smart-header,
+  .smart-header-top-inner,
+  .smart-nav-bar,
+  .smart-nav-dock-left,
+  .smart-nav-dock-right {
+    transition: none !important;
+  }
 }
