@@ -3,6 +3,7 @@ import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import RealtimeBanner from '@/components/RealtimeBanner';
 import ScrollReveal from '@/components/ScrollReveal';
+import HeroParallaxFallback from '@/components/HeroParallaxFallback';
 import { getProducts, getBanners } from '@/lib/supabase/service';
 
 export const dynamic = 'force-dynamic';
@@ -78,24 +79,26 @@ export default async function Home() {
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="hero-parallax-wrapper relative min-h-[540px] md:min-h-[620px] flex items-center py-20 md:py-28 overflow-hidden bg-[#241811]">
-        {/* Full-bleed Hero Background Image with Scroll-Driven Parallax */}
-        <img
-          src="/hero-background.webp"
-          alt="Gerai Rewang Desa dengan aneka produk hasil bumi dan kerajinan desa"
-          width={1920}
-          height={1071}
-          fetchPriority="high"
-          className="hero-parallax-bg absolute inset-0 w-full h-full object-cover object-center"
-        />
-
-        {/* Warm Earthy Gradient Overlays for Text Readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1f140e]/90 via-[#2c1d15]/70 to-[#2c1d15]/30 pointer-events-none"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1f140e]/70 via-transparent to-[#1f140e]/25 pointer-events-none"></div>
+      {/* Hero Section — Clipped 30% Downward Parallax + Smooth Content Fade */}
+      <HeroParallaxFallback />
+      <section className="hero-parallax-wrapper relative min-h-[560px] md:min-h-[660px] lg:min-h-[78vh] flex items-center py-20 md:py-28 overflow-clip bg-[#241811]">
+        {/* Full-bleed Parallax Background + Overlays (moves in unison at ~0.70x visual speed) */}
+        <div className="hero-parallax-bg absolute inset-x-0 -top-[28%] bottom-0 z-0 origin-top pointer-events-none">
+          <img
+            src="/hero-background.webp"
+            alt="Gerai Rewang Desa dengan aneka produk hasil bumi dan kerajinan desa"
+            width={1920}
+            height={1071}
+            fetchPriority="high"
+            className="w-full h-full object-cover object-center"
+          />
+          {/* Warm Earthy Gradient Overlays for Text Readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1f140e]/90 via-[#2c1d15]/70 to-[#2c1d15]/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1f140e]/70 via-transparent to-[#1f140e]/25" />
+        </div>
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-2xl text-center md:text-left">
+          <div className="hero-parallax-content max-w-2xl text-center md:text-left">
             
             {/* Brand Eyebrow Badge */}
             <div className="hero-stagger-1 inline-flex items-center gap-2 bg-[#fffaf5]/15 backdrop-blur-md text-[#ffdd7d] px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest mb-6 border border-[#ffdd7d]/30 font-body">

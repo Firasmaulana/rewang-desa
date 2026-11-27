@@ -2,6 +2,7 @@ import { Target, Heart, Users, MapPin, Phone, CheckCircle2 } from 'lucide-react'
 import Link from 'next/link';
 import Logo from '@/components/Logo';
 import ScrollReveal from '@/components/ScrollReveal';
+import HeroParallaxFallback from '@/components/HeroParallaxFallback';
 
 function InstagramIcon({ size = 20, className = "" }: { size?: number; className?: string }) {
   return (
@@ -41,31 +42,36 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <div className="bg-[#fffaf5] min-h-screen">
-      {/* Hero Section */}
-      <section className="hero-parallax-wrapper relative py-24 md:py-32 bg-[#241811] text-[#fffaf5] overflow-hidden">
-        {/* Background Image */}
-        <img
-          src="/hero-background.webp"
-          alt="Suasana gerai Rewang Desa dengan aneka produk hasil bumi dan kerajinan desa"
-          width={1920}
-          height={1071}
-          fetchPriority="high"
-          className="hero-parallax-bg absolute inset-0 w-full h-full object-cover object-center"
-        />
-        {/* Warm Dark Overlay for Centered Text Readability */}
-        <div className="absolute inset-0 bg-[#1f140e]/70 pointer-events-none"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1f140e]/50 via-transparent to-[#1f140e]/75 pointer-events-none"></div>
+      {/* Hero Section — Clipped 30% Downward Parallax + Smooth Content Fade */}
+      <HeroParallaxFallback />
+      <section className="hero-parallax-wrapper relative py-24 md:py-32 bg-[#241811] text-[#fffaf5] overflow-clip">
+        {/* Background Image + Warm Overlays (moves in unison at ~0.70x visual speed) */}
+        <div className="hero-parallax-bg absolute inset-x-0 -top-[28%] bottom-0 z-0 origin-top pointer-events-none">
+          <img
+            src="/hero-background.webp"
+            alt="Suasana gerai Rewang Desa dengan aneka produk hasil bumi dan kerajinan desa"
+            width={1920}
+            height={1071}
+            fetchPriority="high"
+            className="w-full h-full object-cover object-center"
+          />
+          {/* Warm Dark Overlay for Centered Text Readability */}
+          <div className="absolute inset-0 bg-[#1f140e]/70" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1f140e]/50 via-transparent to-[#1f140e]/75" />
+        </div>
 
         <div className="container mx-auto px-4 relative z-10 text-center max-w-3xl">
-          <span className="hero-stagger-1 inline-block bg-[#fffaf5]/15 backdrop-blur-md border border-[#ffdd7d]/30 text-[#ffdd7d] text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-5 font-body">
-            Cerita Di Balik Layar
-          </span>
-          <h1 className="hero-stagger-2 text-4xl md:text-5xl lg:text-6xl font-heading text-white mb-6 drop-shadow-sm">
-            Tentang <span className="text-[#ffdd7d]">Rewang Desa</span>
-          </h1>
-          <p className="hero-stagger-3 text-stone-100 text-base md:text-lg leading-relaxed font-body drop-shadow-xs">
-            Lahir dari keresahan, tumbuh menjadi jembatan gotong royong yang membawa karya dan hasil bumi dari tangan desa langsung kepada Anda.
-          </p>
+          <div className="hero-parallax-content">
+            <span className="hero-stagger-1 inline-block bg-[#fffaf5]/15 backdrop-blur-md border border-[#ffdd7d]/30 text-[#ffdd7d] text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-5 font-body">
+              Cerita Di Balik Layar
+            </span>
+            <h1 className="hero-stagger-2 text-4xl md:text-5xl lg:text-6xl font-heading text-white mb-6 drop-shadow-sm">
+              Tentang <span className="text-[#ffdd7d]">Rewang Desa</span>
+            </h1>
+            <p className="hero-stagger-3 text-stone-100 text-base md:text-lg leading-relaxed font-body drop-shadow-xs">
+              Lahir dari keresahan, tumbuh menjadi jembatan gotong royong yang membawa karya dan hasil bumi dari tangan desa langsung kepada Anda.
+            </p>
+          </div>
         </div>
       </section>
 
